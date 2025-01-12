@@ -1,5 +1,5 @@
 image:
-  tag:  v1.123.0 # renovate: github-releases=immich-app/immich
+  tag:  v1.124.2 # renovate: github-releases=immich-app/immich
 
 immich:
   configuration:
