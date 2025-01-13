@@ -11,7 +11,7 @@ helmCharts:
   releaseName: netbird-backend
   namespace: netbird
   repo: https://charts.jaconi.io
-  version: 0.14.2
+  version: 0.14.3
   valuesFile: values.yaml
 
 patches:
