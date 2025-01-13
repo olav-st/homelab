@@ -333,8 +333,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 ---
@@ -345,8 +345,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-signal
   namespace: netbird
 ---
@@ -4098,8 +4098,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 ---
@@ -5117,8 +5117,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -5141,8 +5141,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-signal
   namespace: netbird
 spec:
@@ -5375,8 +5375,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -5395,8 +5395,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-signal
   namespace: netbird
 spec:
@@ -7030,8 +7030,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -7045,7 +7045,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 33266913fcd62c05b8afe08c1b818e720e8c7023857c7b26d753a8f468eaa077
+        checksum/config: 53d282864c53995a94280bea80bf9f719d5856aa3863de589619e34472e4d822
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
@@ -7170,8 +7170,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-signal
   namespace: netbird
 spec:
@@ -10962,8 +10962,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -11000,8 +11000,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.26.3
-    helm.sh/chart: netbird-0.14.3
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
   name: netbird-backend-signal
   namespace: netbird
 spec:
