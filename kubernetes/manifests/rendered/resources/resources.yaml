@@ -153,8 +153,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.2-r8
-    helm.sh/chart: coturn-1.0.0
+    app.kubernetes.io/version: 4.6.3-r2
+    helm.sh/chart: coturn-1.0.1
   name: coturn
   namespace: coturn
 ---
@@ -3228,8 +3228,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.2-r8
-    helm.sh/chart: coturn-1.0.0
+    app.kubernetes.io/version: 4.6.3-r2
+    helm.sh/chart: coturn-1.0.1
   name: coturn
   namespace: coturn
 ---
@@ -4646,8 +4646,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.2-r8
-    helm.sh/chart: coturn-1.0.0
+    app.kubernetes.io/version: 4.6.3-r2
+    helm.sh/chart: coturn-1.0.1
   name: coturn
   namespace: coturn
 spec:
@@ -5688,8 +5688,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.2-r8
-    helm.sh/chart: coturn-1.0.0
+    app.kubernetes.io/version: 4.6.3-r2
+    helm.sh/chart: coturn-1.0.1
   name: coturn
   namespace: coturn
 spec:
@@ -5722,7 +5722,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: netbird-turn-credentials
-          image: coturn/coturn:4.6.2-r8
+          image: coturn/coturn:4.6.3-r2
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
@@ -10696,8 +10696,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.2-r8
-    helm.sh/chart: coturn-1.0.0
+    app.kubernetes.io/version: 4.6.3-r2
+    helm.sh/chart: coturn-1.0.1
   name: coturn
   namespace: coturn
 spec:
