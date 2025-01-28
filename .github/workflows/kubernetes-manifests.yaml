@@ -96,6 +96,9 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           
+          # Store the main branch SHA before switching branches
+          main_sha=${{ github.sha }}
+
           # Fetch and checkout rendered_manifests branch
           git fetch origin rendered_manifests
           git checkout rendered_manifests
@@ -105,5 +108,5 @@ jobs:
           
           # Commit and push changes
           git add .
-          git commit -m "Update rendered manifests" || echo "No changes to commit"
+          git commit -m "Update rendered manifests (from $main_sha)" || echo "No changes to commit"
           git push origin rendered_manifests
