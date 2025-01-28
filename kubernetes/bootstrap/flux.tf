@@ -61,7 +61,7 @@ resource "helm_release" "flux2_sync" {
         url = "ssh://git@github.com/${var.github_org}/${var.github_repository}.git"
         interval = "3m"
         ref = {
-          branch = "main"
+          branch = "rendered_manifests"
         }
         secretRef = {
           name = kubernetes_secret.ssh_keypair.metadata[0].name
@@ -72,7 +72,7 @@ resource "helm_release" "flux2_sync" {
     kustomizationlist = [
       {
         spec = {
-          path = "./kubernetes/manifests/rendered/crds"
+          path = "./crds"
           interval = "15m"
           timeout = "10m"
           prune = true
@@ -82,10 +82,10 @@ resource "helm_release" "flux2_sync" {
         spec = {
           dependsOn = [
             {
-              path = "./kubernetes/manifests/rendered/crds"
+              path = "./crds"
             }
           ]
-          path = "./kubernetes/manifests/rendered/resources"
+          path = "./resources"
           interval = "15m"
           timeout = "10m"
           prune = true
@@ -95,10 +95,10 @@ resource "helm_release" "flux2_sync" {
         spec = {
           dependsOn = [
             {
-              path = "./kubernetes/manifests/rendered/resources"
+              path = "./resources"
             }
           ]
-          path = "./kubernetes/manifests/rendered/composite-resources"
+          path = "./composite-resources"
           interval = "15m"
           timeout = "10m"
           prune = true

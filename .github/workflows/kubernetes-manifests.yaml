@@ -2,21 +2,26 @@ name: Kubernetes Manifests
 
 on:
   push:
-    branches: 
-      - '**'
+    branches:
+      - main
+    paths:
+      - '**.yaml'
+  pull_request:
+    branches:
+      - main
     paths:
       - '**.yaml'
 
 permissions:
   contents: write
   packages: write
+  pull-requests: write
 
 jobs:
   render-manifests:
     name: Render
     runs-on: ubuntu-latest
     if: github.event.head_commit.author.name != 'GitHub Actions'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,30 +42,6 @@ jobs:
           cacheFrom: ghcr.io/olav-st/homelab-devcontainer
           runCmd: make render-manifests
 
-      - name: Commit changes
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add .
-          git commit -m "Update rendered manifests" || echo "No changes to commit"
-          git push origin HEAD
-
-  test-manifests:
-    name:  Test
-    runs-on: ubuntu-latest
-    if: github.event.head_commit.author.name == 'GitHub Actions'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Test rendered manifests (dry-run)
         uses: devcontainers/ci@v0.3
         with:
@@ -69,3 +50,60 @@ jobs:
           runCmd: |
             make start-dev-cluster
             make test
+
+      - name: Generate diff for PR
+        if: github.event_name == 'pull_request'
+        run: |
+          # Fetch and checkout rendered_manifests branch
+          git fetch origin rendered_manifests
+          git checkout rendered_manifests
+          
+          # Copy rendered manifests
+          cp -r kubernetes/manifests/rendered/* .
+          
+          # Compare rendered manifests with current files in the rendered_manifests branch
+          diff_output=$(git diff)
+          
+          # Save diff to file
+          echo "$diff_output" > manifest_diff.txt
+          
+          # Create comment with diff
+          if [ -s manifest_diff.txt ]; then
+            echo "DIFF_EXISTS=true" >> $GITHUB_ENV
+            echo 'DIFF_CONTENT<<EOF' >> $GITHUB_ENV
+            echo '```diff' >> $GITHUB_ENV
+            cat manifest_diff.txt >> $GITHUB_ENV
+            echo '```' >> $GITHUB_ENV
+            echo 'EOF' >> $GITHUB_ENV
+          else
+            echo "DIFF_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && env.DIFF_EXISTS == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "### Rendered Manifest Changes
+
+          This PR will make the following changes to the rendered manifests:
+
+          ${DIFF_CONTENT}" | gh pr comment ${{ github.event.pull_request.number }} -F -
+
+      - name: Update rendered manifests branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          
+          # Fetch and checkout rendered_manifests branch
+          git fetch origin rendered_manifests
+          git checkout rendered_manifests
+          
+          # Copy rendered manifests
+          cp -r kubernetes/manifests/rendered/* .
+          
+          # Commit and push changes
+          git add .
+          git commit -m "Update rendered manifests" || echo "No changes to commit"
+          git push origin rendered_manifests
