@@ -1,6 +1,6 @@
 locals {
   talos = {
-    current_version = "v1.9.1"
+    current_version = "v1.9.2"
     upgrade_version = "v1.9.2" # renovate: github-releases=siderolabs/talos
     base_url        = "https://factory.talos.dev/image/787b79bb847a07ebb9ae37396d015617266b1cef861107eaec85968ad7b40618"
   }
