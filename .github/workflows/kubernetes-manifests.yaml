@@ -108,5 +108,5 @@ jobs:
           
           # Commit and push changes
           git add .
-          git commit -m "Update rendered manifests (from $main_sha)" || echo "No changes to commit"
+          git commit -m "chore: Update rendered manifests (from $main_sha)" || echo "No changes to commit"
           git push origin rendered_manifests
