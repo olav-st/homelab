@@ -1,6 +1,6 @@
 locals {
   haos = {
-    version    = "14.1" # renovate: github-releases=home-assistant/operating-system
+    version    = "14.2" # renovate: github-releases=home-assistant/operating-system
     base_url   = "https://github.com/home-assistant/operating-system/releases/download"
     local_file = "home-assistant/haos_ova.qcow2"
   }
