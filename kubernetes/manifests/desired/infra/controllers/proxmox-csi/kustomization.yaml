@@ -10,6 +10,6 @@ helmCharts:
   releaseName: proxmox-csi-plugin
   namespace: csi-proxmox
   repo: oci://ghcr.io/sergelogvinov/charts
-  version: 0.3.4
+  version: 0.3.5
   includeCRDs: true
   valuesFile: values.yaml
