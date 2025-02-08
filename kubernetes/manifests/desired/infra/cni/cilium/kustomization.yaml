@@ -5,14 +5,14 @@ namespace: kube-system
 resources:
   - announcement-policy.yaml
   - ip-pool.yaml
-  - https://doc.crds.dev/raw/github.com/cilium/cilium@1.16.6 # renovate: helm=cilium registry=https://helm.cilium.io
+  - https://doc.crds.dev/raw/github.com/cilium/cilium@1.17.0 # renovate: helm=cilium registry=https://helm.cilium.io
 
 helmCharts:
   - name: cilium
     releaseName: cilium
     repo: https://helm.cilium.io
     namespace: kube-system
-    version: 1.16.6
+    version: 1.17.0
     includeCRDs: true
     valuesFile: values.yaml
 
