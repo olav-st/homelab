@@ -10,7 +10,7 @@ resources:
   - xrds.yaml
   - functions/builtin-objects.yaml
   - functions/go-templating.yaml
-  - https://doc.crds.dev/raw/github.com/crossplane/crossplane@v1.18.2 # renovate: github-releases=crossplane/crossplane
+  - https://doc.crds.dev/raw/github.com/crossplane/crossplane@v1.19.0 # renovate: github-releases=crossplane/crossplane
   - https://doc.crds.dev/raw/github.com/crossplane-contrib/provider-keycloak@v1.11.0 # renovate: github-releases=crossplane-contrib/provider-keycloak
 
 helmCharts:
@@ -18,4 +18,4 @@ helmCharts:
   releaseName: crossplane
   namespace: crossplane
   repo: https://charts.crossplane.io/stable
-  version: 1.18.2
+  version: 1.19.0
