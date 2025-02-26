@@ -21,7 +21,7 @@ resource "kubernetes_namespace" "flux_system" {
 resource "helm_release" "flux2" {
   repository = "https://fluxcd-community.github.io/helm-charts"
   chart      = "flux2"
-  version    = "2.14.1"
+  version    = "2.15.0"
 
   name      = "flux2"
   namespace = "flux-system"
