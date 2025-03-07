@@ -29,7 +29,7 @@ spec:
               name: netbird-relay-credentials
         - name: NB_EXPOSED_ADDRESS
           value: rels://netbird.homelab.olav.ninja:443
-        image: netbirdio/relay:0.37.1 # renovate: docker=netbirdio/relay
+        image: netbirdio/relay:0.37.2 # renovate: docker=netbirdio/relay
         imagePullPolicy: IfNotPresent
         name: netbird-relay
         ports:
