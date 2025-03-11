@@ -57,7 +57,7 @@ spec:
               drop:
                 - ALL
         - name: netbird-agent
-          image: netbirdio/netbird:0.37.2 # renovate: docker=netbirdio/netbird
+          image: netbirdio/netbird:0.38.0 # renovate: docker=netbirdio/netbird
           env:
             - name: NB_SETUP_KEY
               valueFrom:

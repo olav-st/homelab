@@ -23,7 +23,7 @@ idp:
 
 management:
   image:
-    tag: 0.37.2 # renovate: docker=netbirdio/management
+    tag: 0.38.0 # renovate: docker=netbirdio/management
   dnsDomain: netbird
   persistentVolume:
     enabled: true
@@ -47,7 +47,7 @@ management:
 
 signal:
   image:
-    tag: 0.37.2 # renovate: docker=netbirdio/signal
+    tag: 0.38.0 # renovate: docker=netbirdio/signal
   uri: netbird.homelab.olav.ninja:443
   protocol: https
   persistentVolume:
