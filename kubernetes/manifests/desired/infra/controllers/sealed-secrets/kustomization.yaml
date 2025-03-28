@@ -10,6 +10,6 @@ helmCharts:
   releaseName: sealed-secrets
   namespace: sealed-secrets
   repo: oci://registry-1.docker.io/bitnamicharts
-  version: 2.5.7
+  version: 2.5.8
   includeCRDs: true
   valuesFile: values.yaml
