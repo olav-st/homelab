@@ -6590,7 +6590,7 @@ spec:
               value: immich-redis-master
             - name: TRANSFORMERS_CACHE
               value: /cache
-          image: ghcr.io/immich-app/immich-machine-learning:v1.130.3
+          image: ghcr.io/immich-app/immich-machine-learning:v1.131.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -6683,7 +6683,7 @@ spec:
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
               value: immich-redis-master
-          image: ghcr.io/immich-app/immich-server:v1.130.3
+          image: ghcr.io/immich-app/immich-server:v1.131.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
