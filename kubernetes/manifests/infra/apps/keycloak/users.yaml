@@ -8,10 +8,9 @@ spec:
     enabled: true
     username: olav
     initialPassword:
-      - temporary: true
-        valueSecretRef:
-          key: password
-          name: keycloak-initial-password
+      - valueSecretRef:
+          key: olav
+          name: keycloak-initial-passwords
           namespace: keycloak
     realmIdRef:
       name: homelab
@@ -25,10 +24,9 @@ spec:
     enabled: true
     username: jiyoung
     initialPassword:
-      - temporary: true
-        valueSecretRef:
-          key: password
-          name: keycloak-initial-password
+      - valueSecretRef:
+          key: jiyoung
+          name: keycloak-initial-passwords
           namespace: keycloak
     realmIdRef:
       name: homelab
