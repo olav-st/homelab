@@ -10798,15 +10798,17 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  name: keycloak-initial-password
+  name: keycloak-initial-passwords
   namespace: keycloak
 spec:
   encryptedData:
-    password: AgAh73gywqf2fP3OPwTeS3Dsw8mPr2cUc16Y9Lqrt6L6jbsL7Y8S3wAl4t3KhmtkEKxrRWwwK+D9TJPayAwmWYlqYwD5DhE1U9Yag8ZJkMlJOMjVsTGBWDScTSy/tJwHEtfD+rmo9HEjLY1sfdczmr94PygosHJvmrMFWO2YnZEvyKTXz0e+BPytcGOCh7/hd9t0c79VHDN0HZbd8hiHW3eVzQj2kv37X57H1iJx3XVI+53Vj1JJ/RZ9pM0CXanc1LyhGHhi0g5nokstwUXC/QgTEVqe76AC4EiyKVQ91dp7b5OsJvNRhsQy4u85C1GBANiDrxFBHmCbyn3JP2+yixjw5MvGCCGkD45dj2O5JrprGd7EmmBxfTMTYFc7j8BkTe0vcepfF80dDPr736dGHKc7VoB7mz9swFyhu+EIyS6ss0WwBRMNSwyUe+e/kbrp7SKYXyAKr+9mU/7DWnpcoek/JJsVfNvaF6QSVY7eqwsMmKXFkeqtGA0MdBiz9kKhg/NZmFGuerxAM8o1U7MpP7H+VKPW7zSQu9W+UTF4cJy3hP6PaCPduysvk5T7n+IvBbnhvlD8Db/KIF0gjpmp3E2mcPFVifEPIvLVtXbwjElRQVqLqS/69WK6JV8HriBfzIMPiiIklwCds6yUZQQKKCraHjTquj6KMib/wEsgFrbHkuKPAr8BIBkuuM/UCgf/loNFlB7vUrYtfhM=
+    jiyoung: AgBjfkzNhEWEjBLwuYVxJivGuVUpaDxcKKtLCeudRW1qFDwUeloT/eWE1b8M7n3vAomwXkXO7L6MzZXeloUHhwkT1WSIfxqBVYnjvK/zUD0tYLp6FjXvPjSFMscFU4tvNNc7+teiju9JzMapOo0Omc/Z4yX4PaEVdEUuvKc8oEIyueKq5JE1sU7ZIIg+PohdrzOH2RNUgjloeo1vcH2c/fRWjU9pJlrzx6cpUGZDJL0pUH8ed/k+9ikuRJiNIl5qKzD1EgWn9kmcFlenSaXj/cN462F/JL8DeE+rnU2Tdvg8ijZZnFKWbG7auqqL5Ui4dYaTUcJZkeB+jbRkCB5uwA9e1tomrrdxd9fwAOZHRK51yqRRhEV+Jjh+OlSFYL+mZlHGiLpKcTbv7oKyaLXfZDPy36UPJhJjOQJqBoNRrD8czDTrD3ZEnwzdW9mzt/aKRjBlASX2/XGSe7iFrRx+yJ7wNI3s5kiACxeRZag7v3rFw+/xuf0jG91JRo6LBoiZDZYCbxDAisykRofb9g1N46tKHfYL+2mde/D4HQn4DoLcrvOkFiiRCci9iKZh++jRVnbNwGr204zeHAuXwyHIBCUUKnrZXXhl7eJR87lyTmm53bKug/V11ACUSdrBnnOfoiEBldvg0C6dxNpcUn/sqbm581AKkemGDJKGiwi5SbEnuQ+W4//vMZgx8ML4tCnsCxXYOJsARcPT7z8fpRIOWqw=
+    olav: AgAzrh0PKbxUE2vfIdL+iWPb78QmHcvDULvLns8DwMI/I4oLyz5J+DPy8pvEjVNCm3AEyxt3Wj5TanOGNdSCcpP+tp/p1oiWdQGBvq+DAi0S7CfWxKjc+SEne0YUcQLXTMhX7rtdJOVjVf/shjG9Q0eMx8TqX+dnda3PKSD+B+HVpvZaQmnMiVszssp2VUqvw9D9yqlDoK2Nv1d5kQNmX7Mm1+HLdYOkmPnMXMNH9zxQzD/jhkq4i01FgOIQpeu2651GQ2SX8BGPR74sIXijIm4QjETDs1atJNXz6yxG7dSQQ1OMUUhlWUasifAkbo4tLZDpgKXYgQgJA6sR7SkukbEr0JixI3dk93dmBoSUXS9qyf3E0iBKR63jB/Wl2Ba4H2buhrd7rBaF+29zeX0leKWf//hXY0KcpgqKWxwcPVf204/OGBsJ0x6vTZRMd9w0KxiKLV5yng8VKXbrQsnKI3o7ypCRwcVk/AHpBEIUJrOC53R4h307INAdPuM2KOLFDuHukWaM10bbTGJ0NRczCkuq7munS9QzycN6n/U3Yteob6gPTRbMOt9AVd0fWE3sjpbrKOp+78XtTQ58I1JWDhMUHa3rG2XdH2kClbfz+knCzROMB6SyZXp6x0NSfeY6ni86VqkDEnNwEE5qi3GkC+HyYVcjMI1iL+sRZFc+DWGDzMcVLTASzuabPSNGdlLmIEKCCrOczaSLMuGjscZFlPU3
   template:
     metadata:
-      name: keycloak-initial-password
+      name: keycloak-initial-passwords
       namespace: keycloak
+    type: Opaque
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
@@ -11757,10 +11759,9 @@ spec:
   forProvider:
     enabled: true
     initialPassword:
-      - temporary: true
-        valueSecretRef:
-          key: password
-          name: keycloak-initial-password
+      - valueSecretRef:
+          key: jiyoung
+          name: keycloak-initial-passwords
           namespace: keycloak
     realmIdRef:
       name: homelab
@@ -11775,10 +11776,9 @@ spec:
   forProvider:
     enabled: true
     initialPassword:
-      - temporary: true
-        valueSecretRef:
-          key: password
-          name: keycloak-initial-password
+      - valueSecretRef:
+          key: olav
+          name: keycloak-initial-passwords
           namespace: keycloak
     realmIdRef:
       name: homelab
