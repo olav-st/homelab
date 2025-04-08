@@ -1,5 +1,5 @@
-MANIFEST_INPUT_DIR=kubernetes/manifests/desired
-MANIFEST_OUTPUT_DIR=kubernetes/manifests/rendered
+MANIFEST_INPUT_DIR=kubernetes/manifests
+MANIFEST_OUTPUT_DIR=kubernetes/rendered-manifests
 
 .PHONY: help render-manifests
 .DEFAULT_GOAL := help

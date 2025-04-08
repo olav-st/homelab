@@ -59,7 +59,7 @@ jobs:
           git checkout rendered_manifests
 
           # Copy rendered manifests
-          cp -r kubernetes/manifests/rendered/* .
+          cp -r kubernetes/rendered-manifests/* .
 
           # Generate diff with markdown formatting
           echo "### Rendered Manifest Changes" > manifests_diff.md
@@ -105,7 +105,7 @@ jobs:
           git checkout rendered_manifests
           
           # Copy rendered manifests
-          cp -r kubernetes/manifests/rendered/* .
+          cp -r kubernetes/rendered-manifests/* .
           
           # Commit and push changes
           git add .

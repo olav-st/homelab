@@ -59,7 +59,7 @@ talosconfig
 kubernetes/manifests/**/charts/
 
 # Ignore rendered manifests
-kubernetes/manifests/rendered/
+kubernetes/rendered-manifests/
 
 # Ignore Home Assistant images/ to avoid commiting large binary files
 home-assistant/*.qcow2
