@@ -1,0 +1,12 @@
+managementURL: https://netbird.homelab.olav.ninja
+
+netbirdAPI:
+  keyFromSecret: netbird-operator-api-key
+
+ingress:
+  enabled: true
+  router:
+    enabled: true
+
+cluster:
+  name: homelab
