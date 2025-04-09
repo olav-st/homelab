@@ -4,6 +4,8 @@ ingressRoute:
 
 service:
   type: LoadBalancer
+  annotations:
+    netbird.io/expose: true
   spec:
     externalTrafficPolicy: Local
     internalTrafficPolicy: Local
