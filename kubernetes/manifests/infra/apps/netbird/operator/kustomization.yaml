@@ -8,7 +8,7 @@ resources:
 
 helmCharts:
   - name: kubernetes-operator
-    releaseName: netbird-operator
+    releaseName: netbird
     namespace: netbird
     repo: https://netbirdio.github.io/kubernetes-operator
     version: 0.1.7
