@@ -5525,6 +5525,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    netbird.io/expose: "true"
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
