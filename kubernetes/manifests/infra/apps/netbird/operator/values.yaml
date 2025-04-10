@@ -5,6 +5,8 @@ netbirdAPI:
 
 ingress:
   enabled: true
+  kubernetesAPI:
+    enabled: true
   router:
     enabled: true
     replicas: 1
