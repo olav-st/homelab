@@ -12208,7 +12208,7 @@ metadata:
   name: function-keycloak-builtin-objects
   namespace: crossplane
 spec:
-  package: registry.gitlab.com/corewire/images/crossplane/function-keycloak-builtin-objects:v3.0.0
+  package: registry.gitlab.com/corewire/images/crossplane/function-keycloak-builtin-objects:v3.0.1
   packagePullPolicy: Always
 ---
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
