@@ -13,16 +13,33 @@ cgroup:
 externalIPs:
   enabled: true
 
+hubble:
+  enabled: true
+  tls:
+    auto:
+      method: "cronJob"
+  relay:
+    enabled: true
+    rollOutPods: true
+  ui:
+    enabled: true
+    rollOutPods: true
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+      hosts:
+        - hubble.homelab.olav.ninja
+      tls:
+        - secretName: hubble-tls-certificate
+          hosts:
+            - hubble.homelab.olav.ninja
+
 l2announcements:
   enabled: true
 
 ipam:
   mode: kubernetes
-
-hubble:
-  tls:
-    auto:
-      method: "cronJob"
 
 operator:
   replicas: 1

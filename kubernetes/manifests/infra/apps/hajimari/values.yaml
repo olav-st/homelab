@@ -8,6 +8,8 @@ hajimari:
   globalBookmarks: 
     - group: Utilities
       bookmarks:
+      - name: Hubble
+        url: 'https://hubble.homelab.olav.ninja'
       - name: Keycloak
         url: 'https://keycloak.homelab.olav.ninja'
       - name: Netbird
