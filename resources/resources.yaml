@@ -3589,6 +3589,8 @@ data:
     defaultEnable: false
     globalBookmarks:
     - bookmarks:
+      - name: Hubble
+        url: https://hubble.homelab.olav.ninja
       - name: Keycloak
         url: https://keycloak.homelab.olav.ninja
       - name: Netbird
