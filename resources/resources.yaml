@@ -12088,6 +12088,34 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+  labels:
+    app.kubernetes.io/name: hubble-ui
+    app.kubernetes.io/part-of: cilium
+    k8s-app: hubble-ui
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  rules:
+    - host: hubble.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: hubble-ui
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - hubble.homelab.olav.ninja
+      secretName: hubble-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
   labels:
     app.kubernetes.io/instance: netbird-backend
