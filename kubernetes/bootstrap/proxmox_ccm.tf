@@ -41,7 +41,7 @@ EOF
 resource "helm_release" "proxmox-ccm" {
   repository = "oci://ghcr.io/sergelogvinov/charts"
   chart      = "proxmox-cloud-controller-manager"
-  version    = "0.2.11"
+  version    = "0.2.13"
 
   name      = "proxmox-cloud-controller-manager"
   namespace = "kube-system"
