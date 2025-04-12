@@ -2582,29 +2582,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: keycloak-xbuiltinobjects-create
-rules:
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - keycloak.crossplane.io
-    resources:
-      - xbuiltinobjects
-    verbs:
-      - get
-      - list
-      - create
-      - patch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
   labels:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
@@ -3510,19 +3487,6 @@ subjects:
   - kind: ServiceAccount
     name: hubble-ui
     namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: keycloak-xbuiltinobjects-create
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: keycloak-xbuiltinobjects-create
-subjects:
-  - kind: ServiceAccount
-    name: keycloak
-    namespace: keycloak
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -10104,64 +10068,6 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xbuiltinobjects.keycloak.crossplane.io
-  namespace: crossplane
-spec:
-  group: keycloak.crossplane.io
-  names:
-    kind: XBuiltinObjects
-    plural: xbuiltinobjects
-  versions:
-    - name: v1alpha1
-      referenceable: true
-      schema:
-        openAPIV3Schema:
-          properties:
-            spec:
-              properties:
-                builtinAuthenticationFlows:
-                  description: List of authentication flows to import from the realm
-                  items:
-                    type: string
-                  type: array
-                builtinClients:
-                  description: List of clients to import from the realm
-                  items:
-                    type: string
-                  type: array
-                builtinRealmRoles:
-                  description: List of realm roles to import from the realm
-                  items:
-                    enum:
-                      - offline_access
-                      - uma_authorization
-                      - admin
-                      - create-realm
-                      - default-roles-master
-                    type: string
-                  type: array
-                providerConfigName:
-                  description: Name of the provider config to attach to the imported clients/roles
-                  type: string
-                providerSecretName:
-                  description: Name of the secret containing the provider credentials (Secret must have a label with key=type and value=provider-credentials to be found)
-                  type: string
-                realm:
-                  description: Realm to import the builtin clients/roles from
-                  type: string
-              required:
-                - providerConfigName
-                - providerSecretName
-                - realm
-              type: object
-          required:
-            - spec
-          type: object
-      served: true
----
-apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
   name: xoidcclients.oidc.homelab.olav.ninja
   namespace: crossplane
 spec:
@@ -10265,43 +10171,6 @@ spec:
             - spec
           type: object
       served: true
----
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: keycloak-builtin-objects
-  namespace: crossplane
-spec:
-  compositeTypeRef:
-    apiVersion: keycloak.crossplane.io/v1alpha1
-    kind: XBuiltinObjects
-  mode: Pipeline
-  pipeline:
-    - functionRef:
-        name: function-extra-resources
-      input:
-        apiVersion: extra-resources.fn.crossplane.io/v1beta1
-        kind: Input
-        spec:
-          extraResources:
-            - apiVersion: v1
-              into: secrets
-              kind: Secret
-              selector:
-                matchLabels:
-                  - key: type
-                    type: Value
-                    value: provider-credentials
-                maxMatch: 100
-                minMatch: 1
-              type: Selector
-      step: pull-provider-configs
-    - functionRef:
-        name: function-keycloak-builtin-objects
-      step: keycloak-builtin-objects
-    - functionRef:
-        name: function-auto-ready
-      step: automatically-detect-ready-composed-resources
 ---
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
@@ -12506,6 +12375,23 @@ spec:
     - Egress
 ---
 apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+kind: Client
+metadata:
+  annotations:
+    crossplane.io/external-name: homelab/realm-management
+  name: builtin-homelab-realm-management
+  namespace: keycloak
+spec:
+  forProvider:
+    clientId: realm-management
+    realmIdRef:
+      name: homelab
+  managementPolicies:
+    - Observe
+  providerConfigRef:
+    name: default
+---
+apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
 kind: ClientScope
 metadata:
   name: netbird-api
@@ -12529,35 +12415,10 @@ spec:
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
-  name: function-auto-ready
-  namespace: crossplane
-spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.4.2
----
-apiVersion: pkg.crossplane.io/v1beta1
-kind: Function
-metadata:
-  name: function-extra-resources
-  namespace: crossplane
-spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-extra-resources:v0.0.3
----
-apiVersion: pkg.crossplane.io/v1beta1
-kind: Function
-metadata:
   name: function-go-templating
   namespace: crossplane
 spec:
   package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.9.2
----
-apiVersion: pkg.crossplane.io/v1beta1
-kind: Function
-metadata:
-  name: function-keycloak-builtin-objects
-  namespace: crossplane
-spec:
-  package: registry.gitlab.com/corewire/images/crossplane/function-keycloak-builtin-objects:v3.0.1
-  packagePullPolicy: Always
 ---
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa

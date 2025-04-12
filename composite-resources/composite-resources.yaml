@@ -1,25 +1,3 @@
-apiVersion: keycloak.crossplane.io/v1alpha1
-kind: XBuiltinObjects
-metadata:
-  name: builtin-objects-homelab
-  namespace: keycloak
-spec:
-  builtinAuthenticationFlows:
-    - browser
-  builtinClients:
-    - account
-    - account-console
-    - admin-cli
-    - broker
-    - realm-management
-    - security-admin-console
-  builtinRealmRoles:
-    - offline_access
-    - uma_authorization
-  providerConfigName: default
-  providerSecretName: crossplane-keycloak-credentials
-  realm: homelab
----
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
