@@ -8474,7 +8474,6 @@ spec:
   template:
     metadata:
       annotations:
-        netbird.io/setup-key: traefik
         prometheus.io/path: /metrics
         prometheus.io/port: "9100"
         prometheus.io/scrape: "true"
