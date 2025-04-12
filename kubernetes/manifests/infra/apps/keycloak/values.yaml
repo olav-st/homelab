@@ -3,6 +3,8 @@ auth:
   existingSecret: keycloak-admin-password
   passwordSecretKey: password
 
+usePasswordFiles: false
+
 production: true
 
 proxy: edge
