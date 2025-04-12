@@ -12377,8 +12377,6 @@ spec:
 apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
 kind: Client
 metadata:
-  annotations:
-    crossplane.io/external-name: homelab/realm-management
   name: builtin-homelab-realm-management
   namespace: keycloak
 spec:
