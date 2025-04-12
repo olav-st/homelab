@@ -1,3 +1,7 @@
+deployment:
+  podAnnotations:
+    netbird.io/setup-key: traefik
+
 ingressRoute:
   dashboard:
     enabled: false

@@ -1,0 +1,10 @@
+---
+apiVersion: netbird.io/v1
+kind: NBSetupKey
+metadata:
+  name: traefik
+spec:
+  managementURL: https://netbird.homelab.olav.ninja
+  secretKeyRef:
+    name: netbird-setup-key
+    key: setupkey
