@@ -9249,10 +9249,16 @@ spec:
                   fieldPath: metadata.namespace
             - name: BITNAMI_DEBUG
               value: "false"
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD_FILE
-              value: /opt/bitnami/keycloak/secrets/password
-            - name: KEYCLOAK_DATABASE_PASSWORD_FILE
-              value: /opt/bitnami/keycloak/secrets/password
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: keycloak-admin-password
+            - name: KEYCLOAK_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: keycloak-db-credentials
             - name: KEYCLOAK_HTTP_RELATIVE_PATH
               value: /
             - name: KC_SPI_ADMIN_REALM
@@ -9327,8 +9333,6 @@ spec:
             - mountPath: /opt/bitnami/keycloak/providers
               name: empty-dir
               subPath: app-providers-dir
-            - mountPath: /opt/bitnami/keycloak/secrets
-              name: keycloak-secrets
       enableServiceLinks: true
       initContainers:
         - args:
@@ -9382,13 +9386,6 @@ spec:
       volumes:
         - emptyDir: {}
           name: empty-dir
-        - name: keycloak-secrets
-          projected:
-            sources:
-              - secret:
-                  name: keycloak-admin-password
-              - secret:
-                  name: keycloak-db-credentials
   updateStrategy:
     rollingUpdate: {}
     type: RollingUpdate
