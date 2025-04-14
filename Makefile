@@ -30,21 +30,26 @@ render-manifests: ## Render Kubernetes manifests using Kustomize
 	rm ${TEMP_MANIFESTS_FILE}
 
 rendered-manifests-diff: render-manifests ## Render Kubernetes manifests and show the diff from the rendered_manifests branch
-	@if test -n "$$(git status --porcelain --untracked-files=no)"; then \
-		echo "Error: Tracked changes detected"; \
-		exit 1; \
-	fi
-
-	# Capture the current branch
-	$(eval CURRENT_BRANCH := $(shell git branch --show-current || git rev-parse --abbrev-ref HEAD))
-
-	# Generate diff with to rendered_manifests branch
-	git switch rendered_manifests
-	cp -r kubernetes/rendered-manifests/* .
-	git --no-pager diff --color
-
-	# Return to previous branch
-	git switch --discard-changes $(CURRENT_BRANCH)
+	# Create temporary directory
+	$(eval TEMP_DIR := $(shell mktemp -d))
+	@echo "Created temporary directory: $(TEMP_DIR)"
+	
+	# Clone rendered_manifests branch to temp directory
+	@echo "Checking out rendered_manifests to temporary directory..."
+	git worktree add $(TEMP_DIR) rendered_manifests
+	
+	# Copy rendered manifests to temp directory
+	cp -r kubernetes/rendered-manifests/* $(TEMP_DIR)
+	
+	# Go to temp directory and generate diff
+	@echo "Generating diff..."
+	cd $(TEMP_DIR) && git --no-pager diff --color
+	
+	# Clean up
+	@echo "Cleaning up temporary directory..."
+	git worktree remove --force $(TEMP_DIR)
+	rm -rf $(TEMP_DIR)
+	@echo "Done"
 
 apply-rendered-crds: ## Apply rendered CRDs, needed for dry-run (ref https://github.com/kubernetes/kubectl/issues/711)
 	kubectl apply --server-side -f ${MANIFEST_OUTPUT_DIR}/crds/crds.yaml
