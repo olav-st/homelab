@@ -1,9 +1,9 @@
 auth:
   adminUser: admin
   existingSecret: keycloak-admin-password
-  passwordSecretKey: password
+  passwordSecretKey: pazzword
 
-usePasswordFiles: false
+usePasswordFiles: true
 
 production: true
 
