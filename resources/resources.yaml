@@ -9217,16 +9217,10 @@ spec:
                   fieldPath: metadata.namespace
             - name: BITNAMI_DEBUG
               value: "false"
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: keycloak-admin-password
-            - name: KEYCLOAK_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: keycloak-db-credentials
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD_FILE
+              value: /opt/bitnami/keycloak/secrets/pazzword
+            - name: KEYCLOAK_DATABASE_PASSWORD_FILE
+              value: /opt/bitnami/keycloak/secrets/password
             - name: KEYCLOAK_HTTP_RELATIVE_PATH
               value: /
             - name: KC_SPI_ADMIN_REALM
@@ -9301,6 +9295,8 @@ spec:
             - mountPath: /opt/bitnami/keycloak/providers
               name: empty-dir
               subPath: app-providers-dir
+            - mountPath: /opt/bitnami/keycloak/secrets
+              name: keycloak-secrets
       enableServiceLinks: true
       initContainers:
         - args:
@@ -9354,6 +9350,13 @@ spec:
       volumes:
         - emptyDir: {}
           name: empty-dir
+        - name: keycloak-secrets
+          projected:
+            sources:
+              - secret:
+                  name: keycloak-admin-password
+              - secret:
+                  name: keycloak-db-credentials
   updateStrategy:
     rollingUpdate: {}
     type: RollingUpdate
@@ -11474,7 +11477,7 @@ metadata:
   namespace: keycloak
 spec:
   encryptedData:
-    password: AgBgtRvU9pbVKgL7wZQnogcTXA+I8XO3BqAzialWSeeX3YpYCBbhNELkTe4BcugoYfL+keC/0D2VqiECisYL4arvUkOmHXKBVUsl97rzSKcS8zSomy4OMx3lQWI6xBuB4vwLzDN6qcl+LfnoIJlzcycpgQhdWPPcEJ3utzp/dhO9LzocCW2xHREgaySYSkuaTBdq/Tj2HZKuaJ7hVNgbO00zjHZd7qAs0OVFoZpJlZyMYdZU0S1r0gL+XaP3v2ARZ3XQEDmmxufLOPWcxYOeJ712q8wFZn5sCJdns31sFCFYI5mN/d6iBvcEfuWLnCz1ET0DC6HgedLID1jB3sCjYnQdz92V2fkDyj6uzqb7X9CTKwn6JvY8Egd40KVbamsLuoiT2aNpFw23gkK3Ajus3H5S9aL3k8zCSgBrHBKkO2TZDER6Fzw39cLBSnRBWzPS7wy10JIfRNPKV9rmGlHWY6y+H4KWkPiIlUOqDGjlfaLPXyD9o0DcTs3rTPF/lScqPtqSlKJCEDwWqudC8UKLn5YSPfECdOnqNCDyj586h+FZk0IxU4MSG7HbLHi+B3/Aev3qibBeMIYSsUYGn+B61YY0INm+AEV+M2Co98WU46S7+zIHpxSK6LxV+ov6MIdyo1tGC4PnFd1bIZ2ZxjlUnwMfE8tFSyWO+963ECVcPx0rXbvEDnzKvPsW4f25ttk0zzjX2WLxOfs6fcOKnoeGnG+U
+    pazzword: AgBgtRvU9pbVKgL7wZQnogcTXA+I8XO3BqAzialWSeeX3YpYCBbhNELkTe4BcugoYfL+keC/0D2VqiECisYL4arvUkOmHXKBVUsl97rzSKcS8zSomy4OMx3lQWI6xBuB4vwLzDN6qcl+LfnoIJlzcycpgQhdWPPcEJ3utzp/dhO9LzocCW2xHREgaySYSkuaTBdq/Tj2HZKuaJ7hVNgbO00zjHZd7qAs0OVFoZpJlZyMYdZU0S1r0gL+XaP3v2ARZ3XQEDmmxufLOPWcxYOeJ712q8wFZn5sCJdns31sFCFYI5mN/d6iBvcEfuWLnCz1ET0DC6HgedLID1jB3sCjYnQdz92V2fkDyj6uzqb7X9CTKwn6JvY8Egd40KVbamsLuoiT2aNpFw23gkK3Ajus3H5S9aL3k8zCSgBrHBKkO2TZDER6Fzw39cLBSnRBWzPS7wy10JIfRNPKV9rmGlHWY6y+H4KWkPiIlUOqDGjlfaLPXyD9o0DcTs3rTPF/lScqPtqSlKJCEDwWqudC8UKLn5YSPfECdOnqNCDyj586h+FZk0IxU4MSG7HbLHi+B3/Aev3qibBeMIYSsUYGn+B61YY0INm+AEV+M2Co98WU46S7+zIHpxSK6LxV+ov6MIdyo1tGC4PnFd1bIZ2ZxjlUnwMfE8tFSyWO+963ECVcPx0rXbvEDnzKvPsW4f25ttk0zzjX2WLxOfs6fcOKnoeGnG+U
   template:
     metadata:
       name: keycloak-admin-password
