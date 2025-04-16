@@ -7155,7 +7155,7 @@ spec:
                   key: debug
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/operator-generic:v1.17.2@sha256:81f2d7198366e8dec2903a3a8361e4c68d47d19c68a0d42f0b7b6e3f0523f249
+          image: quay.io/cilium/operator-generic:v1.17.3@sha256:8bd38d0e97a955b2d725929d60df09d712fb62b60b930551a29abac2dd92e597
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -7240,7 +7240,7 @@ spec:
             - serve
           command:
             - hubble-relay
-          image: quay.io/cilium/hubble-relay:v1.17.2@sha256:42a8db5c256c516cacb5b8937c321b2373ad7a6b0a1e5a5120d5028433d586cc
+          image: quay.io/cilium/hubble-relay:v1.17.3@sha256:f8674b5139111ac828a8818da7f2d344b4a5bfbaeb122c5dc9abed3e74000c55
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 12
@@ -10607,7 +10607,7 @@ spec:
                 resourceFieldRef:
                   divisor: "1"
                   resource: limits.memory
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -10748,7 +10748,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           name: config
           terminationMessagePolicy: FallbackToLogsOnError
@@ -10765,7 +10765,7 @@ spec:
           env:
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           name: apply-sysctl-overwrites
           securityContext:
@@ -10791,7 +10791,7 @@ spec:
             - /bin/bash
             - -c
             - --
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           name: mount-bpf-fs
           securityContext:
@@ -10822,7 +10822,7 @@ spec:
                   key: write-cni-conf-when-ready
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           name: clean-cilium-state
           securityContext:
@@ -10847,7 +10847,7 @@ spec:
               name: cilium-run
         - command:
             - /install-plugin.sh
-          image: quay.io/cilium/cilium:v1.17.2@sha256:3c4c9932b5d8368619cb922a497ff2ebc8def5f41c18e410bcc84025fcd385b1
+          image: quay.io/cilium/cilium:v1.17.3@sha256:1782794aeac951af139315c10eff34050aa7579c12827ee9ec376bb719b82873
           imagePullPolicy: IfNotPresent
           name: install-cni-binaries
           resources:
@@ -11034,7 +11034,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium-envoy:v1.31.5-1741765102-efed3defcc70ab5b263a0fc44c93d316b846a211@sha256:377c78c13d2731f3720f931721ee309159e782d882251709cb0fac3b42c03f4b
+          image: quay.io/cilium/cilium-envoy:v1.32.5-1744305768-f9ddca7dcd91f7ca25a505560e655c47d3dec2cf@sha256:a01cadf7974409b5c5c92ace3d6afa298408468ca24cab1cb413c04f89d3d1f9
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
