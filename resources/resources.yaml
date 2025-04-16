@@ -404,8 +404,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
   namespace: netbird
 ---
@@ -759,8 +759,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
   namespace: netbird
 rules:
@@ -2590,8 +2590,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
 rules:
   - apiGroups:
@@ -3099,8 +3099,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
   namespace: netbird
 roleRef:
@@ -3499,8 +3499,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -5433,8 +5433,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-metrics
   namespace: netbird
 spec:
@@ -5455,8 +5455,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-webhook-service
   namespace: netbird
 spec:
@@ -7856,8 +7856,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator
   namespace: netbird
 spec:
@@ -7873,8 +7873,8 @@ spec:
         app.kubernetes.io/instance: netbird
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kubernetes-operator
-        app.kubernetes.io/version: 0.1.2
-        helm.sh/chart: kubernetes-operator-0.1.7
+        app.kubernetes.io/version: 0.1.3
+        helm.sh/chart: kubernetes-operator-0.1.8
     spec:
       containers:
         - args:
@@ -7891,7 +7891,7 @@ spec:
           envFrom:
             - secretRef:
                 name: netbird-operator-api-key
-          image: docker.io/netbirdio/kubernetes-operator:0.1.2
+          image: docker.io/netbirdio/kubernetes-operator:0.1.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -11202,12 +11202,12 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-delete-policies
   namespace: netbird
 spec:
-  backOffLimit: 3
+  backoffLimit: 3
   template:
     metadata:
       labels:
@@ -11215,8 +11215,8 @@ spec:
         app.kubernetes.io/instance: netbird
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kubernetes-operator
-        app.kubernetes.io/version: 0.1.2
-        helm.sh/chart: kubernetes-operator-0.1.7
+        app.kubernetes.io/version: 0.1.3
+        helm.sh/chart: kubernetes-operator-0.1.8
       name: netbird-kubernetes-operator
     spec:
       containers:
@@ -11242,12 +11242,12 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-delete-routers
   namespace: netbird
 spec:
-  backOffLimit: 3
+  backoffLimit: 3
   template:
     metadata:
       labels:
@@ -11255,8 +11255,8 @@ spec:
         app.kubernetes.io/instance: netbird
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kubernetes-operator
-        app.kubernetes.io/version: 0.1.2
-        helm.sh/chart: kubernetes-operator-0.1.7
+        app.kubernetes.io/version: 0.1.3
+        helm.sh/chart: kubernetes-operator-0.1.8
       name: netbird-kubernetes-operator
     spec:
       containers:
@@ -11283,8 +11283,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-kubernetes-service-expose
   namespace: netbird
 spec:
@@ -11296,8 +11296,8 @@ spec:
         app.kubernetes.io/instance: netbird
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kubernetes-operator
-        app.kubernetes.io/version: 0.1.2
-        helm.sh/chart: kubernetes-operator-0.1.7
+        app.kubernetes.io/version: 0.1.3
+        helm.sh/chart: kubernetes-operator-0.1.8
       name: netbird-kubernetes-operator
     spec:
       containers:
@@ -11707,8 +11707,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-serving-cert
   namespace: netbird
 spec:
@@ -11754,8 +11754,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-selfsigned-issuer
   namespace: netbird
 spec:
@@ -11803,8 +11803,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: router
   namespace: netbird
 spec:
@@ -12695,8 +12695,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-mpod-webhook
 webhooks:
   - admissionReviewVersions:
@@ -12779,8 +12779,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-vnbgroup-webhook
 webhooks:
   - admissionReviewVersions:
@@ -12812,8 +12812,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-vnbresource-webhook
 webhooks:
   - admissionReviewVersions:
@@ -12845,8 +12845,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-vnbroutingpeer-webhook
 webhooks:
   - admissionReviewVersions:
@@ -12878,8 +12878,8 @@ metadata:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.2
-    helm.sh/chart: kubernetes-operator-0.1.7
+    app.kubernetes.io/version: 0.1.3
+    helm.sh/chart: kubernetes-operator-0.1.8
   name: netbird-kubernetes-operator-vnbsetupkey-webhook
 webhooks:
   - admissionReviewVersions:
