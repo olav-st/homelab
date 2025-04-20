@@ -17,7 +17,7 @@ metadata:
   name: external-cluster
 subsets:
 - addresses:
-  - ip: 192.168.0.81
+  - ip: 192.168.0.80
   ports:
   - name: ingress-port
     port: 443
