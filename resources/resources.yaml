@@ -4415,8 +4415,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.6
-    helm.sh/chart: nextcloud-6.6.9
+    app.kubernetes.io/version: 30.0.10
+    helm.sh/chart: nextcloud-6.6.10
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -4476,8 +4476,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.6
-    helm.sh/chart: nextcloud-6.6.9
+    app.kubernetes.io/version: 30.0.10
+    helm.sh/chart: nextcloud-6.6.10
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -5494,8 +5494,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.6
-    helm.sh/chart: nextcloud-6.6.9
+    app.kubernetes.io/version: 30.0.10
+    helm.sh/chart: nextcloud-6.6.10
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -7986,8 +7986,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.6
-    helm.sh/chart: nextcloud-6.6.9
+    app.kubernetes.io/version: 30.0.10
+    helm.sh/chart: nextcloud-6.6.10
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -8042,7 +8042,7 @@ spec:
               value: nextcloud.homelab.olav.ninja
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
-          image: nextcloud:30.0.6-apache
+          image: nextcloud:30.0.10-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -8168,7 +8168,7 @@ spec:
               value: nextcloud.homelab.olav.ninja
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
-          image: nextcloud:30.0.6-apache
+          image: nextcloud:30.0.10-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -12152,8 +12152,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.6
-    helm.sh/chart: nextcloud-6.6.9
+    app.kubernetes.io/version: 30.0.10
+    helm.sh/chart: nextcloud-6.6.10
   name: nextcloud
   namespace: nextcloud
 spec:
