@@ -7515,7 +7515,7 @@ spec:
         - args:
             - TCP-LISTEN:443,fork
             - TCP:traefik.traefik.svc.cluster.local:443
-          image: alpine/socat:1.8.0.1
+          image: alpine/socat:1.8.0.3
           name: traefik-proxy
           ports:
             - containerPort: 443
@@ -7524,7 +7524,7 @@ spec:
         - args:
             - TCP-LISTEN:22,fork
             - TCP:traefik.traefik.svc.cluster.local:22
-          image: alpine/socat:1.8.0.1
+          image: alpine/socat:1.8.0.3
           name: gitea-ssh-proxy
           ports:
             - containerPort: 22
