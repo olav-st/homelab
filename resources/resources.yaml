@@ -378,6 +378,18 @@ metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-relay
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
+  name: netbird-backend-relay
+  namespace: netbird
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
     app.kubernetes.io/version: 0.35.2
     helm.sh/chart: netbird-0.14.4
@@ -457,7 +469,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets
   namespace: sealed-secrets
 ---
@@ -804,7 +816,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-key-admin
   namespace: sealed-secrets
 rules:
@@ -832,7 +844,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-service-proxier
   namespace: sealed-secrets
 rules:
@@ -2716,7 +2728,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-unsealer
 rules:
   - apiGroups:
@@ -3120,7 +3132,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-key-admin
   namespace: sealed-secrets
 roleRef:
@@ -3140,7 +3152,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-service-proxier
   namespace: sealed-secrets
 roleRef:
@@ -3561,7 +3573,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets-sealed-secrets
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -5383,6 +5395,28 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-relay
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
+  name: netbird-backend-relay
+  namespace: netbird
+spec:
+  ports:
+    - name: http
+      port: 33080
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/name: netbird-relay
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: h2c
   labels:
@@ -5588,7 +5622,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets
   namespace: sealed-secrets
 spec:
@@ -7607,7 +7641,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 53d282864c53995a94280bea80bf9f719d5856aa3863de589619e34472e4d822
+        checksum/config: a7d495890f56d73e445f354af57bb002ed4c977911c8422a1650a4a531d69800
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
@@ -7704,6 +7738,9 @@ spec:
               value: https://keycloak.homelab.olav.ninja/admin/realms/homelab
             - name: NETBIRD_IDP_KEYCLOAK_TOKEN_ENDPOINT
               value: https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token
+          envFrom:
+            - secretRef:
+                name: netbird-relay-secret
           image: golang:latest
           imagePullPolicy: IfNotPresent
           name: configure
@@ -7724,6 +7761,58 @@ spec:
         - name: management
           persistentVolumeClaim:
             claimName: netbird-backend-management
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-relay
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
+  name: netbird-backend-relay
+  namespace: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbird-backend
+      app.kubernetes.io/name: netbird-relay
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: netbird-backend
+        app.kubernetes.io/name: netbird-relay
+    spec:
+      containers:
+        - args:
+            - --listen-address
+            - :33080
+            - --log-level
+            - info
+            - --log-file
+            - console
+          envFrom:
+            - secretRef:
+                name: netbird-relay-secret
+          image: netbirdio/relay:0.35.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 33080
+          name: netbird-relay
+          ports:
+            - containerPort: 33080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 33080
+          resources: {}
+          securityContext: null
+      securityContext: null
+      serviceAccountName: netbird-backend-relay
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -8349,7 +8438,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets
   namespace: sealed-secrets
 spec:
@@ -8366,7 +8455,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealed-secrets
         app.kubernetes.io/version: 0.29.0
-        helm.sh/chart: sealed-secrets-2.5.10
+        helm.sh/chart: sealed-secrets-2.5.11
     spec:
       affinity:
         nodeAffinity: null
@@ -10069,7 +10158,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/version: 0.29.0
-    helm.sh/chart: sealed-secrets-2.5.10
+    helm.sh/chart: sealed-secrets-2.5.11
   name: sealed-secrets
   namespace: sealed-secrets
 spec:
