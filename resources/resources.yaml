@@ -5406,7 +5406,7 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 33080
+      port: 80
       protocol: TCP
       targetPort: http
   selector:
@@ -5503,22 +5503,6 @@ spec:
     app.kubernetes.io/instance: netbird
     app.kubernetes.io/name: kubernetes-operator
   type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: netbird-relay
-  name: netbird-relay
-  namespace: netbird
-spec:
-  ports:
-    - name: relay
-      port: 80
-      protocol: TCP
-      targetPort: 80
-  selector:
-    app.kubernetes.io/name: netbird-relay
 ---
 apiVersion: v1
 kind: Service
@@ -7788,7 +7772,7 @@ spec:
       containers:
         - args:
             - --listen-address
-            - :33080
+            - :80
             - --log-level
             - info
             - --log-file
@@ -7796,19 +7780,19 @@ spec:
           envFrom:
             - secretRef:
                 name: netbird-relay-secret
-          image: netbirdio/relay:0.35.2
+          image: netbirdio/relay:0.43.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
-              port: 33080
+              port: 80
           name: netbird-relay
           ports:
-            - containerPort: 33080
+            - containerPort: 80
               name: http
               protocol: TCP
           readinessProbe:
             tcpSocket:
-              port: 33080
+              port: 80
           resources: {}
           securityContext: null
       securityContext: null
@@ -8027,45 +8011,6 @@ spec:
           secret:
             defaultMode: 420
             secretName: netbird-kubernetes-operator-tls
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/name: netbird-relay
-  name: netbird-relay
-  namespace: netbird
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: netbird-relay
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: netbird-relay
-        app.kubernetes.io/name: netbird-relay
-    spec:
-      containers:
-        - env:
-            - name: NB_LOG_LEVEL
-              value: info
-            - name: NB_LISTEN_ADDRESS
-              value: :80
-            - name: NB_AUTH_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: authSecret
-                  name: netbird-relay-credentials
-            - name: NB_EXPOSED_ADDRESS
-              value: rels://netbird.homelab.olav.ninja:443
-          image: netbirdio/relay:0.43.2
-          imagePullPolicy: IfNotPresent
-          name: netbird-relay
-          ports:
-            - containerPort: 80
-              name: relay
-              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11667,15 +11612,19 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  name: netbird-relay-credentials
+  creationTimestamp: null
+  name: netbird-relay-secret
   namespace: netbird
 spec:
   encryptedData:
-    authSecret: AgB9VjwTn3KK5wsczoJf0WoHRX7BdJ7ENaxbuZtmbzAI/NFQrQIPprRvI9tvVDDSlL8i0vlzN6a2bxFF6jApj+lth1N8JHePWs3g+6lqyA8ihYXLoPGb7bQCpMlccPj3tYKSkWhfJEW2lJMMsN+toZxnoNM+UG1oLO1524ejNAz+NqoADtHv0gVgwFQfoBWEOom26ppqzV8/PZhBoL5HJefw/2UC1qQxQ06uDrvRatnC85XZ9w+5lnjGOsvEAq86Ia1YtERxeXRUcMx7DMARCISQ6e3uzGw4uzj4ypgpq67i6wqppPi5b8H4I+cacxrKp5oZsH4la2ZvnRMOzqD4rGG1TF69fzES/o6J9uzORcA5wugi7X7RXGEQQXEIxqR6cUsbxwjy5r03h54TN5988swLfjo17UG4bP5i96R3c3X4a2IvGnVC5dg7CKS5S6xALUnl84Z9V3v8oltxEVa9z7FZ32Z3piHr+vc0Ub9uVmylBnjEqZa6u4BqIUlG4NN87sNuBRhSpZnjY82j0RqeIU3nj0ej+8KpoMFYOSW2VGDOya5lNoRk8tck1UXcx6Kg47UpkFkR4Kbtw4RJoJPyVb8ujyy/Bpt7u36mu9Y4mAVyHoJgAXXYZVUIV2smNFB0GtZ/sPmHhe4s1SyfRDtYXz6g5dGxyO7mQQTpi/SokBpQMm7U1PxNZtv3N6zdxCjBOFlmdIuLBGoZV8emCe/HhWw7RD1rBw==
+    NB_AUTH_SECRET: AgBwuk9UL1sF+dHVXNjTGY8/FZbHszo+c/lBR/tAcOfwJRDZMxUpDUTZCMAh8dof6Sry5RRSenZiWOM5pUYz9Vzzple+e7UjB//TJCz7LtVr6DAcZE8UHC79pxYiQoRuVPLHnzV5uy7OOrGJfAlKfYxgmYWf9YYDV4P2H86Oiflw/fm7auedQL0N/FMfe/JCYKVnSIss1m33rVYeQS66RMj36uH4mo+ctXwbeKfQFEdMmY2MpEuaLNNp4UKqOMxErHSOIR6iCDjKXNgppSwQaZ0I0Ydqr5NWYrtIpMdf4gJA/+FTCCs/nRJkPZFFUD4897XKXvueQrw3lag6dEJiZPMEl5IUaysq7vjdkBKis6INlkfPUC9K2BAAMQePqZEogYtEQUU3Ahm8JjUD57RQikYKxWv7rvcxlMlzGNGkWBpKT8idjy8gYY0/B8+RuU1XaxZ4xkNN7FrfpfNQ0qxuT1PzPYOmq8q12NmgKCNkPr0G/Tqs4Y2L6P5GFUeFqf0qrDE0XTRbPz6ly4Bic7gMq0r5Oalj8UTmk05rcDbt/1CnWqYkN3d80n23R8NMDbWb634H8gFw9E7r+1VA1qrHZz5/5VuS84yIHe5tMZ9vtok3KXXz9eE83+ucceRSu+ex5GsrnxG2w3sZB7H1ogbpDAKm8Q/BeIKWxessnfL8ZdYA96zwn22ZNgpLu1/L1bxY4NdXxzbHVSXrnQvnu7CFMU5rZ+XrBA==
+    NB_EXPOSED_ADDRESS: AgAsz3POoeLHik09MEKr+e52iDi2drsmsJntQHwi0NVjkGAgrz0VnY51VDrGOS9WaXZXAD1iPU1lmIAIzH+MerB6Vcpo5F8zZjn20yRQpT5XaPBztGtMWhHE8vey/xXCssafA8OgwN/201mJBVUBOGJKdIO8NTGmuCaO4LCxbmHP0fiYE24QzkPEhTdIkHjpINQuzgAfuozrPiSWmo7br+z/Y6w5s7n/onUGHUC4scjxkMq35v+5SbLGzfOJ9nyhw6ienhUwF88KezDvxz1hfra0Il8m3PzcqluQK+Q7E2emSZBWaKBTJGI8XfjiJN/tRtp0C72V+5nPSw+AnfdJ2BUGF1lsdgHWoSj4pJhBhKnxtbmWRmWs3WYMD4hzWsAf1Su50cNoLtlyYNUqENcbkrrprLacQbPYwodA9Is92sTCbmWXaAex6GGlRU9Kn9t++IXgwl3GjTUIY59EgQyYSq2yxYhBM+ZfIEY4VDpcQLxScqz/yYiYoYVlJp7cyH1MvZ1sfNnZGkDxlyZpxH0vPuw5n4HloQSwPmbZlCMFJbNXzZTcVG4PM4VCIoUaSQIn/1em1uu1McN9bz19d0Xfx89/C0Qs/RbhDga3vlafTxXN+/efivErI9/1cXLjY3UB2xj97PVejHeRoP+L4oyh5I0zCqcS+LBUrAYhZrwaoRYwHlyBUHr9tOF1JU3+m64h6uxVVuL8BSSUeEeKrbYYt5HsipYd/5PWEMzuLxB7gHPZvWG+aaEa
   template:
     metadata:
-      name: netbird-relay-credentials
+      creationTimestamp: null
+      name: netbird-relay-secret
       namespace: netbird
+    type: Opaque
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
@@ -12151,6 +12100,37 @@ metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-relay
+    app.kubernetes.io/version: 0.35.2
+    helm.sh/chart: netbird-0.14.4
+  name: netbird-backend-relay
+  namespace: netbird
+spec:
+  rules:
+    - host: netbird.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: netbird-backend-relay
+                port:
+                  number: 80
+            path: /relay
+            pathType: Prefix
+  tls:
+    - hosts:
+        - netbird.homelab.olav.ninja
+      secretName: netbird-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
     app.kubernetes.io/version: 0.35.2
     helm.sh/chart: netbird-0.14.4
@@ -12198,31 +12178,6 @@ spec:
                 port:
                   number: 80
             path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  name: netbird-relay
-  namespace: netbird
-spec:
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-relay
-                port:
-                  number: 80
-            path: /relay
             pathType: Prefix
   tls:
     - hosts:
