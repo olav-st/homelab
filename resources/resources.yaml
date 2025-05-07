@@ -4155,9 +4155,9 @@ data:
             }
         },
         "Relay": {
-            "Addresses": ["${NETBIRD_RELAY_URI}"],
+            "Addresses": ["${NB_EXPOSED_ADDRESS}"],
             "CredentialsTTL": "24h",
-            "Secret": "${NETBIRD_RELAY_SECRET}"
+            "Secret": "${NB_AUTH_SECRET}"
         }
     }
 kind: ConfigMap
@@ -7660,13 +7660,6 @@ spec:
             - /bin/sh
             - -c
           env:
-            - name: NETBIRD_RELAY_URI
-              value: rels://netbird.homelab.olav.ninja:443
-            - name: NETBIRD_RELAY_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: authSecret
-                  name: netbird-relay-credentials
             - name: NETBIRD_SIGNAL_URI
               value: netbird.homelab.olav.ninja:443
             - name: NETBIRD_SIGNAL_PROTOCOL
@@ -11612,7 +11605,6 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  creationTimestamp: null
   name: netbird-relay-secret
   namespace: netbird
 spec:
@@ -11621,7 +11613,6 @@ spec:
     NB_EXPOSED_ADDRESS: AgAsz3POoeLHik09MEKr+e52iDi2drsmsJntQHwi0NVjkGAgrz0VnY51VDrGOS9WaXZXAD1iPU1lmIAIzH+MerB6Vcpo5F8zZjn20yRQpT5XaPBztGtMWhHE8vey/xXCssafA8OgwN/201mJBVUBOGJKdIO8NTGmuCaO4LCxbmHP0fiYE24QzkPEhTdIkHjpINQuzgAfuozrPiSWmo7br+z/Y6w5s7n/onUGHUC4scjxkMq35v+5SbLGzfOJ9nyhw6ienhUwF88KezDvxz1hfra0Il8m3PzcqluQK+Q7E2emSZBWaKBTJGI8XfjiJN/tRtp0C72V+5nPSw+AnfdJ2BUGF1lsdgHWoSj4pJhBhKnxtbmWRmWs3WYMD4hzWsAf1Su50cNoLtlyYNUqENcbkrrprLacQbPYwodA9Is92sTCbmWXaAex6GGlRU9Kn9t++IXgwl3GjTUIY59EgQyYSq2yxYhBM+ZfIEY4VDpcQLxScqz/yYiYoYVlJp7cyH1MvZ1sfNnZGkDxlyZpxH0vPuw5n4HloQSwPmbZlCMFJbNXzZTcVG4PM4VCIoUaSQIn/1em1uu1McN9bz19d0Xfx89/C0Qs/RbhDga3vlafTxXN+/efivErI9/1cXLjY3UB2xj97PVejHeRoP+L4oyh5I0zCqcS+LBUrAYhZrwaoRYwHlyBUHr9tOF1JU3+m64h6uxVVuL8BSSUeEeKrbYYt5HsipYd/5PWEMzuLxB7gHPZvWG+aaEa
   template:
     metadata:
-      creationTimestamp: null
       name: netbird-relay-secret
       namespace: netbird
     type: Opaque
