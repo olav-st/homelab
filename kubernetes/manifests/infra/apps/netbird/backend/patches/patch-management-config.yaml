@@ -68,8 +68,8 @@ data:
             }
         },
         "Relay": {
-            "Addresses": ["${NETBIRD_RELAY_URI}"],
+            "Addresses": ["${NB_EXPOSED_ADDRESS}"],
             "CredentialsTTL": "24h",
-            "Secret": "${NETBIRD_RELAY_SECRET}"
+            "Secret": "${NB_AUTH_SECRET}"
         }
     }

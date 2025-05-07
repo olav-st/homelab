@@ -15,7 +15,6 @@ helmCharts:
   valuesFile: values.yaml
 
 patches:
-  - path: patches/add-relay-config.yaml
   - path: patches/annotate-services.yaml
   - path: patches/fix-pvc-backend-management.yaml
   - path: patches/fix-pvc-backend-signal.yaml
