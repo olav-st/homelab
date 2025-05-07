@@ -45,6 +45,32 @@ management:
         hosts:
           - netbird.homelab.olav.ninja
 
+relay:
+  env:
+    secretName: netbird-relay-secret
+  replicaCount: 1
+  image:
+    repository: netbirdio/relay
+    pullPolicy: IfNotPresent
+    tag: 0.43.2 # renovate: docker=netbirdio/relay
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+    hosts:
+      - host: netbird.homelab.olav.ninja
+        paths:
+          - path: /relay
+            pathType: Prefix
+    tls:
+      - hosts:
+          - netbird.homelab.olav.ninja
+        secretName: netbird-tls-certificate
+
 signal:
   image:
     tag: 0.43.2 # renovate: docker=netbirdio/signal
