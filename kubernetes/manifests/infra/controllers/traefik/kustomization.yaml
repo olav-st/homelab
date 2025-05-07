@@ -5,7 +5,7 @@ namespace: traefik
 resources:
   - namespace.yaml
   - middleware.yaml
-  - netbird-setup-key.yaml
+#  - netbird-setup-key.yaml
   - proxy-external-cluster.yaml
   - secrets.yaml
 
