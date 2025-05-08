@@ -22,7 +22,7 @@ resource "null_resource" "haos_image" {
   }
 }
 
-resource "proxmox_virtual_environment_file" "haos_generic_image_nuc" {
+resource "proxmox_virtual_environment_file" "haos_generic_image" {
   depends_on = [ null_resource.haos_image ]
   content_type = "iso"
   datastore_id = "local"

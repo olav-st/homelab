@@ -32,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "home_assistant" {
 
   disk {
     datastore_id = "local-zfs"
-    file_id      = proxmox_virtual_environment_file.haos_generic_image_nuc.id
+    file_id      = proxmox_virtual_environment_file.haos_generic_image.id
     interface    = "virtio0"
     size         = 64
   }
@@ -45,7 +45,11 @@ resource "proxmox_virtual_environment_vm" "home_assistant" {
     host = "10c4:ea60" # Nabu Casa SkyConnect
   }
 
+  usb {
+    host = "0a12:0001" # CSR8510 Bluetooth Adapter
+  }
+
   lifecycle {
-      prevent_destroy = true
+    prevent_destroy = true
   }
 }
