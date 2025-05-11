@@ -20,7 +20,7 @@ permissions:
 jobs:
   render-manifests:
     name: Render
-    if: github.event.head_commit.author.name != 'GitHub Actions
+    if: github.event.head_commit.author.name != 'GitHub Actions'
     runs-on: ubuntu-latest
     concurrency:
       group: render-manifests
