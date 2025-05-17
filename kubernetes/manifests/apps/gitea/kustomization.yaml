@@ -15,5 +15,5 @@ helmCharts:
     releaseName: gitea
     namespace: gitea
     repo: https://dl.gitea.io/charts/
-    version: 11.0.1
+    version: 12.0.0
     valuesFile: values.yaml
