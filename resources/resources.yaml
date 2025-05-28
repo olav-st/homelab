@@ -306,8 +306,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 ---
@@ -3788,8 +3788,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak-env-vars
   namespace: keycloak
 ---
@@ -5126,8 +5126,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 spec:
@@ -5152,8 +5152,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak-headless
   namespace: keycloak
 spec:
@@ -9182,8 +9182,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 spec:
@@ -9199,15 +9199,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap-env-vars: 86fe875dbd32d65e2dc046b395aeaf59a5090d1e9fcb1db45050a3d4f4e55e33
+        checksum/configmap-env-vars: d80c992feef3a8b41fed394f5fb5434812268953473a2893746fd449c0ae97c7
       labels:
-        app.kubernetes.io/app-version: 26.2.4
+        app.kubernetes.io/app-version: 26.2.5
         app.kubernetes.io/component: keycloak
         app.kubernetes.io/instance: keycloak
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: keycloak
-        app.kubernetes.io/version: 26.2.4
-        helm.sh/chart: keycloak-24.7.1
+        app.kubernetes.io/version: 26.2.5
+        helm.sh/chart: keycloak-24.7.3
     spec:
       affinity:
         nodeAffinity: null
@@ -9242,7 +9242,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: keycloak-env-vars
-          image: docker.io/bitnami/keycloak:26.2.4-debian-12-r0
+          image: docker.io/bitnami/keycloak:26.2.5-debian-12-r1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -9331,7 +9331,7 @@ spec:
               info "Copy operation completed"
           command:
             - /bin/bash
-          image: docker.io/bitnami/keycloak:26.2.4-debian-12-r0
+          image: docker.io/bitnami/keycloak:26.2.5-debian-12-r1
           imagePullPolicy: IfNotPresent
           name: prepare-write-dirs
           resources:
@@ -10046,8 +10046,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 spec:
@@ -11759,8 +11759,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 spec:
@@ -12187,8 +12187,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 26.2.4
-    helm.sh/chart: keycloak-24.7.1
+    app.kubernetes.io/version: 26.2.5
+    helm.sh/chart: keycloak-24.7.3
   name: keycloak
   namespace: keycloak
 spec:
