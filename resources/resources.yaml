@@ -7479,7 +7479,7 @@ spec:
               value: https://netbird.homelab.olav.ninja
             - name: NB_CONFIG
               value: /config/config.json
-          image: netbirdio/netbird:0.45.1
+          image: netbirdio/netbird:0.45.2
           name: netbird-agent
           securityContext:
             allowPrivilegeEscalation: false
@@ -7531,7 +7531,7 @@ spec:
             - console
             - --dns-domain
             - netbird
-          image: netbirdio/management:0.45.1
+          image: netbirdio/management:0.45.2
           imagePullPolicy: IfNotPresent
           name: netbird-management
           ports:
@@ -7666,7 +7666,7 @@ spec:
           envFrom:
             - secretRef:
                 name: netbird-relay-secret
-          image: netbirdio/relay:0.45.1
+          image: netbirdio/relay:0.45.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
@@ -7717,7 +7717,7 @@ spec:
             - info
             - --log-file
             - console
-          image: netbirdio/signal:0.45.1
+          image: netbirdio/signal:0.45.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
