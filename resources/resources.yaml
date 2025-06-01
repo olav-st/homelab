@@ -9352,13 +9352,13 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 750m
+              cpu: "1.5"
               ephemeral-storage: 2Gi
-              memory: 1536Mi
+              memory: 3072Mi
             requests:
-              cpu: 500m
+              cpu: "1.0"
               ephemeral-storage: 50Mi
-              memory: 1024Mi
+              memory: 2048Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -9418,13 +9418,13 @@ spec:
           name: prepare-write-dirs
           resources:
             limits:
-              cpu: 750m
+              cpu: "1.5"
               ephemeral-storage: 2Gi
-              memory: 1536Mi
+              memory: 3072Mi
             requests:
-              cpu: 500m
+              cpu: "1.0"
               ephemeral-storage: 50Mi
-              memory: 1024Mi
+              memory: 2048Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
