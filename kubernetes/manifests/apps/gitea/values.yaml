@@ -66,10 +66,17 @@ postgresql:
       existingClaim: gitea-postgresql
     podAffinityPreset: soft # prefer running on the same node as the main pod
 
+valkey:
+  enabled: true
+  master:
+    count: 1
+
 # Disable HA components
 postgresql-ha:
   enabled: false
 redis-cluster:
+  enabled: false
+valkey-cluster:
   enabled: false
 
 # Use "Recreate" strategy for the deployment
