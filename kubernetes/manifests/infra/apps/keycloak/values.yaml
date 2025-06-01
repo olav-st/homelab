@@ -6,6 +6,7 @@ auth:
 usePasswordFiles: true
 
 production: true
+resourcesPreset: large
 
 proxy: edge
 
