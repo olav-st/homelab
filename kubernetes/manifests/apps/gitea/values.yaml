@@ -70,6 +70,9 @@ valkey:
   enabled: true
   master:
     count: 1
+  primary:
+    persistence:
+      enabled: false
 
 # Disable HA components
 postgresql-ha:
