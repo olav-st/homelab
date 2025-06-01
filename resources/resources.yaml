@@ -8861,23 +8861,10 @@ spec:
           name: config
         - emptyDir: {}
           name: empty-dir
+        - emptyDir: {}
+          name: valkey-data
   updateStrategy:
     type: RollingUpdate
-  volumeClaimTemplates:
-    - apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        labels:
-          app.kubernetes.io/component: primary
-          app.kubernetes.io/instance: gitea
-          app.kubernetes.io/name: valkey
-        name: valkey-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 8Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
