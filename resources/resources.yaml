@@ -174,8 +174,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.3-r2
-    helm.sh/chart: coturn-1.0.1
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
   name: coturn
   namespace: coturn
 ---
@@ -3419,8 +3419,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.3-r2
-    helm.sh/chart: coturn-1.0.1
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
   name: coturn
   namespace: coturn
 ---
@@ -4851,9 +4851,9 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.3-r2
-    helm.sh/chart: coturn-1.0.1
-  name: coturn
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
+  name: coturn-tcp
   namespace: coturn
 spec:
   ports:
@@ -4861,14 +4861,34 @@ spec:
       port: 3478
       protocol: TCP
       targetPort: tcp
-    - name: udp
-      port: 3478
-      protocol: UDP
-      targetPort: udp
     - name: tcp-tls
       port: 5349
       protocol: TCP
       targetPort: tcp-tls
+  selector:
+    app.kubernetes.io/instance: coturn
+    app.kubernetes.io/name: coturn
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    io.cilium/lb-ipam-ips: 192.168.0.91
+  labels:
+    app.kubernetes.io/instance: coturn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: coturn
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
+  name: coturn-udp
+  namespace: coturn
+spec:
+  ports:
+    - name: udp
+      port: 3478
+      protocol: UDP
+      targetPort: udp
     - name: udp-tls
       port: 5349
       protocol: UDP
@@ -6066,8 +6086,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.3-r2
-    helm.sh/chart: coturn-1.0.1
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
   name: coturn
   namespace: coturn
 spec:
@@ -6100,7 +6120,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: netbird-turn-credentials
-          image: coturn/coturn:4.6.3-r2
+          image: coturn/coturn:4.6.3-r3
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
@@ -11610,8 +11630,8 @@ metadata:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: coturn
-    app.kubernetes.io/version: 4.6.3-r2
-    helm.sh/chart: coturn-1.0.1
+    app.kubernetes.io/version: 4.6.3-r3
+    helm.sh/chart: coturn-1.0.3
   name: coturn
   namespace: coturn
 spec:
