@@ -46,5 +46,5 @@ resource "helm_release" "proxmox-ccm" {
   name      = "proxmox-cloud-controller-manager"
   namespace = "kube-system"
 
-  values = [file("kubernetes/manifests/infra/controllers/proxmox-ccm/values.yaml")]
+  values = [file("kubernetes/manifests/infra/proxmox-ccm/values.yaml")]
 }

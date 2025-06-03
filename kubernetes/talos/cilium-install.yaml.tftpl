@@ -19,7 +19,7 @@ metadata:
   namespace: kube-system
 data:
   values.yaml: |
-    ${indent(4, file("kubernetes/manifests/infra/cni/cilium/values.yaml"))}
+    ${indent(4, file("kubernetes/manifests/infra/cilium/values.yaml"))}
 ---
 apiVersion: v1
 kind: ServiceAccount
