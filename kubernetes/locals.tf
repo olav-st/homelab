@@ -1,6 +1,6 @@
 locals {
   talos = {
-    current_version = "v1.9.5"
+    current_version = "v1.10.3"
     upgrade_version = "v1.10.3" # renovate: github-releases=siderolabs/talos
     base_url        = "https://factory.talos.dev/image/ef909f816be835a6236a401377846307a921533d6b218c2d8e95c6d9013ede06" # nocloud image with siderolabs/qemu-guest-agent and siderolabs/amdgpu extensions
   }
@@ -13,7 +13,7 @@ locals {
       "talos-cp-${substr(sha256("${i}${local.talos.current_version}"), 0, 7)}" => {
         type             = "controlplane"
         cpus             = 4
-        memory           = 14336
+        memory           = 12288
         image            = proxmox_virtual_environment_download_file.talos_image[local.talos.current_version].id
         bootstrap        = (i == 0)
         pci_passthrough  = (i == 0) ? ["0000:03:00"] : []
@@ -24,7 +24,7 @@ locals {
       "talos-cp-${substr(sha256("${i}${local.talos.upgrade_version}"), 0, 7)}" => {
         type            = "controlplane"
         cpus            = 4
-        memory          = 14336
+        memory          = 12288
         image           = proxmox_virtual_environment_download_file.talos_image[local.talos.upgrade_version].id
         bootstrap       = false
         pci_passthrough = []
