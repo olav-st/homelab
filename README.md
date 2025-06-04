@@ -20,15 +20,30 @@ For more details, see [Hardware](#hardware) and [Software](#software) below.
 
 ## Software
 
-<img alt="Hardware" align="right" width="410" src=".github/images/software.webp">
+<table>
+<tr>
+<td>
 
-| Logo                                                                                             | Name                                                                  | Purpose                 |
+|                                                                                                  |                                                                       |                         |
 |:------------------------------------------------------------------------------------------------:|-----------------------------------------------------------------------|-------------------------|
 | <img height="32" src="https://raw.githubusercontent.com/toboshii/hajimari/main/assets/logo.png"> | [Hajimari](https://github.com/toboshii/hajimari)                      | Dashboard               |
 | <img width="32" src="https://avatars.githubusercontent.com/u/19211038">                          | [Nextcloud](https://nextcloud.com/)                                   | File Syncing            |
 | <img width="32" src="https://avatars.githubusercontent.com/u/109746326">                         | [Immich](https://immich.app/)                                         | Photo/Video Gallery     |
 | <img width="32" src="https://avatars.githubusercontent.com/u/12724356">                          | [Gitea](https://about.gitea.com/products/gitea/)                      | Self-hosted Git server  |
-| <img width="32" src="https://avatars.githubusercontent.com/u/13844975">                          | [Home Assistant](https://www.home-assistant.io/)                      | Home Automation         |
+
+</td>
+<td>
+
+|                                                                            |                                                                       |                         |
+|:---------------------------------------------------------------------------|-----------------------------------------------------------------------|-------------------------|
+| <img width="32" src="https://avatars.githubusercontent.com/u/151674099">   | [Ollama](https://ollama.com/)                                         | Self-hosted LLMs        |
+| <img width="32" src="https://avatars.githubusercontent.com/u/158137808">   | [Open WebUI](https://openwebui.com/)                                  | LLM Web Frontend        |
+| <img width="32" src="https://zipline.diced.sh/favicons/favicon-32x32.png"> | [Zipline](https://zipline.diced.sh/)                                  | File Transfer           |
+| <img width="32" src="https://avatars.githubusercontent.com/u/13844975">    | [Home Assistant](https://www.home-assistant.io/)                      | Home Automation         |
+
+</td>
+</tr>
+</table>
 
 Everything in my homelab runs in virtual machines on top of Proxmox VE. I have a dedicated virtual machine for Home Assistant (running Home Assistant OS). The remaining applications run on top of a Kubernetes cluster, based on Talos Linux. 
 
@@ -68,6 +83,7 @@ I run Kubernetes on top of Proxmox VE, deployed and managed with OpenTofu. Talos
 | <img width="32" src="https://icon.icepanel.io/Technology/svg/Traefik-Proxy.svg">                                                             | [Traefik](https://traefik.io/traefik/)                                    | Modern HTTP reverse proxy and load balancer for microservices                      |
 | <img width="32" src="https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/refs/heads/main/charts/proxmox-csi-plugin/icon.png"> | [Proxmox CSI](https://github.com/sergelogvinov/proxmox-csi-plugin)        | Container Storage Interface (CSI) driver for Proxmox                               |
 | <img width="32" src="https://avatars.githubusercontent.com/u/39950598">                                                                      | [cert-manager](https://cert-manager.io/)                                  | Automates the management and issuance of TLS certificates in Kubernetes            |
+| <img width="32" src="https://avatars.githubusercontent.com/u/100373852">                                                                     | [CloudNativePG](https://cloudnative-pg.io/)                               | Kubernetes operator for managing PostgreSQL databases                              |
 | <img width="32" src="https://avatars.githubusercontent.com/u/52158677">                                                                      | [Flux](https://fluxcd.io/)                                                | GitOps for Kubernetes resources                                                    |
 | <img width="32" src="https://avatars.githubusercontent.com/u/38656520">                                                                      | [Renovate](https://docs.renovatebot.com/)                                 | Automates dependency updates through pull requests                                 |
 | <img width="32" src="https://avatars.githubusercontent.com/u/34656521">                                                                      | [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)          | Allows you to store encrypted secrets safely in Git                                |
@@ -113,6 +129,15 @@ I run Kubernetes on top of Proxmox VE, deployed and managed with OpenTofu. Talos
     <img src=".github/images/screenshot-gitea.webp"
          alt="Gitea">
     <figcaption>Self-hosted Git server powered by <a href="https://about.gitea.com/products/gitea/">Gitea</a></figcaption>
+</figure>
+<br/>
+<br/>
+<br/>
+
+<figure>
+    <img src=".github/images/screenshot-openwebui.webp"
+         alt="Immich">
+    <figcaption>Local AI with <a href="https://ollama.com/">Ollama</a> and <a href="https://openwebui.com/">Open WebUI</a></figcaption>
 </figure>
 <br/>
 <br/>
