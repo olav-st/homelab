@@ -7,6 +7,6 @@ helmCharts:
   releaseName: proxmox-cloud-controller-manager
   namespace: kube-system
   repo: oci://ghcr.io/sergelogvinov/charts
-  version: 0.2.13
+  version: 0.2.14
   includeCRDs: true
   valuesFile: values.yaml
