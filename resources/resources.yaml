@@ -386,8 +386,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-cloud-controller-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.8.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.13
+    app.kubernetes.io/version: v0.9.0
+    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
   name: proxmox-cloud-controller-manager
   namespace: kube-system
 ---
@@ -2909,8 +2909,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-cloud-controller-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.8.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.13
+    app.kubernetes.io/version: v0.9.0
+    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
   name: system:proxmox-cloud-controller-manager
 rules:
   - apiGroups:
@@ -8374,8 +8374,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-cloud-controller-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.8.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.13
+    app.kubernetes.io/version: v0.9.0
+    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
   name: proxmox-cloud-controller-manager
   namespace: kube-system
 spec:
@@ -8411,7 +8411,7 @@ spec:
             - --use-service-account-credentials
             - --secure-port=10258
             - --authorization-always-allow-paths=/healthz,/livez,/readyz,/metrics
-          image: ghcr.io/sergelogvinov/proxmox-cloud-controller-manager:v0.8.0
+          image: ghcr.io/sergelogvinov/proxmox-cloud-controller-manager:v0.9.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
