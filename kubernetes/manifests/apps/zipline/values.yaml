@@ -11,7 +11,7 @@ controllers:
           CORE_DATABASE_URL:
               valueFrom:
                 secretKeyRef:
-                  name: zipline-postgres-app
+                  name: zipline-postgresql-app
                   key: uri
           CORE_RETURN_HTTPS: true
           DATASOURCE_TYPE: local
