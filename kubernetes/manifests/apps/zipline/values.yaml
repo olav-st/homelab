@@ -8,12 +8,12 @@ controllers:
           repository: ghcr.io/diced/zipline
           tag: 4.1.2
         env:
-          CORE_DATABASE_URL:
+          CORE_RETURN_HTTPS: true
+          DATABASE_URL:
               valueFrom:
                 secretKeyRef:
                   name: zipline-postgresql-app
                   key: uri
-          CORE_RETURN_HTTPS: true
           DATASOURCE_TYPE: local
           DATASOURCE_LOCAL_DIRECTORY: /data
           UPLOADER_DEFAULT_FORMAT: random
