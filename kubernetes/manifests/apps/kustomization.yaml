@@ -7,3 +7,4 @@ resources:
   - ./nextcloud
   - ./ollama
   - ./openwebui
+  - ./zipline

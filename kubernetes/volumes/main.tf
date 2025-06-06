@@ -45,6 +45,14 @@ locals {
       name = "open-webui"
       size = 10
     },
+    {
+      name = "zipline"
+      size = 50
+    },
+    {
+      name = "zipline-postgresql"
+      size = 10
+    },
   ]
 }
 
