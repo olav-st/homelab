@@ -92,6 +92,11 @@ metadata:
     pod-security.kubernetes.io/warn: baseline
   name: traefik
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zipline
+---
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -6522,6 +6527,29 @@ spec:
   type: LoadBalancer
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: zipline
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: zipline
+    app.kubernetes.io/service: zipline
+    helm.sh/chart: app-template-3.1.0
+  name: zipline
+  namespace: zipline
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/component: zipline
+    app.kubernetes.io/instance: zipline
+    app.kubernetes.io/name: zipline
+  type: ClusterIP
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: gitea
@@ -6678,6 +6706,20 @@ spec:
       storage: 10Gi
   storageClassName: proxmox-csi
   volumeName: open-webui
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zipline
+  namespace: zipline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: proxmox-csi
+  volumeName: zipline
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9486,6 +9528,100 @@ spec:
           name: data
         - emptyDir: {}
           name: tmp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: zipline
+    app.kubernetes.io/instance: zipline
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: zipline
+    helm.sh/chart: app-template-3.1.0
+  name: zipline
+  namespace: zipline
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: zipline
+      app.kubernetes.io/instance: zipline
+      app.kubernetes.io/name: zipline
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: zipline
+        app.kubernetes.io/instance: zipline
+        app.kubernetes.io/name: zipline
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - env:
+            - name: CORE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: uri
+                  name: zipline-postgres-app
+            - name: CORE_RETURN_HTTPS
+              value: "true"
+            - name: DATASOURCE_LOCAL_DIRECTORY
+              value: /data
+            - name: DATASOURCE_TYPE
+              value: local
+            - name: UPLOADER_DEFAULT_FORMAT
+              value: random
+            - name: UPLOADER_MAX_FILE_SIZE
+              value: 10gb
+            - name: URLS_ROUTE
+              value: /z
+          envFrom:
+            - secretRef:
+                name: zipline-secret
+          image: ghcr.io/diced/zipline:4.1.2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          name: app
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 5m
+              memory: 256Mi
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      serviceAccountName: default
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: zipline
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -12573,6 +12709,38 @@ spec:
       name: netbird-setup-key
       namespace: traefik
 ---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: zipline-oidc-credentials
+  namespace: zipline
+spec:
+  encryptedData:
+    clientId: AgCK62tOqgA6mc4ZDSE8O8AmOH1QyY5Px/G2oowMIqr/fa2u6J1kNPjm13SbidckuDUqSup3bGjfsGmDDOSlQfLqkRsV8gKcMhcUHP8dxYB60+wEo20YGmTHsxjzF5fZ6wtiEwC+Aoc5PIzUs8++StT7Hgn7Vv2sUbEf0W8j452X2F/emQQTqQoflNKh2Dmep+WB6qJkZmMutrKsotK9eCbrSs9zcmJH5nToaqGaeR8KPMY9p32tsArCSOVk/Rd1T81sLYs/u2WZ5sh8/YfxsnCjrnLm53BITSkRlIJTU7Te7C23LtzGd+RR3wCfsfnTQOhq6smrW06IVipTnQWxK3vEH8ocujOalE9wYu2/D+WEGRZogBuLMj8NtCgd07uHLMXS923x47P4J6bhGBFytVgFahc6ZYNlS7wA9GsS6zqVr9BofOBgGBZsc4smee7vck0y494pz45dV+mmltL6w/TgI412vB6gHnL3P0JWSMSpFNAMfiP8GXj01oM9l/mNcu0w3tv0S4Sr5PLH3b40vnkhJMqt+x8Z5u1mEDqKBQMNc8X4IWN8grgH5fUF6JHiGQf35/bfHDvzveKKoisNc9fVm6cRsBKvdjynDOgfXZeWwuRog1gxv6Ky5C4hRxo50HtTLDV7v/LtNA7W4W3Huhbb2OZDDc7ZlmURhTt+G6GjLTVzaZ2Sud/0yUNbvSYy5GcsnLuzzlUa
+    clientSecret: AgAlWn+UowfA13a29JpAjr2CZg0vaBpo8U7pMRPXQhHGsy+XiNPE9kuDG5yV0U4Vxhf7TCWz8+NImlwZieklld8mbbqokt7W6tm+iTrZ+f7Zl7mSpe4naLxlMmb93iExIcY8AKQ8ksgSPOUbhc5YziW5DRgqcQyvbBGaGIuXuoqMb1u1jrHBuTU9a7lKCq/gVvoBE6R19UDE5VJZski/NR1vXlbRgoiKcixPf5v8JRwvVBVgF2Fjxey+bV0wgRtf0g1ammPmKYFwHcDMzGgrcUKMHEKMBUWllcrOu2PAEDrkNwzYFFCvOgKsvYoHFnLitc8KT2xww9MCTaL6zRQIhZwaGJQufVLOH9EOMNUAhbc8seMZ5BbTbmK9dPsjyXoDq9EKp6oJQLVTojrTDc5dHmlZsnnzh4AESwL6mosFF7Q/p4bxKhbucaCJaoE9EwpRVAOz7dVGxqLa3cwmG2JMrVwNVI5+GLc1kLE4wFM12CN1t8aCEOiaaHcz45mZOY76YrHZ1McTXE82O1UoLsRtFOYxufK6HAFYQ4lKx2m1IbS4baxZqE1ZCbwxAJahGXpV/eeh6wYAVtMkfVXqsmNtpBEc3XD6Qj9QGhD0jDO9Kal3Rhgd6pXJywfs0PJDMZh/syDH8iMUpdyB0+ZI+uaOWeSoQQd01fq2S+PYNPH4zep/IE+zp0i+hEAI5Xun7LLdZD3o6lA0zPr5AK3/y/1yMR6E4cRa5tAQ
+  template:
+    metadata:
+      creationTimestamp: null
+      name: zipline-oidc-credentials
+      namespace: zipline
+    type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: zipline-secret
+  namespace: zipline
+spec:
+  encryptedData:
+    CORE_SECRET: AgARTOJtingO6Q1IChVJkwGuRMKMCuKD7kuLP+86ETAfcoi8LvA1L4A0n7s62qft/dgvh0SFVw8N8fiJwY5cpMLzr096dvgz2tayeTb6ijZrwIa+NuaAv/Z+FF5+BNPtRPobtSpEd5okvZIX/dciREw5Dj78e/NWYBasgGr8zI4bcrhkgq5KwqWz9WAoPnX78R7WDSIYeJ3nRQa1nLK54DLZb7pzNSs5AwYOYxC97ydrb2X54Dm+BO+WpAagr729FUXFyAzL6D1ochk5DKgdv0JGRYu0zwiDU2a485GqFQv09FCkhvQpJoUfQ2lM/93rSDRRKB266apoml03qvAITErmpTwUc0C43qU55hniVCWpubWN+AQfxuYt/CnQ++3CZbvSh5JykSq7veuYTKHEau8TPyWmSYbDIkxAO+ILuAOfFQ5YA3RAsYUEQdDLV8u0AhCOZz6Rwqk33HM9uyivZMpiQMpGPSvkLpTnLvlZjZAb2JXYMWLeXZINC/WqbGArYvrTjLA1d85TtrU8zZv+Yp5nhFbX1gpOIAkd+qjQQsz+JC4R8LPGYYOEJ/X3ElIyuUDX+q9j4m44pq63ysq6FJzl7lDFpncHoKDnotQfWoygK0LO5AXXc7DkWhPVeVb6HT1XWZ6i1jac3zTK3XAxkNTrvB9zgplLMdYA18WiUQEy+F3WRwvJASBdyxIbO+gDwYTpdanwUdZHiMTHu+pXNTxt63K9PYzyO75dHKGPd3siFjSoH+3uuB6s0wszAA==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: zipline-secret
+      namespace: zipline
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -13092,6 +13260,37 @@ spec:
       secretName: openwebui-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://zipline.diced.sh/favicons/apple-touch-icon.png
+  labels:
+    app.kubernetes.io/instance: zipline
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: zipline
+    helm.sh/chart: app-template-3.1.0
+  name: zipline
+  namespace: zipline
+spec:
+  rules:
+    - host: zipline.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: zipline
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - zipline.homelab.olav.ninja
+      secretName: zipline-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
   annotations:
@@ -13345,6 +13544,28 @@ metadata:
   namespace: crossplane
 spec:
   package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.10.0
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: zipline-postgresql
+  namespace: zipline
+spec:
+  bootstrap:
+    initdb:
+      database: zipline
+      owner: zipline
+  instances: 1
+  postgresql:
+    parameters:
+      timezone: Europe/Oslo
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: proxmox-csi
+      volumeName: zipline-postgresql
+    size: 10G
 ---
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa

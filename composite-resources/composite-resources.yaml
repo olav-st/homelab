@@ -127,6 +127,26 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: zipline
+  namespace: zipline
+spec:
+  baseUrl: https://zipline.homelab.olav.ninja
+  clientId: zipline
+  clientSecretSecretRef:
+    key: clientSecret
+    name: zipline-oidc-credentials
+  description: Zipline Client
+  displayName: Zipline
+  grantTypes:
+    - code
+  realm: homelab
+  redirectUris:
+    - https://zipline.homelab.olav.ninja/api/auth/oauth/callback
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: kubectl
 spec:
   clientId: kubectl
