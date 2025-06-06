@@ -9560,13 +9560,13 @@ spec:
       automountServiceAccountToken: true
       containers:
         - env:
-            - name: CORE_DATABASE_URL
+            - name: CORE_RETURN_HTTPS
+              value: "true"
+            - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
                   key: uri
                   name: zipline-postgresql-app
-            - name: CORE_RETURN_HTTPS
-              value: "true"
             - name: DATASOURCE_LOCAL_DIRECTORY
               value: /data
             - name: DATASOURCE_TYPE
