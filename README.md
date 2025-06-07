@@ -34,12 +34,12 @@ For more details, see [Hardware](#hardware) and [Software](#software) below.
 </td>
 <td>
 
-|                                                                            |                                                                       |                         |
-|:---------------------------------------------------------------------------|-----------------------------------------------------------------------|-------------------------|
-| <img width="32" src="https://avatars.githubusercontent.com/u/151674099">   | [Ollama](https://ollama.com/)                                         | Self-hosted LLMs        |
-| <img width="32" src="https://avatars.githubusercontent.com/u/158137808">   | [Open WebUI](https://openwebui.com/)                                  | LLM Web Frontend        |
-| <img width="32" src="https://zipline.diced.sh/favicons/favicon-32x32.png"> | [Zipline](https://zipline.diced.sh/)                                  | File Transfer           |
-| <img width="32" src="https://avatars.githubusercontent.com/u/13844975">    | [Home Assistant](https://www.home-assistant.io/)                      | Home Automation         |
+|                                                                                  |                                                                       |                         |
+|:---------------------------------------------------------------------------------|-----------------------------------------------------------------------|-------------------------|
+| <img width="32" src="https://avatars.githubusercontent.com/u/151674099">         | [Ollama](https://ollama.com/)                                         | Self-hosted LLMs        |
+| <img width="32" src="https://avatars.githubusercontent.com/u/158137808">         | [Open WebUI](https://openwebui.com/)                                  | LLM Web Frontend        |
+| <img width="32" src="https://pingvin-share.dev.eliasschneider.com/img/logo.png"> | [Pingvin Share](https://stonith404.github.io/pingvin-share/)          | File Transfer           |
+| <img width="32" src="https://avatars.githubusercontent.com/u/13844975">          | [Home Assistant](https://www.home-assistant.io/)                      | Home Automation         |
 
 </td>
 </tr>

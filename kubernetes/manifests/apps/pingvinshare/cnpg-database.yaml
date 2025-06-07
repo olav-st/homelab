@@ -1,8 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: zipline-postgresql
-  namespace: zipline
+  name: pingvinshare-postgresql
+  namespace: pingvinshare
 spec:
   instances: 1
   postgresql:
@@ -10,12 +10,12 @@ spec:
       timezone: Europe/Oslo
   bootstrap:
     initdb:
-      database: zipline
-      owner: zipline
+      database: pingvinshare
+      owner: pingvinshare
   storage:
     size: 10G
     pvcTemplate:
       storageClassName: proxmox-csi
-      volumeName: zipline-postgresql
+      volumeName: pingvinshare-postgresql
       accessModes:
         - ReadWriteOnce

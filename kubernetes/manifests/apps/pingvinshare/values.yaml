@@ -1,27 +1,19 @@
 controllers:
-  zipline:
+  pingvinshare:
     strategy: Recreate
 
     containers:
       app:
         image:
-          repository: ghcr.io/diced/zipline
-          tag: 4.1.2
+          repository: ghcr.io/stonith404/pingvinshare
+          tag: v1.13.0 # renovate: github-releases=stonith404/pingvinshare
         env:
-          CORE_RETURN_HTTPS: true
-          DATABASE_URL:
-              valueFrom:
-                secretKeyRef:
-                  name: zipline-postgresql-app
-                  key: uri
-          DATASOURCE_TYPE: local
-          DATASOURCE_LOCAL_DIRECTORY: /data
-          UPLOADER_DEFAULT_FORMAT: random
-          UPLOADER_MAX_FILE_SIZE: 10gb
-          URLS_ROUTE: /z
-        envFrom:
-          - secretRef:
-              name: zipline-secret
+          TRUST_PROXY: true
+          OIDC_CLIENT_SECRET:
+            valueFrom:
+              secretKeyRef:
+                name: pingvinshare-oidc-credentials
+                key: clientSecret
         probes:
           liveness:
             enabled: true
@@ -41,11 +33,17 @@ controllers:
 
 persistence:
   data:
-    existingClaim: zipline
+    existingClaim: pingvinshare
+  config:
+    type: configMap
+    name: pingvinshare-config
+    globalMounts:
+      - path: /opt/app/config.yaml
+        subPath: config.yaml
 
 service:
   app:
-    controller: zipline
+    controller: pingvinshare
     ports:
       http:
         port: 3000
@@ -55,9 +53,9 @@ ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
       hajimari.io/enable: 'true'
-      hajimari.io/icon: https://zipline.diced.sh/favicons/apple-touch-icon.png
+      hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
     hosts:
-      - host: &hostName zipline.homelab.olav.ninja
+      - host: &hostName pingvin.homelab.olav.ninja
         paths:
           - path: /
             service:
@@ -66,4 +64,4 @@ ingress:
     tls:
       - hosts:
           - *hostName
-        secretName: zipline-tls-certificate
+        secretName: pingvinshare-tls-certificate

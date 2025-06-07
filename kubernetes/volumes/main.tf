@@ -46,11 +46,11 @@ locals {
       size = 10
     },
     {
-      name = "zipline"
+      name = "pingvinshare"
       size = 50
     },
     {
-      name = "zipline-postgresql"
+      name = "pingvinshare-postgresql"
       size = 10
     },
   ]
