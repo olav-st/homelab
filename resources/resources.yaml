@@ -9370,11 +9370,6 @@ spec:
       automountServiceAccountToken: true
       containers:
         - env:
-            - name: OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: clientSecret
-                  name: pingvinshare-oidc-credentials
             - name: TRUST_PROXY
               value: "true"
           image: ghcr.io/stonith404/pingvin-share:v1.13.0
@@ -9417,11 +9412,41 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              apk add --no-cache gettext
+              echo "Processing config file..."
+              envsubst < /config-template/config.yaml > /config/config.yaml
+              echo "Config file processed successfully"
+          env:
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: pingvinshare-oidc-credentials
+          image: alpine:3.19
+          name: config-processor
+          volumeMounts:
+            - mountPath: /opt/app/config.yaml
+              name: config
+              subPath: config.yaml
+            - mountPath: /config
+              name: config
+            - mountPath: /config-template
+              name: config-template
+              readOnly: true
+            - mountPath: /data
+              name: data
       serviceAccountName: default
       volumes:
+        - emptyDir: {}
+          name: config
         - configMap:
             name: pingvinshare-config
-          name: config
+          name: config-template
         - name: data
           persistentVolumeClaim:
             claimName: pingvinshare
