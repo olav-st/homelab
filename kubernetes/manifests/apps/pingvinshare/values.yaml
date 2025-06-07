@@ -5,7 +5,7 @@ controllers:
     containers:
       app:
         image:
-          repository: ghcr.io/stonith404/pingvinshare
+          repository: ghcr.io/stonith404/pingvin-share
           tag: v1.13.0 # renovate: github-releases=stonith404/pingvinshare
         env:
           TRUST_PROXY: true
