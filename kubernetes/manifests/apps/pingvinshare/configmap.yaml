@@ -43,8 +43,6 @@ data:
       oidc-signOut: "true"
       oidc-scope: openid email profile
       oidc-usernameClaim: "preferred_username"
-      oidc-rolePath: "roles"
-      oidc-roleAdminAccess: "admin"
       oidc-clientId: "pingvinshare"
       oidc-clientSecret: "${OIDC_CLIENT_SECRET}"
     
