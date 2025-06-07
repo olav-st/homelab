@@ -5325,7 +5325,7 @@ data:
       ignoreTotp: "true"
       disablePassword: "true"
       oidc-enabled: "true"
-      oidc-discoveryUri: "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid_configuration"
+      oidc-discoveryUri: "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration"
       oidc-signOut: "true"
       oidc-scope: "openid email profile"
       oidc-usernameClaim: "preferred_username"
