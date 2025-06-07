@@ -140,6 +140,8 @@ spec:
   displayName: Pingvin Share
   grantTypes:
     - code
+  postLogoutRedirectUris:
+    - https://pingvin.homelab.olav.ninja/*
   realm: homelab
   redirectUris:
     - https://pingvin.homelab.olav.ninja/api/oauth/callback/oidc
