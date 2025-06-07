@@ -9,11 +9,11 @@ data:
       appName: Pingvin Share
       appUrl: https://pingvin.homelab.olav.ninja
       secureCookies: "true"
-      showHomePage: "true"
+      showHomePage: "false"
       sessionDuration: 1 week
     
     share:
-      allowRegistration: "true"
+      allowRegistration: "false"
       allowUnauthenticatedShares: "true"
       maxExpiration: 180 days
       shareIdLength: "8"
