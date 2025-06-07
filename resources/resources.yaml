@@ -9379,7 +9379,7 @@ spec:
                   name: pingvinshare-oidc-credentials
             - name: TRUST_PROXY
               value: "true"
-          image: ghcr.io/stonith404/pingvinshare:v1.13.0
+          image: ghcr.io/stonith404/pingvin-share:v1.13.0
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 0
