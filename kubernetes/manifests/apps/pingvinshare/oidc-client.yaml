@@ -16,5 +16,5 @@ spec:
     - code
   baseUrl: "https://pingvin.homelab.olav.ninja"
   redirectUris:
-    - "https://pingvin.homelab.olav.ninja/api/auth/oauth/callback/oidc"
+    - "https://pingvin.homelab.olav.ninja/api/oauth/callback/oidc"
   realm: homelab
