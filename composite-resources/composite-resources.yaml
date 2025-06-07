@@ -142,7 +142,7 @@ spec:
     - code
   realm: homelab
   redirectUris:
-    - https://pingvin.homelab.olav.ninja/api/auth/oauth/callback/oidc
+    - https://pingvin.homelab.olav.ninja/api/oauth/callback/oidc
   type: CONFIDENTIAL
 ---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
