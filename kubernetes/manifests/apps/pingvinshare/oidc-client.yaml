@@ -10,6 +10,7 @@ spec:
   clientSecretSecretRef:
     key: clientSecret
     name: pingvinshare-oidc-credentials
+    namespace: pingvinshare
   description: Pingvin Share Client
   grantTypes:
     - code
