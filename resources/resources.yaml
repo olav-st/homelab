@@ -6534,7 +6534,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: zipline
     app.kubernetes.io/service: zipline
-    helm.sh/chart: app-template-3.1.0
+    helm.sh/chart: app-template-3.7.3
   name: zipline
   namespace: zipline
 spec:
@@ -9537,7 +9537,7 @@ metadata:
     app.kubernetes.io/instance: zipline
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: zipline
-    helm.sh/chart: app-template-3.1.0
+    helm.sh/chart: app-template-3.7.3
   name: zipline
   namespace: zipline
 spec:
@@ -13270,7 +13270,7 @@ metadata:
     app.kubernetes.io/instance: zipline
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: zipline
-    helm.sh/chart: app-template-3.1.0
+    helm.sh/chart: app-template-3.7.3
   name: zipline
   namespace: zipline
 spec:
