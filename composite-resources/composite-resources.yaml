@@ -127,21 +127,21 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
-  name: zipline
-  namespace: zipline
+  name: pingvinshare
+  namespace: pingvinshare
 spec:
-  baseUrl: https://zipline.homelab.olav.ninja
-  clientId: zipline
+  baseUrl: https://pingvin.homelab.olav.ninja
+  clientId: pingvinshare
   clientSecretSecretRef:
     key: clientSecret
-    name: zipline-oidc-credentials
-  description: Zipline Client
-  displayName: Zipline
+    name: pingvinshare-oidc-credentials
+  description: Pingvin Share Client
+  displayName: Pingvin Share
   grantTypes:
     - code
   realm: homelab
   redirectUris:
-    - https://zipline.homelab.olav.ninja/api/auth/oauth/callback
+    - https://pingvin.homelab.olav.ninja/api/auth/oauth/callback/oidc
   type: CONFIDENTIAL
 ---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
