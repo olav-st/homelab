@@ -13303,6 +13303,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
+    hajimari.io/title: Pingvin Share
   labels:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
