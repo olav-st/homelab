@@ -9430,9 +9430,6 @@ spec:
           image: alpine:3.19
           name: config-processor
           volumeMounts:
-            - mountPath: /opt/app/config.yaml
-              name: config
-              subPath: config.yaml
             - mountPath: /config
               name: config
             - mountPath: /config-template
