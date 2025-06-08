@@ -59,13 +59,13 @@ persistence:
             readOnly: true
   config:
     type: emptyDir
-    globalMounts:
-      - path: /opt/app/config.yaml
-        subPath: config.yaml
     advancedMounts:
       pingvinshare:
         config-processor:
           - path: /config
+        app:
+          - path: /opt/app/config.yaml
+            subPath: config.yaml
 
 service:
   app:
