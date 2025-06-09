@@ -22,6 +22,10 @@ locals {
       size = 10
     },
     {
+      name = "immich-postgresql-cnpg"
+      size = 10
+    },
+    {
       name = "netbird-management"
       size = 1
     },

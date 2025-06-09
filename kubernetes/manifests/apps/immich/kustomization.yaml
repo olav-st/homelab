@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: immich
 
 resources:
+- cnpg-database.yaml
 - namespace.yaml
 - oidc-client.yaml
 - pvcs.yaml

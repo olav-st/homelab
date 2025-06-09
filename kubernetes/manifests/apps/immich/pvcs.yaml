@@ -24,3 +24,16 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: proxmox-csi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-postgresql-cnpg
+spec:
+  volumeName: immich-postgresql-cnpg
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: proxmox-csi
