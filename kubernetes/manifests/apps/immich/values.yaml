@@ -10,6 +10,17 @@ immich:
 
 env:
   DB_HOSTNAME: 'immich-postgresql-rw'
+  DB_USERNAME: 
+    valueFrom:
+      secretKeyRef:
+        key: username
+        name: immich-postgresql-user
+  DB_PASSWORD: 
+    valueFrom:
+      secretKeyRef:
+        key: password
+        name: immich-postgresql-user
+
 
 envFrom:
   - secretRef:
@@ -28,7 +39,7 @@ postgresql:
     initdb:
       scripts:
         immich-superuser.sql: | # The db user is a superuser in the default docker-compose setup
-          ALTER USER immich WITH SUPERUSER; 
+          ALTER USER immich WITH SUPERUSER;
     podSecurityContext:
       fsGroup: 999
     containerSecurityContext:
