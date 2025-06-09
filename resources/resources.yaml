@@ -6665,6 +6665,20 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: immich-postgresql-cnpg
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: proxmox-csi
+  volumeName: immich-postgresql-cnpg
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
@@ -12594,6 +12608,26 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  creationTimestamp: null
+  name: immich-postgresql-user
+  namespace: immich
+spec:
+  encryptedData:
+    DB_DATABASE_NAME: AgAQgjOnZOKDyXwbFsgeZg1okBja90dNsjewAwfUY9XsdKTOPsDlzBjVOz5UmtyZ8kTzkCY6SDsBVmOxsxfcnvXlBjjBW2n/XmOtm7ftKGaEH9g48Lh9BCOfKey9dWrk04JhVwXwdM3lQtwQxlTwHQ1Ie5J72Ht4bK/ti78FbriynvjNwBFNwv6zyBuJY2Zb9EYyGMkIOxawPLSSkYIvzjVSfy8aRHZ8tZdqrL9PjBSn7q2T+EGC+AfhRGkntTySVmgSjfiQfdfH9goum08m41tNfM2JShBPfzMaBI1AQEHdN3EcPkLIE5frQSJ8Pak7am/w4LN7kB9IJQzMF1UrCe5CR5waOBBEczuh5Hlw5krPgCe7u4epV9h3BOk9h1mT6kyMBBNKFnRPvbgMdEG+/Il2oYv7q+Ql5tPIVIYrwdSlPDVAYSQOasQ+oL9/Y+ESRePr3CzlAHy+dCkBflWKW6nAq16VH0XLzElfqLuBZN8ag2kI5waXhO+12gPv3MbRxwL3N51LS4xuKQ7RsRsaxh3if/wSAaLzJEekagTBYSPPUv7CtbZR6ixLFwSRmpaC2IeXd2hXAlanjof76fO1vEnebQ8k8UVBdgEjwTC2STLEAYvICLcwIgTuPWxU/Rpra6tAGAa/PKF70UIKkP+lGrcc0/LsVcWLakCkL6MV6kAeNTYKMRBwkNsn0ra8T6MKS/wMYn4Mcgg=
+    DB_PASSWORD: AgBXzZBsinnsjx/rMLcfGlthCWVqQT8QejjZewRPGyeX6/ksQhuNTt+YDKDQc/0wvJuOwQ35/dWJDIFTZRVyVlKFYQKtCzQuOWdDmwCarbgj4d+OH33d/J7iyJ68/jqRdT389mEnOVh2cCclym13yHD2N3ifd7MWt6TGOHEC6DE3GyNm9bUMyOcOtyBCYn95xBEeUwCPtLzZB+3POrlCaZZxKBVOtR1zkA9dt4naVE5xwtLXK51SkbhRAnurNCzVziCCUwgqdMikXWd7T5GQN8hGXqAlgnENPUqNrxeTd9K2yhLgeEdVcg36m3kG/S3+HzGMxBeNpXOd8XkOCOP1Jm0Yr8X6qfF0MTAmnmru/kaxAhvLMIJkHP8DwxE4q2taal54PgOuAX6uk1Va2zaFk95s/1wbvLsa5b+GZHdagaZSADT1uBJ57N59PZ3kfv4s7Pe3EOSfsuzSTsEsF6I+QPhrKV0uBVviewRcNdpGRHjAe+DAACxJvr2se/Qyzby5mJnMgawe6LHXyqVd+c4qcZ48/6hucQiXhOAhBSHG6pTLnDc/WLmatB3w+Pz9GEb+Rr7zQZRHG5ZxeFm7o9Z3eHPu3ywk2L0ziFXg1NJ7uNrYQXTmIK3AdXThgI0nYN2pn88iPYrMHATcpv9vqF1+HWb5NquaeD8V4YCcD4l0Rj11GLG4Lq0ZUWDFSrRo5/79v7XrC37UKEiT/gP6b/Mqn2ENAEfS6v8K
+    DB_USERNAME: AgB1+8+LCEYsybi0bHdZEA0cSqzuuj0dqDLzxbVoNSZarVmrpb5IseK+4iUCLuB6K1dHI7qXMUjpKiZgM2oNQnJySNh/Epyz658orYaxM6EZz2GNIqQTwo6DIiIM8V7l2++N4fz2M/j2arBm4oHXeTJ0NJmh2KtEQ27y+kL+m9qvXoh2gGzY/LCYaqE7EvTtp284BiKC7TAJEfMO9qgQbvjXRouZXNW0p9XMksyZp7M5feZ/LXxXjkd10QIWFXrnj+nWtw713kZD6FBuvmPDITQZ70J35AeXp7Sdfz07rXHOmMWY0S6IHOxQ56k60+umP5ng+kiLciRKZoef43yTtm3wsG+X3n9ZWadZxBimwKgQkq7xLJAwDWgASg0J5bwkICmcGCU2cxv1J9RqT5y+6ItkQiZgk1BZIcBvhwt1whzUI3qGBetA+wDqTgSJMSpJgQZ7wV49SSG+Dv0gjDzLsDq6ntmkpYWjNloUNM2pc8toQW0H8yRY5ursvJnzfRlhHDlvx8t9YYEyazHDmI3cYSKmPcoJuL3OczhhO4qiPXgomgYzPrsbTdpEgsrQEArG9vaJDqH0LnKK73YxlKvlyg3kZUV1XUF0hivynQPs4MEYee5JWgsGiaVIAH12Gz1cDVJ3nH2YxhsqvlcAcXv2HBrsZU81Fgl29rwxSWjFBmITwcd+DC38fvbu9Fp/D6s4FAO+7Ig85/8=
+    password: AgAGkMOzFeqF/aRBpZUDoq/6BNWr4tkf+MuFPQHCmsn9hvcOkCTksEK7p02C0Ru+7iLrtHF2KK+49WHjo4z3/QCAAnS2BmG2iZXkugPfp/8znMOgTQTg3VT5pw/YanCNcr50BB+a+3MFNXjMSpyNjitcWd+y9SzhCWsIFDYxRhMw5xrK6G+6cQUtdYzPXBlnxghPZBWBg5wiD57aA4SaSjz9LssiPbp1QtH6fW9JPkoNKpQkK+/3i5Ko+xMWigyDpcY1Qd74o67vRVGCQoHO8vxZ8A2lRHWYjW80xAHXUUzXNZUEefUfGQ7XJ8aTqZ21OBtSbzgn4gJFDFGRXpcqLcl9cTg7P1C0pcfIgclGT1kkDX+d+kPaqhxW9Ee1u0aiA69ynof/rGu0YnbzVLXNZlp0S5iVZb2mUPyLALwXmAPXuh5lsfHJ45t9TTiTKxb5ZAggXObHdl48bcM5qn3Ypyah2uU1/K4zdUd5rFdZkqyVTevEOYnGMD3hjasX++zCs5mT+SWY3/6x8bHePf0HUkfMdJKbFFkN97iIRAqP1PkOzJiZMcclssyiQkTnS2BMbUf/owMYzzezGeF5ZIT6X1n5i5QAtNvUQSaPqxVVDNgAsCccJKpUjC+Hx3t9M2kolHhkmDJCkV+2Plq3IYkkBzdo5ubpv5TCVpxXF9S5hqmvSqb0LzNAfTzgar/RShjsjctycfSBid5kvQEWRnQq5NhIlY7wkR3o
+    username: AgASpZ4/NI10U0e3pa2zB2vfxXyA/aa8pSYyNwCSLcM9Kp8Ag+UxQXC8m6bcm9sWh4nEb0oM7IX8GPUOxSyf5bf31RNMAq4LagOY5jf9WBEuoYUpdoe2m9lKRBXkFXyd1Ip54VLjkWXGLjGV/buDPAm3ebUE6rBHQr5aTGbqe1eQ8WLkFc44rk7jjxLnejAuGiV2SjLXHCocvE9jr2KbQDJbILw0tVlpB9jabP/UVJRSPGrV+yTdvdaKD+PJXnly5uHFk+PPtwn1Z1xm6am4jujWoAgb+FBjcaZdmFECtGdYoLVFPQW33EZQJnM06E+QVU4ssHULvX4s8muNamWcBGnuWxhCflWGvtQZQy6ZF9sWVsn81majrUGfzWaUCQJy8IFvetzhmQsFy8zJFoWHS/bcjo7OrJ/IYxie7Wsy4eq4ph5T9Mvy19TTdyGQUAKAGSI7AbpGK+hKb7TGozklR5KpCViKa9NYm16JJGaLdGjtet6kPF5c99+yy0JXUX1F4ufsuaTOYpO1PYMlyqMKdpZyamNuWJa3Bsr32qguJNtsCU+OVyoR74NgUHteEiIvFuWMdFPXKCsrUwcr89jwW+md/UfjzJXpGwie25nReVMwEeAzmn5obBPYyc2VSCUeXnidJEh902ajeXXwpHb36KjPI9Ak1F1b84GHePUKo75juoZG1PdTYFYidkm4v6ROgvqz7jMB6Dk=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: immich-postgresql-user
+      namespace: immich
+    type: kubernetes.io/basic-auth
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: crossplane-keycloak-credentials
   namespace: keycloak
 spec:
@@ -13602,6 +13636,57 @@ metadata:
   namespace: crossplane
 spec:
   package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.10.0
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgresql
+  namespace: immich
+spec:
+  bootstrap:
+    initdb:
+      database: immich
+      import:
+        databases:
+          - immich
+        source:
+          externalCluster: postgres-subchart
+        type: microservice
+      owner: immich
+      postInitSQL:
+        - CREATE EXTENSION IF NOT EXISTS "vectors";
+        - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
+      secret:
+        name: immich-postgresql-user
+  externalClusters:
+    - connectionParameters:
+        dbname: immich
+        host: immich-postgresql.immich.svc.cluster.local
+        user: immich
+      name: postgres-subchart
+      password:
+        key: password
+        name: immich-postgresql
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
+  instances: 1
+  managed:
+    roles:
+      - login: true
+        name: immich
+        superuser: true
+  postgresql:
+    parameters:
+      timezone: Europe/Oslo
+    shared_preload_libraries:
+      - vectors.so
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: proxmox-csi
+      volumeName: immich-postgresql-cnpg
+    size: 10G
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
