@@ -6665,20 +6665,6 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-postgresql-cnpg
-  namespace: immich
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: proxmox-csi
-  volumeName: immich-postgresql-cnpg
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
