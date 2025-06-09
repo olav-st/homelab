@@ -6443,7 +6443,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
     app.kubernetes.io/service: pingvinshare
-    helm.sh/chart: app-template-3.7.3
+    helm.sh/chart: app-template-4.0.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -6453,7 +6453,7 @@ spec:
       protocol: TCP
       targetPort: 3000
   selector:
-    app.kubernetes.io/component: pingvinshare
+    app.kubernetes.io/controller: pingvinshare
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/name: pingvinshare
   type: ClusterIP
@@ -9270,11 +9270,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: pingvinshare
+    app.kubernetes.io/controller: pingvinshare
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-3.7.3
+    helm.sh/chart: app-template-4.0.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -9282,7 +9282,7 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/component: pingvinshare
+      app.kubernetes.io/controller: pingvinshare
       app.kubernetes.io/instance: pingvinshare
       app.kubernetes.io/name: pingvinshare
   strategy:
@@ -9290,7 +9290,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: pingvinshare
+        app.kubernetes.io/controller: pingvinshare
         app.kubernetes.io/instance: pingvinshare
         app.kubernetes.io/name: pingvinshare
     spec:
@@ -13032,7 +13032,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-3.7.3
+    helm.sh/chart: app-template-4.0.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
