@@ -9427,7 +9427,7 @@ spec:
                 secretKeyRef:
                   key: clientSecret
                   name: pingvinshare-oidc-credentials
-          image: alpine:3.19
+          image: alpine:3.22
           name: config-processor
           volumeMounts:
             - mountPath: /config
