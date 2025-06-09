@@ -8,6 +8,13 @@ immich:
     library:
       existingClaim: immich-library
 
+env:
+  DB_HOSTNAME: 'immich-postgresql-rw'
+
+envFrom:
+  - secretRef:
+      name: immich-postgresql-user
+
 postgresql:
   enabled: true
   auth:
