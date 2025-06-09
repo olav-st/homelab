@@ -8021,7 +8021,7 @@ spec:
             - name: DB_DATABASE_NAME
               value: immich
             - name: DB_HOSTNAME
-              value: immich-postgresql
+              value: immich-postgresql-rw
             - name: DB_PASSWORD
               value: immich
             - name: DB_USERNAME
@@ -8032,6 +8032,9 @@ spec:
               value: immich-redis-master
             - name: TRANSFORMERS_CACHE
               value: /cache
+          envFrom:
+            - secretRef:
+                name: immich-postgresql-user
           image: ghcr.io/immich-app/immich-machine-learning:v1.132.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -8114,7 +8117,7 @@ spec:
             - name: DB_DATABASE_NAME
               value: immich
             - name: DB_HOSTNAME
-              value: immich-postgresql
+              value: immich-postgresql-rw
             - name: DB_PASSWORD
               value: immich
             - name: DB_USERNAME
@@ -8125,6 +8128,9 @@ spec:
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
               value: immich-redis-master
+          envFrom:
+            - secretRef:
+                name: immich-postgresql-user
           image: ghcr.io/immich-app/immich-server:v1.132.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
