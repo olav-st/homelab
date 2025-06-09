@@ -302,8 +302,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-master
   namespace: immich
 ---
@@ -4472,7 +4472,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: immich
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-immich-config
   namespace: immich
 ---
@@ -4497,14 +4497,15 @@ data:
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
     # End of replica configuration
+  users.acl: ""
 kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-configuration
   namespace: immich
 ---
@@ -4610,8 +4611,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-health
   namespace: immich
 ---
@@ -4627,6 +4628,9 @@ data:
     if [[ -f /opt/bitnami/redis/mounted-etc/redis.conf ]];then
         cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
     fi
+    if [[ -f /opt/bitnami/redis/mounted-etc/users.acl ]];then
+        cp /opt/bitnami/redis/mounted-etc/users.acl /opt/bitnami/redis/etc/users.acl
+    fi
     ARGS=("--port" "${REDIS_PORT}")
     ARGS+=("--protected-mode" "no")
     ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
@@ -4638,8 +4642,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-scripts
   namespace: immich
 ---
@@ -5979,7 +5983,7 @@ metadata:
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/service: immich-machine-learning
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -6000,8 +6004,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-headless
   namespace: immich
 spec:
@@ -6023,8 +6027,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-master
   namespace: immich
 spec:
@@ -6050,7 +6054,7 @@ metadata:
     app.kubernetes.io/name: server
     app.kubernetes.io/service: immich-server
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-server
   namespace: immich
 spec:
@@ -7902,7 +7906,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -7913,7 +7917,7 @@ spec:
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: machine-learning
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -8002,7 +8006,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-server
   namespace: immich
 spec:
@@ -8013,7 +8017,7 @@ spec:
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: server
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       annotations:
@@ -9975,12 +9979,13 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-master
   namespace: immich
 spec:
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app.kubernetes.io/component: master
@@ -9990,17 +9995,17 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
+        checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
-        checksum/scripts: 43cdf68c28f3abe25ce017a82f74dbf2437d1900fd69df51a55a3edf6193d141
+        checksum/scripts: bdec350b84a1ace7cc118db113a21c9f160bde3425b07714e1c0c1da722621cf
         checksum/secret: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       labels:
         app.kubernetes.io/component: master
         app.kubernetes.io/instance: immich
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: redis
-        app.kubernetes.io/version: 7.2.5
-        helm.sh/chart: redis-19.5.3
+        app.kubernetes.io/version: 7.4.3
+        helm.sh/chart: redis-20.13.2
     spec:
       affinity:
         nodeAffinity: null
@@ -10042,7 +10047,7 @@ spec:
               value: "no"
             - name: REDIS_PORT
               value: "6379"
-          image: docker.io/bitnami/redis:7.2.5-debian-12-r0
+          image: docker.io/bitnami/redis:7.4.3-debian-12-r0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -10073,7 +10078,7 @@ spec:
           resources:
             limits:
               cpu: 150m
-              ephemeral-storage: 1024Mi
+              ephemeral-storage: 2Gi
               memory: 192Mi
             requests:
               cpu: 100m
@@ -10942,8 +10947,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis-master
   namespace: immich
 spec:
@@ -12683,7 +12688,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.8.5
+    helm.sh/chart: immich-0.9.3
   name: immich-server
   namespace: immich
 spec:
@@ -13121,8 +13126,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.5.3
+    app.kubernetes.io/version: 7.4.3
+    helm.sh/chart: redis-20.13.2
   name: immich-redis
   namespace: immich
 spec:
