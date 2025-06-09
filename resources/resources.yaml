@@ -238,8 +238,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 ---
@@ -250,8 +250,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 ---
@@ -645,8 +645,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 rules:
@@ -833,8 +833,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 rules:
@@ -930,8 +930,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 rules:
@@ -7424,8 +7424,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 spec:
@@ -7453,7 +7453,7 @@ spec:
             - -v=5
             - --csi-address=unix:///csi/csi.sock
             - --cloud-config=/etc/proxmox/config.yaml
-          image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.11.0
+          image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.12.0
           imagePullPolicy: IfNotPresent
           name: proxmox-csi-plugin-controller
           ports: null
@@ -7480,7 +7480,7 @@ spec:
             - --timeout=3m
             - --leader-election
             - --default-fstype=ext4
-          image: registry.k8s.io/sig-storage/csi-attacher:v4.8.0
+          image: registry.k8s.io/sig-storage/csi-attacher:v4.9.0
           imagePullPolicy: IfNotPresent
           name: csi-attacher
           resources:
@@ -7515,7 +7515,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-          image: registry.k8s.io/sig-storage/csi-provisioner:v5.1.0
+          image: registry.k8s.io/sig-storage/csi-provisioner:v5.3.0
           imagePullPolicy: IfNotPresent
           name: csi-provisioner
           resources:
@@ -7539,7 +7539,7 @@ spec:
             - --timeout=3m
             - --handle-volume-inuse-error=false
             - --leader-election
-          image: registry.k8s.io/sig-storage/csi-resizer:v1.13.1
+          image: registry.k8s.io/sig-storage/csi-resizer:v1.13.2
           imagePullPolicy: IfNotPresent
           name: csi-resizer
           resources:
@@ -7560,7 +7560,7 @@ spec:
         - args:
             - -v=5
             - --csi-address=unix:///csi/csi.sock
-          image: registry.k8s.io/sig-storage/livenessprobe:v2.14.0
+          image: registry.k8s.io/sig-storage/livenessprobe:v2.15.0
           imagePullPolicy: IfNotPresent
           name: liveness-probe
           resources:
@@ -11337,8 +11337,8 @@ metadata:
     app.kubernetes.io/instance: proxmox-csi-plugin
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.11.0
-    helm.sh/chart: proxmox-csi-plugin-0.3.7
+    app.kubernetes.io/version: v0.12.0
+    helm.sh/chart: proxmox-csi-plugin-0.3.9
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 spec:
@@ -11364,7 +11364,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.11.0
+          image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.12.0
           imagePullPolicy: IfNotPresent
           name: proxmox-csi-plugin-node
           resources: {}
@@ -11393,7 +11393,7 @@ spec:
             - -v=5
             - --csi-address=unix:///csi/csi.sock
             - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/csi.sock
-          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.13.0
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.14.0
           imagePullPolicy: IfNotPresent
           name: csi-node-driver-registrar
           resources:
@@ -11416,7 +11416,7 @@ spec:
         - args:
             - -v=5
             - --csi-address=unix:///csi/csi.sock
-          image: registry.k8s.io/sig-storage/livenessprobe:v2.14.0
+          image: registry.k8s.io/sig-storage/livenessprobe:v2.15.0
           imagePullPolicy: IfNotPresent
           name: liveness-probe
           resources:
