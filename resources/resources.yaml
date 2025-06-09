@@ -4495,7 +4495,8 @@ data:
     CREATE EXTENSION cube;
     CREATE EXTENSION earthdistance;
     CREATE EXTENSION vectors;
-  immich-superuser.sql: "ALTER USER immich WITH SUPERUSER; \n"
+  immich-superuser.sql: |
+    ALTER USER immich WITH SUPERUSER;
 kind: ConfigMap
 metadata:
   labels:
@@ -8023,9 +8024,15 @@ spec:
             - name: DB_HOSTNAME
               value: immich-postgresql-rw
             - name: DB_PASSWORD
-              value: immich
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: immich-postgresql-user
             - name: DB_USERNAME
-              value: immich
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: immich-postgresql-user
             - name: IMMICH_MACHINE_LEARNING_URL
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
@@ -8119,9 +8126,15 @@ spec:
             - name: DB_HOSTNAME
               value: immich-postgresql-rw
             - name: DB_PASSWORD
-              value: immich
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: immich-postgresql-user
             - name: DB_USERNAME
-              value: immich
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: immich-postgresql-user
             - name: IMMICH_CONFIG_FILE
               value: /config/immich-config.yaml
             - name: IMMICH_MACHINE_LEARNING_URL
