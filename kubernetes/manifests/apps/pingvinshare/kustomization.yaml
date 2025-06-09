@@ -15,5 +15,5 @@ helmCharts:
     releaseName: pingvinshare
     namespace: pingvinshare
     repo: https://bjw-s-labs.github.io/helm-charts
-    version: 3.7.3
+    version: 4.0.1
     valuesFile: values.yaml
