@@ -63,3 +63,6 @@ kubernetes/rendered-manifests/
 
 # Ignore Home Assistant images/ to avoid commiting large binary files
 home-assistant/*.qcow2
+
+# Ignore local helper scripts
+.scripts/
