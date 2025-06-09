@@ -26,27 +26,6 @@ envFrom:
   - secretRef:
       name: immich-postgresql-user
 
-postgresql:
-  enabled: true
-  auth:
-    existingSecret: immich-postgresql
-  primary:
-    persistence:
-      enabled: true
-      existingClaim: immich-postgresql
-    podAffinityPreset: soft # prefer running on the same node as the main pod
-    resourcesPreset: medium
-    initdb:
-      scripts:
-        immich-superuser.sql: | # The db user is a superuser in the default docker-compose setup
-          ALTER USER immich WITH SUPERUSER;
-    podSecurityContext:
-      fsGroup: 999
-    containerSecurityContext:
-      runAsUser: 999
-  volumePermissions:
-    enabled: true
-
 redis:
   enabled: true
   master:
