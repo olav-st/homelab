@@ -39,6 +39,6 @@ spec:
     size: 10G
     pvcTemplate:
       storageClassName: proxmox-csi
-      volumeName: immich-postgresql-cnpg
+      volumeName: immich-postgresql
       accessModes:
         - ReadWriteOnce
