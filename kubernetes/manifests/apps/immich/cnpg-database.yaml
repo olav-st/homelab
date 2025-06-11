@@ -42,13 +42,3 @@ spec:
       volumeName: immich-postgresql-cnpg
       accessModes:
         - ReadWriteOnce
-
-  externalClusters:
-    - name: postgres-subchart
-      connectionParameters:
-        host: immich-postgresql.immich.svc.cluster.local
-        user: immich
-        dbname: immich
-      password:
-        name: immich-postgresql
-        key: password
