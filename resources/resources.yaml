@@ -491,7 +491,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik
   namespace: traefik
 ---
@@ -3019,7 +3019,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik-traefik
 rules:
   - apiGroups:
@@ -3789,7 +3789,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik-traefik
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -6585,7 +6585,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik
   namespace: traefik
 spec:
@@ -9571,7 +9571,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik
   namespace: traefik
 spec:
@@ -9596,7 +9596,7 @@ spec:
         app.kubernetes.io/instance: traefik-traefik
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-36.0.0
+        helm.sh/chart: traefik-36.1.0
     spec:
       automountServiceAccountToken: true
       containers:
@@ -13143,7 +13143,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-36.0.0
+    helm.sh/chart: traefik-36.1.0
   name: traefik
 spec:
   controller: traefik.io/ingress-controller
