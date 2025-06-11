@@ -426,8 +426,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.8.2
-    helm.sh/chart: netbird-dashboard-1.1.1
+    app.kubernetes.io/version: v2.12.0
+    helm.sh/chart: netbird-dashboard-1.2.0
   name: netbird-dashboard
   namespace: netbird
 ---
@@ -6407,8 +6407,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.8.2
-    helm.sh/chart: netbird-dashboard-1.1.1
+    app.kubernetes.io/version: v2.12.0
+    helm.sh/chart: netbird-dashboard-1.2.0
   name: netbird-dashboard
   namespace: netbird
 spec:
@@ -8926,8 +8926,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.8.2
-    helm.sh/chart: netbird-dashboard-1.1.1
+    app.kubernetes.io/version: v2.12.0
+    helm.sh/chart: netbird-dashboard-1.2.0
   name: netbird-dashboard
   namespace: netbird
 spec:
@@ -8964,6 +8964,8 @@ spec:
               value: https://netbird.homelab.olav.ninja
             - name: NETBIRD_MGMT_GRPC_API_ENDPOINT
               value: https://netbird.homelab.olav.ninja
+            - name: NGINX_SSL_PORT
+              value: "443"
           image: netbirdio/dashboard:v2.13.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -12986,8 +12988,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.8.2
-    helm.sh/chart: netbird-dashboard-1.1.1
+    app.kubernetes.io/version: v2.12.0
+    helm.sh/chart: netbird-dashboard-1.2.0
   name: netbird-dashboard
   namespace: netbird
 spec:
