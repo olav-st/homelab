@@ -13401,7 +13401,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: proxmox-csi
-      volumeName: immich-postgresql-cnpg
+      volumeName: immich-postgresql
     size: 10G
 ---
 apiVersion: postgresql.cnpg.io/v1
