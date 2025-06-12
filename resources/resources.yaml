@@ -6524,7 +6524,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
     app.kubernetes.io/service: pingvinshare
-    helm.sh/chart: app-template-4.1.0
+    helm.sh/chart: app-template-4.1.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -9357,7 +9357,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.1.0
+    helm.sh/chart: app-template-4.1.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -13116,7 +13116,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.1.0
+    helm.sh/chart: app-template-4.1.1
   name: pingvinshare
   namespace: pingvinshare
 spec:
