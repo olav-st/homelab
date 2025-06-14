@@ -239,7 +239,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 ---
@@ -251,7 +251,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 ---
@@ -646,7 +646,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 rules:
@@ -834,7 +834,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 rules:
@@ -931,7 +931,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 rules:
@@ -7510,7 +7510,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-controller
   namespace: csi-proxmox
 spec:
@@ -11427,7 +11427,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: proxmox-csi-plugin
     app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.10
+    helm.sh/chart: proxmox-csi-plugin-0.3.11
   name: proxmox-csi-plugin-node
   namespace: csi-proxmox
 spec:
