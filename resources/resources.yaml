@@ -432,19 +432,6 @@ metadata:
   namespace: netbird
 ---
 apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
----
-apiVersion: v1
 automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
@@ -5283,49 +5270,6 @@ metadata:
 ---
 apiVersion: v1
 data:
-  my.cnf: |-
-    [mysqld]
-    skip-name-resolve
-    explicit_defaults_for_timestamp
-    basedir=/opt/bitnami/mariadb
-    datadir=/bitnami/mariadb/data
-    plugin_dir=/opt/bitnami/mariadb/plugin
-    port=3306
-    socket=/opt/bitnami/mariadb/tmp/mysql.sock
-    tmpdir=/opt/bitnami/mariadb/tmp
-    max_allowed_packet=16M
-    bind-address=*
-    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-    log-error=/opt/bitnami/mariadb/logs/mysqld.log
-    character-set-server=UTF8
-    collation-server=utf8_general_ci
-    slow_query_log=0
-    long_query_time=10.0
-
-    [client]
-    port=3306
-    socket=/opt/bitnami/mariadb/tmp/mysql.sock
-    default-character-set=UTF8
-    plugin_dir=/opt/bitnami/mariadb/plugin
-
-    [manager]
-    port=3306
-    socket=/opt/bitnami/mariadb/tmp/mysql.sock
-    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
----
-apiVersion: v1
-data:
   uploadLimit.ini: |-
     upload_max_filesize = 1G
     post_max_size = 1G
@@ -6444,32 +6388,6 @@ spec:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/name: nextcloud
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
-spec:
-  ports:
-    - name: mysql
-      nodePort: null
-      port: 3306
-      protocol: TCP
-      targetPort: mysql
-  selector:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/name: mariadb
-  sessionAffinity: None
   type: ClusterIP
 ---
 apiVersion: v1
@@ -9022,20 +8940,26 @@ spec:
         - env:
             - name: OVERWRITEPROTOCOL
               value: https
-            - name: MYSQL_HOST
-              value: nextcloud-mariadb
-            - name: MYSQL_DATABASE
-              value: nextcloud
-            - name: MYSQL_USER
+            - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  key: mariadb-username
-                  name: nextcloud-database-auth
-            - name: MYSQL_PASSWORD
+                  key: host
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  key: mariadb-password
-                  name: nextcloud-database-auth
+                  key: dbname
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: nextcloud-postgresql-app
             - name: NEXTCLOUD_ADMIN_USER
               valueFrom:
                 secretKeyRef:
@@ -9148,20 +9072,26 @@ spec:
           env:
             - name: OVERWRITEPROTOCOL
               value: https
-            - name: MYSQL_HOST
-              value: nextcloud-mariadb
-            - name: MYSQL_DATABASE
-              value: nextcloud
-            - name: MYSQL_USER
+            - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  key: mariadb-username
-                  name: nextcloud-database-auth
-            - name: MYSQL_PASSWORD
+                  key: host
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  key: mariadb-password
-                  name: nextcloud-database-auth
+                  key: dbname
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: nextcloud-postgresql-app
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: nextcloud-postgresql-app
             - name: NEXTCLOUD_ADMIN_USER
               valueFrom:
                 secretKeyRef:
@@ -9241,26 +9171,6 @@ spec:
             - mountPath: /usr/local/etc/php/conf.d/uploadLimit.ini
               name: nextcloud-phpconfig
               subPath: uploadLimit.ini
-      initContainers:
-        - command:
-            - sh
-            - -c
-            - until mysql --host=nextcloud-mariadb --user=${MYSQL_USER} --password=${MYSQL_PASSWORD} --execute="SELECT 1;"; do echo waiting for mysql; sleep 2; done;
-          env:
-            - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  key: mariadb-username
-                  name: nextcloud-database-auth
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mariadb-password
-                  name: nextcloud-database-auth
-          image: docker.io/bitnami/mariadb:11.3.2-debian-12-r5
-          name: mariadb-isalive
-          resources: {}
-          securityContext: {}
       securityContext:
         fsGroup: 33
       volumes:
@@ -10612,217 +10522,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
-spec:
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: nextcloud
-      app.kubernetes.io/name: mariadb
-  serviceName: nextcloud-mariadb
-  template:
-    metadata:
-      annotations:
-        checksum/configuration: fb262c2f871ddf4c9fa925e29eb7198153cfc48305559085fcf1ef74cf716807
-      labels:
-        app.kubernetes.io/component: primary
-        app.kubernetes.io/instance: nextcloud
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: mariadb
-        app.kubernetes.io/version: 11.3.2
-        helm.sh/chart: mariadb-18.2.0
-    spec:
-      affinity:
-        nodeAffinity: null
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: primary
-                    app.kubernetes.io/instance: nextcloud
-                    app.kubernetes.io/name: mariadb
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: primary
-                    app.kubernetes.io/instance: nextcloud
-                    app.kubernetes.io/name: mariadb
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-      automountServiceAccountToken: false
-      containers:
-        - env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: MARIADB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mariadb-root-password
-                  name: nextcloud-database-auth
-            - name: MARIADB_USER
-              value: nextcloud
-            - name: MARIADB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mariadb-password
-                  name: nextcloud-database-auth
-            - name: MARIADB_DATABASE
-              value: nextcloud
-          image: docker.io/bitnami/mariadb:11.3.2-debian-12-r5
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            exec:
-              command:
-                - /bin/bash
-                - -ec
-                - |
-                  password_aux="${MARIADB_ROOT_PASSWORD:-}"
-                  if [[ -f "${MARIADB_ROOT_PASSWORD_FILE:-}" ]]; then
-                      password_aux=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
-                  fi
-                  mysqladmin status -uroot -p"${password_aux}"
-            failureThreshold: 3
-            initialDelaySeconds: 120
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: mariadb
-          ports:
-            - containerPort: 3306
-              name: mysql
-          readinessProbe:
-            exec:
-              command:
-                - /bin/bash
-                - -ec
-                - |
-                  password_aux="${MARIADB_ROOT_PASSWORD:-}"
-                  if [[ -f "${MARIADB_ROOT_PASSWORD_FILE:-}" ]]; then
-                      password_aux=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
-                  fi
-                  mysqladmin ping -uroot -p"${password_aux}"
-            failureThreshold: 3
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          resources:
-            limits:
-              cpu: 375m
-              ephemeral-storage: 1024Mi
-              memory: 384Mi
-            requests:
-              cpu: 250m
-              ephemeral-storage: 50Mi
-              memory: 256Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
-            runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /bitnami/mariadb
-              name: data
-            - mountPath: /opt/bitnami/mariadb/conf/my.cnf
-              name: config
-              subPath: my.cnf
-            - mountPath: /tmp
-              name: empty-dir
-              subPath: tmp-dir
-            - mountPath: /opt/bitnami/mariadb/conf
-              name: empty-dir
-              subPath: app-conf-dir
-            - mountPath: /opt/bitnami/mariadb/tmp
-              name: empty-dir
-              subPath: app-tmp-dir
-            - mountPath: /opt/bitnami/mariadb/logs
-              name: empty-dir
-              subPath: app-logs-dir
-      initContainers:
-        - args:
-            - -ec
-            - |
-              #!/bin/bash
-
-              . /opt/bitnami/scripts/libfs.sh
-              # We copy the logs folder because it has symlinks to stdout and stderr
-              if ! is_dir_empty /opt/bitnami/mariadb/logs; then
-                cp -r /opt/bitnami/mariadb/logs /emptydir/app-logs-dir
-              fi
-          command:
-            - /bin/bash
-          image: docker.io/bitnami/mariadb:11.3.2-debian-12-r5
-          imagePullPolicy: IfNotPresent
-          name: preserve-logs-symlinks
-          resources:
-            limits:
-              cpu: 375m
-              ephemeral-storage: 1024Mi
-              memory: 384Mi
-            requests:
-              cpu: 250m
-              ephemeral-storage: 50Mi
-              memory: 256Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
-            runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /emptydir
-              name: empty-dir
-      securityContext:
-        fsGroup: 1001
-        fsGroupChangePolicy: Always
-        supplementalGroups: []
-        sysctls: []
-      serviceAccountName: nextcloud-mariadb
-      volumes:
-        - emptyDir: {}
-          name: empty-dir
-        - configMap:
-            name: nextcloud-mariadb
-          name: config
-        - name: data
-          persistentVolumeClaim:
-            claimName: nextcloud-mariadb
-  updateStrategy:
-    type: RollingUpdate
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  labels:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
@@ -11082,26 +10781,6 @@ spec:
       app.kubernetes.io/component: primary
       app.kubernetes.io/instance: keycloak
       app.kubernetes.io/name: postgresql
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: nextcloud
-      app.kubernetes.io/name: mariadb
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -13279,35 +12958,6 @@ spec:
       app.kubernetes.io/component: primary
       app.kubernetes.io/instance: keycloak
       app.kubernetes.io/name: postgresql
-  policyTypes:
-    - Ingress
-    - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mariadb
-    app.kubernetes.io/version: 11.3.2
-    helm.sh/chart: mariadb-18.2.0
-  name: nextcloud-mariadb
-  namespace: nextcloud
-spec:
-  egress:
-    - {}
-  ingress:
-    - ports:
-        - port: 3306
-        - port: 3306
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/instance: nextcloud
-      app.kubernetes.io/managed-by: Helm
-      app.kubernetes.io/name: mariadb
-      app.kubernetes.io/version: 11.3.2
-      helm.sh/chart: mariadb-18.2.0
   policyTypes:
     - Ingress
     - Egress
