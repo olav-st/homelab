@@ -262,19 +262,6 @@ metadata:
   labels:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql
-  namespace: gitea
----
-apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.1
@@ -5587,12 +5574,6 @@ stringData:
   cache: |-
     ADAPTER=redis
     HOST=redis://:changeme@gitea-valkey-headless.gitea.svc.cluster.local:6379/0?pool_size=100&idle_timeout=180s&
-  database: |-
-    DB_TYPE=postgres
-    HOST=gitea-postgresql.gitea.svc.cluster.local:5432
-    NAME=gitea
-    PASSWD=gitea
-    USER=gitea
   indexer: ISSUE_INDEXER_TYPE=db
   metrics: ENABLED=false
   queue: |-
@@ -5849,56 +5830,6 @@ spec:
   selector:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/name: gitea
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql
-  namespace: gitea
-spec:
-  ports:
-    - name: tcp-postgresql
-      nodePort: null
-      port: 5432
-      targetPort: tcp-postgresql
-  selector:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/name: postgresql
-  sessionAffinity: None
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql-hl
-  namespace: gitea
-spec:
-  clusterIP: None
-  ports:
-    - name: tcp-postgresql
-      port: 5432
-      targetPort: tcp-postgresql
-  publishNotReadyAddresses: true
-  selector:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/name: postgresql
   type: ClusterIP
 ---
 apiVersion: v1
@@ -7632,7 +7563,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 3ffed20ea9c55171e092c1d8fc17b75051edfe5685b7f5f2f8d47dd3a1943274
+        checksum/config: b0fd9b9c9cb4a996a5ff0a315409c1d5c4378ec056ce7b734bc7d77c273095f7
         checksum/oauth_0: 01764dcd9b49e15763176a4daa8f8e10f4902756616d3e834ef1341e80062ad5
       labels:
         app: gitea
@@ -7735,6 +7666,28 @@ spec:
               value: /tmp/existing-envs
             - name: ENV_TO_INI_MOUNT_POINT
               value: /env-to-ini-mounts
+            - name: GITEA__database__DB_TYPE
+              value: postgres
+            - name: GITEA__database__HOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: gitea-postgresql-app
+            - name: GITEA__database__NAME
+              valueFrom:
+                secretKeyRef:
+                  key: dbname
+                  name: gitea-postgresql-app
+            - name: GITEA__database__USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: gitea-postgresql-app
+            - name: GITEA__database__PASSWD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: gitea-postgresql-app
           image: docker.gitea.com/gitea:1.23.8-rootless
           imagePullPolicy: IfNotPresent
           name: init-app-ini
@@ -9621,187 +9574,6 @@ metadata:
     app.kubernetes.io/component: primary
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql
-  namespace: gitea
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: gitea
-      app.kubernetes.io/name: postgresql
-  serviceName: gitea-postgresql-hl
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: primary
-        app.kubernetes.io/instance: gitea
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: postgresql
-        app.kubernetes.io/version: 17.5.0
-        helm.sh/chart: postgresql-16.7.2
-      name: gitea-postgresql
-    spec:
-      affinity:
-        nodeAffinity: null
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: primary
-                    app.kubernetes.io/instance: gitea
-                    app.kubernetes.io/name: postgresql
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: primary
-                    app.kubernetes.io/instance: gitea
-                    app.kubernetes.io/name: postgresql
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-      automountServiceAccountToken: false
-      containers:
-        - env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: POSTGRESQL_PORT_NUMBER
-              value: "5432"
-            - name: POSTGRESQL_VOLUME_DIR
-              value: /bitnami/postgresql
-            - name: PGDATA
-              value: /bitnami/postgresql/data
-            - name: POSTGRES_USER
-              value: gitea
-            - name: POSTGRES_PASSWORD_FILE
-              value: /opt/bitnami/postgresql/secrets/password
-            - name: POSTGRES_POSTGRES_PASSWORD_FILE
-              value: /opt/bitnami/postgresql/secrets/postgres-password
-            - name: POSTGRES_DATABASE
-              value: gitea
-            - name: POSTGRESQL_ENABLE_LDAP
-              value: "no"
-            - name: POSTGRESQL_ENABLE_TLS
-              value: "no"
-            - name: POSTGRESQL_LOG_HOSTNAME
-              value: "false"
-            - name: POSTGRESQL_LOG_CONNECTIONS
-              value: "false"
-            - name: POSTGRESQL_LOG_DISCONNECTIONS
-              value: "false"
-            - name: POSTGRESQL_PGAUDIT_LOG_CATALOG
-              value: "off"
-            - name: POSTGRESQL_CLIENT_MIN_MESSAGES
-              value: error
-            - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
-              value: pgaudit
-          image: docker.io/bitnami/postgresql:15-debian-11
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - exec pg_isready -U "gitea" -d "dbname=gitea" -h 127.0.0.1 -p 5432
-            failureThreshold: 6
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-          name: postgresql
-          ports:
-            - containerPort: 5432
-              name: tcp-postgresql
-          readinessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - -e
-                - |
-                  exec pg_isready -U "gitea" -d "dbname=gitea" -h 127.0.0.1 -p 5432
-                  [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
-            failureThreshold: 6
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-          resources:
-            limits:
-              cpu: 150m
-              ephemeral-storage: 2Gi
-              memory: 192Mi
-            requests:
-              cpu: 100m
-              ephemeral-storage: 50Mi
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
-            runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /tmp
-              name: empty-dir
-              subPath: tmp-dir
-            - mountPath: /opt/bitnami/postgresql/conf
-              name: empty-dir
-              subPath: app-conf-dir
-            - mountPath: /opt/bitnami/postgresql/tmp
-              name: empty-dir
-              subPath: app-tmp-dir
-            - mountPath: /opt/bitnami/postgresql/secrets/
-              name: postgresql-password
-            - mountPath: /dev/shm
-              name: dshm
-            - mountPath: /bitnami/postgresql
-              name: data
-      hostIPC: false
-      hostNetwork: false
-      securityContext:
-        fsGroup: 1001
-        fsGroupChangePolicy: Always
-        supplementalGroups: []
-        sysctls: []
-      serviceAccountName: gitea-postgresql
-      volumes:
-        - emptyDir: {}
-          name: empty-dir
-        - name: postgresql-password
-          secret:
-            secretName: gitea-postgresql
-        - emptyDir:
-            medium: Memory
-          name: dshm
-        - name: data
-          persistentVolumeClaim:
-            claimName: gitea-postgresql
-  updateStrategy:
-    rollingUpdate: {}
-    type: RollingUpdate
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.1
@@ -10701,26 +10473,6 @@ spec:
           serviceAccountName: hubble-generate-certs
       ttlSecondsAfterFinished: 1800
   schedule: 0 0 1 */4 *
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql
-  namespace: gitea
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: gitea
-      app.kubernetes.io/name: postgresql
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -12828,33 +12580,6 @@ metadata:
   name: traefik
 spec:
   controller: traefik.io/ingress-controller
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.2
-  name: gitea-postgresql
-  namespace: gitea
-spec:
-  egress:
-    - {}
-  ingress:
-    - ports:
-        - port: 5432
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: gitea
-      app.kubernetes.io/name: postgresql
-  policyTypes:
-    - Ingress
-    - Egress
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
