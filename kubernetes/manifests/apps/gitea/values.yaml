@@ -1,6 +1,29 @@
 gitea:
   admin:
     existingSecret: gitea-admin-user
+  additionalConfigFromEnvs:
+    - name: GITEA__database__DB_TYPE
+      value: postgres
+    - name: GITEA__database__HOST
+      valueFrom:
+        secretKeyRef:
+          name: gitea-postgresql-app
+          key: host
+    - name: GITEA__database__NAME
+      valueFrom:
+        secretKeyRef:
+          name: gitea-postgresql-app
+          key: dbname
+    - name: GITEA__database__USER
+      valueFrom:
+        secretKeyRef:
+          name: gitea-postgresql-app
+          key: username
+    - name: GITEA__database__PASSWD
+      valueFrom:
+        secretKeyRef:
+          name: gitea-postgresql-app
+          key: password
   config:
     service:
       DISABLE_REGISTRATION: true
@@ -54,18 +77,6 @@ persistence:
   create: false
   claimName: gitea
 
-postgresql:
-  enabled: true
-  auth:
-    existingSecret: gitea-postgresql
-  image:
-    tag: 15-debian-11
-  primary:
-    persistence:
-      enabled: true
-      existingClaim: gitea-postgresql
-    podAffinityPreset: soft # prefer running on the same node as the main pod
-
 valkey:
   enabled: true
   master:
@@ -74,7 +85,9 @@ valkey:
     persistence:
       enabled: false
 
-# Disable HA components
+# Disable unused components
+postgresql:
+  enabled: false
 postgresql-ha:
   enabled: false
 redis-cluster:
