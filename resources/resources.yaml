@@ -13409,6 +13409,28 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
+  name: nextcloud-postgresql
+  namespace: nextcloud
+spec:
+  bootstrap:
+    initdb:
+      database: nextcloud
+      owner: nextcloud
+  instances: 1
+  postgresql:
+    parameters:
+      timezone: Europe/Oslo
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: proxmox-csi
+      volumeName: nextcloud-postgresql
+    size: 10G
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
   name: pingvinshare-postgresql
   namespace: pingvinshare
 spec:
