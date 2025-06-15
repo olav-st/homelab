@@ -19,3 +19,12 @@ spec:
       volumeName: gitea-postgresql-cnpg
       accessModes:
         - ReadWriteOnce
+  externalClusters:
+    - name: postgres-subchart
+      connectionParameters:
+        host: gitea-postgresql.gitea.svc.cluster.local
+        user: gitea
+        dbname: gitea
+      password:
+        name: gitea-postgresql
+        key: password
