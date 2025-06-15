@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gitea-postgresql
+  namespace: gitea
+spec:
+  instances: 1
+  postgresql:
+    parameters:
+      timezone: Europe/Oslo
+  bootstrap:
+    initdb:
+      database: gitea
+      owner: gitea
+  storage:
+    size: 10G
+    pvcTemplate:
+      storageClassName: proxmox-csi
+      volumeName: gitea-postgresql-cnpg
+      accessModes:
+        - ReadWriteOnce

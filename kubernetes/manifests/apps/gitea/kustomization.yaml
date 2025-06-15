@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: gitea
 
 resources:
+  - cnpg-database.yaml
   - ingress-route.yaml
   - namespace.yaml
   - middleware.yaml
