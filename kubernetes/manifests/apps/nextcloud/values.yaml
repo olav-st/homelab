@@ -26,27 +26,14 @@ internalDatabase:
 
 externalDatabase:
   enabled: true
-  type: mysql
+  type: postgresql
   existingSecret:
     enabled: true
-    secretName: nextcloud-database-auth
-    usernameKey: mariadb-username
-    passwordKey: mariadb-password
-    hostKey: mariadb-hostname
-    databaseKey: mariadb-database
-
-mariadb:
-  enabled: true
-  auth:
-    database: nextcloud
-    username: nextcloud
-    existingSecret: nextcloud-database-auth
-  architecture: standalone
-  primary:
-    persistence:
-      enabled: true
-      existingClaim: nextcloud-mariadb
-    podAffinityPreset: soft # prefer running on the same node as the main pod
+    secretName: nextcloud-postgresql-app
+    usernameKey: username
+    passwordKey: password
+    hostKey: host
+    databaseKey: dbname
 
 persistence:
   enabled: true
