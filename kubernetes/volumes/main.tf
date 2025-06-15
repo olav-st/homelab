@@ -38,6 +38,10 @@ locals {
       size = 10
     },
     {
+      name = "nextcloud-postgresql"
+      size = 10
+    },
+    {
       name = "ollama"
       size = 60
     },

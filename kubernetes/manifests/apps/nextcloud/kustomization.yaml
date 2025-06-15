@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: nextcloud
 
 resources:
+  - cnpg-database.yaml
   - namespace.yaml
   - pvcs.yaml
   - secrets.yaml
