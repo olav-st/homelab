@@ -6,10 +6,14 @@ nextcloud:
     usernameKey: username
     passwordKey: password
   configs:
-    # add k8s pod namespace to trusted proxies, set phone region and maintenance window start time to 1am
+    # allow remote servers with local addresses (for OIDC)
+    # add k8s pod namespace to trusted proxies
+    # set phone region
+    # maintenance window start time to 1am
     mycustom.config.php: |
       <?php
       $CONFIG = array(
+        'allow_local_remote_servers' => true,
         'trusted_proxies' => array('10.0.0.0/8'),
         'default_phone_region' => 'NO',
         'maintenance_window_start' => 1,
