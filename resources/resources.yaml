@@ -5077,6 +5077,7 @@ data:
   mycustom.config.php: |-
     <?php
     $CONFIG = array(
+      'allow_local_remote_servers' => true,
       'trusted_proxies' => array('10.0.0.0/8'),
       'default_phone_region' => 'NO',
       'maintenance_window_start' => 1,
@@ -8882,7 +8883,7 @@ spec:
     metadata:
       annotations:
         hooks-hash: 9525c2748a6c7cd0e28ec740623d0b3fa5a75c83b51ccfd136bc89c76737b204
-        nextcloud-config-hash: 93a9742eed1608d05f159d9fa1830f38ea212bcc9440dceccdf0528d6ed6aefc
+        nextcloud-config-hash: a1d16d19d9e6a7542bf8cde75cecdc3357d062366aef5d2551e3b984a16915cf
         php-config-hash: ef6725a34482d427b584b8ddff54804f14e7c98827ae18ff7642f7cf0dd254af
       labels:
         app.kubernetes.io/component: app

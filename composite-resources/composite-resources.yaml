@@ -121,7 +121,7 @@ spec:
     - code
   realm: homelab
   redirectUris:
-    - https://nextcloud.homelab.olav.ninja/*
+    - https://nextcloud.homelab.olav.ninja/apps/user_oidc/code
   type: CONFIDENTIAL
 ---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
