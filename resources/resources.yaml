@@ -439,8 +439,8 @@ metadata:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: 0.6.14
-    helm.sh/chart: open-webui-6.20.0
+    app.kubernetes.io/version: 0.6.15
+    helm.sh/chart: open-webui-6.22.0
   name: open-webui
   namespace: openwebui
 ---
@@ -6350,8 +6350,8 @@ metadata:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: 0.6.14
-    helm.sh/chart: open-webui-6.20.0
+    app.kubernetes.io/version: 0.6.15
+    helm.sh/chart: open-webui-6.22.0
   name: open-webui
   namespace: openwebui
 spec:
@@ -10297,8 +10297,8 @@ metadata:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: 0.6.14
-    helm.sh/chart: open-webui-6.20.0
+    app.kubernetes.io/version: 0.6.15
+    helm.sh/chart: open-webui-6.22.0
   name: open-webui
   namespace: openwebui
 spec:
@@ -10314,8 +10314,8 @@ spec:
         app.kubernetes.io/component: open-webui
         app.kubernetes.io/instance: openwebui
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/version: 0.6.14
-        helm.sh/chart: open-webui-6.20.0
+        app.kubernetes.io/version: 0.6.15
+        helm.sh/chart: open-webui-6.22.0
     spec:
       automountServiceAccountToken: false
       containers:
@@ -10348,7 +10348,7 @@ spec:
               value: Keycloak
             - name: OAUTH_SCOPES
               value: openid email profile
-          image: ghcr.io/open-webui/open-webui:0.6.14
+          image: ghcr.io/open-webui/open-webui:0.6.15
           imagePullPolicy: IfNotPresent
           name: open-webui
           ports:
@@ -10364,7 +10364,7 @@ spec:
             - sh
             - -c
             - cp -R -n /app/backend/data/* /tmp/app-data/
-          image: ghcr.io/open-webui/open-webui:0.6.14
+          image: ghcr.io/open-webui/open-webui:0.6.15
           imagePullPolicy: IfNotPresent
           name: copy-app-data
           volumeMounts:
@@ -12514,8 +12514,8 @@ metadata:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: 0.6.14
-    helm.sh/chart: open-webui-6.20.0
+    app.kubernetes.io/version: 0.6.15
+    helm.sh/chart: open-webui-6.22.0
   name: open-webui
   namespace: openwebui
 spec:
