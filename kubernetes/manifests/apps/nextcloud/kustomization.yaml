@@ -5,6 +5,7 @@ namespace: nextcloud
 resources:
   - cnpg-database.yaml
   - namespace.yaml
+  - oidc-client.yaml
   - pvcs.yaml
   - secrets.yaml
 

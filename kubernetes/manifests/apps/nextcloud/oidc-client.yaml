@@ -1,0 +1,20 @@
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: nextcloud
+spec:
+  displayName: Nextcloud
+  type: CONFIDENTIAL
+  clientId: nextcloud
+  clientSecretSecretRef:
+    name: nextcloud-oidc-credentials
+    namespace: nextcloud
+    key: clientSecret
+  description: Nextcloud Client
+  grantTypes:
+    - code
+  baseUrl: "https://nextcloud.homelab.olav.ninja"
+  redirectUris:
+    - "https://nextcloud.homelab.olav.ninja/*"
+  realm: homelab
