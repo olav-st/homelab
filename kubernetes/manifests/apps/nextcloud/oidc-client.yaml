@@ -16,5 +16,5 @@ spec:
     - code
   baseUrl: "https://nextcloud.homelab.olav.ninja"
   redirectUris:
-    - "https://nextcloud.homelab.olav.ninja/*"
+    - "https://nextcloud.homelab.olav.ninja/apps/user_oidc/code"
   realm: homelab
