@@ -119,6 +119,8 @@ spec:
   displayName: Nextcloud
   grantTypes:
     - code
+  postLogoutRedirectUris:
+    - https://nextcloud.homelab.olav.ninja/
   realm: homelab
   redirectUris:
     - https://nextcloud.homelab.olav.ninja/apps/user_oidc/code
