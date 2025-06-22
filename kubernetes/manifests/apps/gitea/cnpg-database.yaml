@@ -12,6 +12,12 @@ spec:
     initdb:
       database: gitea
       owner: gitea
+      import:
+        type: microservice
+        databases:
+          - gitea
+        source:
+          externalCluster: postgres-subchart
   storage:
     size: 10G
     pvcTemplate:
