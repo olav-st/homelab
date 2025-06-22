@@ -12746,6 +12746,12 @@ spec:
   bootstrap:
     initdb:
       database: gitea
+      import:
+        databases:
+          - gitea
+        source:
+          externalCluster: postgres-subchart
+        type: microservice
       owner: gitea
   externalClusters:
     - connectionParameters:
