@@ -12771,7 +12771,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: proxmox-csi
-      volumeName: gitea-postgresql-cnpg
+      volumeName: gitea-postgresql
     size: 10G
 ---
 apiVersion: postgresql.cnpg.io/v1
