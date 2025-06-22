@@ -14,10 +14,6 @@ locals {
       size = 10
     },
     {
-      name = "gitea-postgresql-cnpg"
-      size = 10
-    },
-    {
       name = "immich-library"
       size = 150
     },

@@ -22,7 +22,7 @@ spec:
     size: 10G
     pvcTemplate:
       storageClassName: proxmox-csi
-      volumeName: gitea-postgresql-cnpg
+      volumeName: gitea-postgresql
       accessModes:
         - ReadWriteOnce
   externalClusters:
