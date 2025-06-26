@@ -12,12 +12,6 @@ spec:
     initdb:
       database: gitea
       owner: gitea
-      import:
-        type: microservice
-        databases:
-          - gitea
-        source:
-          externalCluster: postgres-subchart
   storage:
     size: 10G
     pvcTemplate:
@@ -25,12 +19,3 @@ spec:
       volumeName: gitea-postgresql
       accessModes:
         - ReadWriteOnce
-  externalClusters:
-    - name: postgres-subchart
-      connectionParameters:
-        host: gitea-postgresql.gitea.svc.cluster.local
-        user: gitea
-        dbname: gitea
-      password:
-        name: gitea-postgresql
-        key: password

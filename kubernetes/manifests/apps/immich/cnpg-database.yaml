@@ -24,12 +24,6 @@ spec:
       owner: immich
       secret:
         name: immich-postgresql-user
-      import:
-        type: microservice
-        databases:
-          - immich
-        source:
-          externalCluster: postgres-subchart
       postInitSQL:
         - CREATE EXTENSION IF NOT EXISTS "vectors";
         - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
