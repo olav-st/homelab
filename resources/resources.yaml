@@ -12746,10 +12746,6 @@ spec:
   bootstrap:
     initdb:
       database: gitea
-      import:
-        databases:
-          - gitea
-        type: microservice
       owner: gitea
   instances: 1
   postgresql:
@@ -12772,10 +12768,6 @@ spec:
   bootstrap:
     initdb:
       database: immich
-      import:
-        databases:
-          - immich
-        type: microservice
       owner: immich
       postInitSQL:
         - CREATE EXTENSION IF NOT EXISTS "vectors";
