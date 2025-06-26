@@ -12749,19 +12749,8 @@ spec:
       import:
         databases:
           - gitea
-        source:
-          externalCluster: postgres-subchart
         type: microservice
       owner: gitea
-  externalClusters:
-    - connectionParameters:
-        dbname: gitea
-        host: gitea-postgresql.gitea.svc.cluster.local
-        user: gitea
-      name: postgres-subchart
-      password:
-        key: password
-        name: gitea-postgresql
   instances: 1
   postgresql:
     parameters:
@@ -12786,8 +12775,6 @@ spec:
       import:
         databases:
           - immich
-        source:
-          externalCluster: postgres-subchart
         type: microservice
       owner: immich
       postInitSQL:
