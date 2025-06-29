@@ -6477,20 +6477,6 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: gitea-postgresql
-  namespace: gitea
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: proxmox-csi
-  volumeName: gitea-postgresql
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: immich-library
   namespace: immich
 spec:
