@@ -2,6 +2,14 @@ machine:
   kubelet:
     extraArgs:
       cloud-provider: external # required for Proxmox CCM
+    extraMounts:
+      - destination: /var/lib/longhorn
+        type: bind
+        source: /var/lib/longhorn
+        options:
+          - bind
+          - rshared
+          - rw
   network:
     hostname: ${hostname}
     interfaces:

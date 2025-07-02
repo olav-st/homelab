@@ -1,0 +1,22 @@
+defaultSettings:
+  backupCompressionMethod: gzip # to save bandwidth since upload speed is limited
+  defaultReplicaCount: 1
+  defaultDataLocality: best-effort
+  nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+  defaultDataPath: /var/lib/longhorn
+
+defaultBackupStore:
+  backupTarget: cifs://100.124.87.95/backup-longhorn
+  backupTargetCredentialSecret: longhorn-truenas-cifs-credentials
+
+persistence:
+  defaultClassReplicaCount: 1
+  defaultDataLocality: best-effort
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  host: longhorn.homelab.olav.ninja
+  tls: true
+  tlsSecret: longhorn-tls-certificate

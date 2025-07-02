@@ -2,7 +2,7 @@ locals {
   talos = {
     current_version = "v1.10.4"
     upgrade_version = "v1.10.4" # renovate: github-releases=siderolabs/talos
-    base_url        = "https://factory.talos.dev/image/ef909f816be835a6236a401377846307a921533d6b218c2d8e95c6d9013ede06" # nocloud image with siderolabs/qemu-guest-agent and siderolabs/amdgpu extensions
+    base_url        = "https://factory.talos.dev/image/f104c23ce4ee3effa915504ac757b38a37c75389a8a7b30670fc045d67664a0c" # nocloud image with siderolabs/qemu-guest-agent and siderolabs/amdgpu and siderolabs/iscsi-tools and siderolabs/util-linux-tools extensions
   }
 
   is_upgrade = local.talos.upgrade_version != local.talos.current_version

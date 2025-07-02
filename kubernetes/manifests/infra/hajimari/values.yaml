@@ -12,6 +12,8 @@ hajimari:
         url: 'https://hubble.homelab.olav.ninja'
       - name: Keycloak
         url: 'https://keycloak.homelab.olav.ninja'
+      - name: Longhorn
+        url: 'https://longhorn.homelab.olav.ninja'
       - name: Netbird
         url: 'https://netbird.homelab.olav.ninja'
     - group: Infrastructure

@@ -10,6 +10,7 @@ resources:
   - ./device-plugins
   - ./hajimari
   - ./keycloak
+  - ./longhorn
   - ./netbird
   - ./oidc-config
   - ./proxmox-ccm

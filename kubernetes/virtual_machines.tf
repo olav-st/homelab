@@ -31,7 +31,7 @@ resource "proxmox_virtual_environment_vm" "talos" {
     file_id      = each.value.image
     file_format  = "raw"
     interface    = "virtio0"
-    size         = 64
+    size         = 512
   }
 
   operating_system {
