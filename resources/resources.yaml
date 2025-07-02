@@ -57,6 +57,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: longhorn-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     pod-security.kubernetes.io/audit: baseline
     pod-security.kubernetes.io/enforce: privileged
@@ -369,6 +374,42 @@ metadata:
     helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
   name: proxmox-cloud-controller-manager
   namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-service-account
+  namespace: longhorn-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-support-bundle
+  namespace: longhorn-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-ui-service-account
+  namespace: longhorn-system
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -2888,6 +2929,187 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-role
+rules:
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - events
+      - persistentvolumes
+      - persistentvolumeclaims
+      - persistentvolumeclaims/status
+      - nodes
+      - proxy/nodes
+      - pods/log
+      - secrets
+      - services
+      - endpoints
+      - configmaps
+      - serviceaccounts
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+      - statefulsets
+      - deployments
+    verbs:
+      - '*'
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - '*'
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
+    verbs:
+      - '*'
+  - apiGroups:
+      - scheduling.k8s.io
+    resources:
+      - priorityclasses
+    verbs:
+      - watch
+      - list
+  - apiGroups:
+      - storage.k8s.io
+    resources:
+      - storageclasses
+      - volumeattachments
+      - volumeattachments/status
+      - csinodes
+      - csidrivers
+    verbs:
+      - '*'
+  - apiGroups:
+      - snapshot.storage.k8s.io
+    resources:
+      - volumesnapshotclasses
+      - volumesnapshots
+      - volumesnapshotcontents
+      - volumesnapshotcontents/status
+    verbs:
+      - '*'
+  - apiGroups:
+      - longhorn.io
+    resources:
+      - volumes
+      - volumes/status
+      - engines
+      - engines/status
+      - replicas
+      - replicas/status
+      - settings
+      - settings/status
+      - engineimages
+      - engineimages/status
+      - nodes
+      - nodes/status
+      - instancemanagers
+      - instancemanagers/status
+      - sharemanagers
+      - sharemanagers/status
+      - backingimages
+      - backingimages/status
+      - backingimagemanagers
+      - backingimagemanagers/status
+      - backingimagedatasources
+      - backingimagedatasources/status
+      - backuptargets
+      - backuptargets/status
+      - backupvolumes
+      - backupvolumes/status
+      - backups
+      - backups/status
+      - recurringjobs
+      - recurringjobs/status
+      - orphans
+      - orphans/status
+      - snapshots
+      - snapshots/status
+      - supportbundles
+      - supportbundles/status
+      - systembackups
+      - systembackups/status
+      - systemrestores
+      - systemrestores/status
+      - volumeattachments
+      - volumeattachments/status
+      - backupbackingimages
+      - backupbackingimages/status
+    verbs:
+      - '*'
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - '*'
+  - apiGroups:
+      - metrics.k8s.io
+    resources:
+      - pods
+      - nodes
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - apiregistration.k8s.io
+    resources:
+      - apiservices
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs:
+      - get
+      - list
+      - create
+      - patch
+      - delete
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+      - clusterrolebindings
+      - clusterroles
+    verbs:
+      - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
     app.kubernetes.io/instance: sealed-secrets
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
@@ -3681,6 +3903,44 @@ subjects:
   - kind: ServiceAccount
     name: hubble-ui
     namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-bind
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: longhorn-role
+subjects:
+  - kind: ServiceAccount
+    name: longhorn-service-account
+    namespace: longhorn-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-support-bundle
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: longhorn-support-bundle
+    namespace: longhorn-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -4482,6 +4742,8 @@ data:
         url: https://hubble.homelab.olav.ninja
       - name: Keycloak
         url: https://keycloak.homelab.olav.ninja
+      - name: Longhorn
+        url: https://longhorn.homelab.olav.ninja
       - name: Netbird
         url: https://netbird.homelab.olav.ninja
       group: Utilities
@@ -4911,6 +5173,77 @@ kind: ConfigMap
 metadata:
   name: hubble-ui-nginx
   namespace: kube-system
+---
+apiVersion: v1
+data:
+  default-resource.yaml: |-
+    backup-target: cifs://100.124.87.95/backup-longhorn
+    backup-target-credential-secret: longhorn-truenas-cifs-credentials
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-default-resource
+  namespace: longhorn-system
+---
+apiVersion: v1
+data:
+  default-setting.yaml: |-
+    default-data-path: /var/lib/longhorn
+    default-replica-count: 1
+    default-data-locality: best-effort
+    priority-class: longhorn-critical
+    node-down-pod-deletion-policy: delete-both-statefulset-and-deployment-pod
+    disable-revision-counter: true
+    backup-compression-method: gzip
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-default-setting
+  namespace: longhorn-system
+---
+apiVersion: v1
+data:
+  storageclass.yaml: |
+    kind: StorageClass
+    apiVersion: storage.k8s.io/v1
+    metadata:
+      name: longhorn
+      annotations:
+        storageclass.kubernetes.io/is-default-class: "true"
+    provisioner: driver.longhorn.io
+    allowVolumeExpansion: true
+    reclaimPolicy: "Delete"
+    volumeBindingMode: Immediate
+    parameters:
+      numberOfReplicas: "1"
+      staleReplicaTimeout: "30"
+      fromBackup: ""
+      fsType: "ext4"
+      dataLocality: "best-effort"
+      unmapMarkSnapChainRemoved: "ignored"
+      disableRevisionCounter: "true"
+      dataEngine: "v1"
+      backupTargetName: "default"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-storageclass
+  namespace: longhorn-system
 ---
 apiVersion: v1
 data:
@@ -6209,6 +6542,112 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: longhorn-admission-webhook
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-admission-webhook
+  namespace: longhorn-system
+spec:
+  ports:
+    - name: admission-webhook
+      port: 9502
+      targetPort: admission-wh
+  selector:
+    longhorn.io/admission-webhook: longhorn-admission-webhook
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: longhorn-manager
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-backend
+  namespace: longhorn-system
+spec:
+  ports:
+    - name: manager
+      port: 9500
+      targetPort: manager
+  selector:
+    app: longhorn-manager
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: longhorn-conversion-webhook
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-conversion-webhook
+  namespace: longhorn-system
+spec:
+  ports:
+    - name: conversion-webhook
+      port: 9501
+      targetPort: conversion-wh
+  selector:
+    longhorn.io/conversion-webhook: longhorn-conversion-webhook
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: longhorn-ui
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-frontend
+  namespace: longhorn-system
+spec:
+  ports:
+    - name: http
+      nodePort: null
+      port: 80
+      targetPort: http
+  selector:
+    app: longhorn-ui
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: longhorn-recovery-backend
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-recovery-backend
+  namespace: longhorn-system
+spec:
+  ports:
+    - name: recovery-backend
+      port: 9503
+      targetPort: recov-backend
+  selector:
+    longhorn.io/recovery-backend: longhorn-recovery-backend
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: h2c
   labels:
@@ -6459,6 +6898,21 @@ spec:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
   type: LoadBalancer
+---
+apiVersion: scheduling.k8s.io/v1
+description: Ensure Longhorn pods have the highest priority to prevent any unexpected eviction by the Kubernetes scheduler under node pressure
+globalDefault: false
+kind: PriorityClass
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-critical
+preemptionPolicy: PreemptLowerPriority
+value: 1000000000
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -8439,6 +8893,149 @@ spec:
               - key: config.yaml
                 path: config.yaml
             secretName: proxmox-ccm-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-driver-deployer
+  namespace: longhorn-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: longhorn-driver-deployer
+  template:
+    metadata:
+      labels:
+        app: longhorn-driver-deployer
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+    spec:
+      containers:
+        - command:
+            - longhorn-manager
+            - -d
+            - deploy-driver
+            - --manager-image
+            - longhornio/longhorn-manager:v1.9.0
+            - --manager-url
+            - http://longhorn-backend:9500/v1
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: SERVICE_ACCOUNT
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.serviceAccountName
+            - name: CSI_ATTACHER_IMAGE
+              value: longhornio/csi-attacher:v4.8.1
+            - name: CSI_PROVISIONER_IMAGE
+              value: longhornio/csi-provisioner:v5.2.0
+            - name: CSI_NODE_DRIVER_REGISTRAR_IMAGE
+              value: longhornio/csi-node-driver-registrar:v2.13.0
+            - name: CSI_RESIZER_IMAGE
+              value: longhornio/csi-resizer:v1.13.2
+            - name: CSI_SNAPSHOTTER_IMAGE
+              value: longhornio/csi-snapshotter:v8.2.0
+            - name: CSI_LIVENESS_PROBE_IMAGE
+              value: longhornio/livenessprobe:v2.15.0
+          image: longhornio/longhorn-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-driver-deployer
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - while [ $(curl -m 1 -s -o /dev/null -w "%{http_code}" http://longhorn-backend:9500/v1) != "200" ]; do echo waiting; sleep 2; done
+          image: longhornio/longhorn-manager:v1.9.0
+          name: wait-longhorn-manager
+      priorityClassName: longhorn-critical
+      securityContext:
+        runAsUser: 0
+      serviceAccountName: longhorn-service-account
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: longhorn-ui
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-ui
+  namespace: longhorn-system
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: longhorn-ui
+  template:
+    metadata:
+      labels:
+        app: longhorn-ui
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - longhorn-ui
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+      containers:
+        - env:
+            - name: LONGHORN_MANAGER_IP
+              value: http://longhorn-backend:9500
+            - name: LONGHORN_UI_PORT
+              value: "8000"
+          image: longhornio/longhorn-ui:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-ui
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+            - mountPath: /var/cache/nginx/
+              name: nginx-cache
+            - mountPath: /var/config/nginx/
+              name: nginx-config
+            - mountPath: /var/run/
+              name: var-run
+      priorityClassName: longhorn-critical
+      serviceAccountName: longhorn-ui-service-account
+      volumes:
+        - emptyDir: {}
+          name: nginx-cache
+        - emptyDir: {}
+          name: nginx-config
+        - emptyDir: {}
+          name: var-run
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11599,6 +12196,138 @@ spec:
       maxUnavailable: 2
     type: RollingUpdate
 ---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: longhorn-manager
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-manager
+  namespace: longhorn-system
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  template:
+    metadata:
+      labels:
+        app: longhorn-manager
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+    spec:
+      containers:
+        - command:
+            - longhorn-manager
+            - -d
+            - daemon
+            - --engine-image
+            - longhornio/longhorn-engine:v1.9.0
+            - --instance-manager-image
+            - longhornio/longhorn-instance-manager:v1.9.0
+            - --share-manager-image
+            - longhornio/longhorn-share-manager:v1.9.0
+            - --backing-image-manager-image
+            - longhornio/backing-image-manager:v1.9.0
+            - --support-bundle-manager-image
+            - longhornio/support-bundle-kit:v0.0.55
+            - --manager-image
+            - longhornio/longhorn-manager:v1.9.0
+            - --service-account
+            - longhorn-service-account
+            - --upgrade-version-check
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: longhornio/longhorn-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-manager
+          ports:
+            - containerPort: 9500
+              name: manager
+            - containerPort: 9501
+              name: conversion-wh
+            - containerPort: 9502
+              name: admission-wh
+            - containerPort: 9503
+              name: recov-backend
+          readinessProbe:
+            httpGet:
+              path: /v1/healthz
+              port: 9501
+              scheme: HTTPS
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /host/boot/
+              name: boot
+              readOnly: true
+            - mountPath: /host/dev/
+              name: dev
+            - mountPath: /host/proc/
+              name: proc
+              readOnly: true
+            - mountPath: /host/etc/
+              name: etc
+              readOnly: true
+            - mountPath: /var/lib/longhorn/
+              mountPropagation: Bidirectional
+              name: longhorn
+            - mountPath: /tls-files/
+              name: longhorn-grpc-tls
+        - command:
+            - sh
+            - -c
+            - echo share-manager image pulled && sleep infinity
+          image: longhornio/longhorn-share-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: pre-pull-share-manager-image
+      priorityClassName: longhorn-critical
+      serviceAccountName: longhorn-service-account
+      volumes:
+        - hostPath:
+            path: /boot/
+          name: boot
+        - hostPath:
+            path: /dev/
+          name: dev
+        - hostPath:
+            path: /proc/
+          name: proc
+        - hostPath:
+            path: /etc/
+          name: etc
+        - hostPath:
+            path: /var/lib/longhorn/
+          name: longhorn
+        - name: longhorn-grpc-tls
+          secret:
+            optional: true
+            secretName: longhorn-grpc-tls
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 100%
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -11659,6 +12388,144 @@ spec:
           type: RuntimeDefault
       serviceAccountName: cert-manager-startupapicheck
   ttlSecondsAfterFinished: 60
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-post-upgrade
+  namespace: longhorn-system
+spec:
+  activeDeadlineSeconds: 900
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+      name: longhorn-post-upgrade
+    spec:
+      containers:
+        - command:
+            - longhorn-manager
+            - post-upgrade
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          image: longhornio/longhorn-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-post-upgrade
+      priorityClassName: longhorn-critical
+      restartPolicy: OnFailure
+      serviceAccountName: longhorn-service-account
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation,hook-failed
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-pre-upgrade
+  namespace: longhorn-system
+spec:
+  activeDeadlineSeconds: 900
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+      name: longhorn-pre-upgrade
+    spec:
+      containers:
+        - command:
+            - longhorn-manager
+            - pre-upgrade
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          image: longhornio/longhorn-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-pre-upgrade
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /host/proc/
+              name: proc
+      restartPolicy: OnFailure
+      serviceAccountName: longhorn-service-account
+      volumes:
+        - hostPath:
+            path: /proc/
+          name: proc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-uninstall
+  namespace: longhorn-system
+spec:
+  activeDeadlineSeconds: 900
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/version: v1.9.0
+        helm.sh/chart: longhorn-1.9.0
+      name: longhorn-uninstall
+    spec:
+      containers:
+        - command:
+            - longhorn-manager
+            - uninstall
+            - --force
+          env:
+            - name: LONGHORN_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          image: longhornio/longhorn-manager:v1.9.0
+          imagePullPolicy: IfNotPresent
+          name: longhorn-uninstall
+      priorityClassName: longhorn-critical
+      restartPolicy: Never
+      serviceAccountName: longhorn-service-account
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
@@ -11854,6 +12721,21 @@ spec:
     metadata:
       name: keycloak-initial-passwords
       namespace: keycloak
+    type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: longhorn-truenas-cifs-credentials
+  namespace: longhorn-system
+spec:
+  encryptedData:
+    CIFS_PASSWORD: AgAK0Zx71bgM/afd7fl+ynP/g78kh+mBf7gQtCjrwXQZCpBhNWMhmLHs4P6Ca07c/IRT/K7UCgEcq4Eqjh0+0N9QyLJAaPhDP46oEtb+hZgbW8WYvRYTqHKxeqGcKThUH0ktIcQNXIBwj00JNHsPvAwm693S6NaLV1DmUZsMr7aEkUoK7dfwPTF0V6DMGuPsHSrJL7SkIccViU/ThBliUdLttO8R1eTM/MKAPVTokQtxilRBVuM9Jmn017K6uXqX/14+I37W3o22qNng7ouxVggP5xH9+R4rXOqIyHi+jUfQFo0MI1U/lWt9kg1/IoTPHJ/PXoNYQcqpQOuTbO+hESeQyKisx8e+ApwRemC1LkGMSzd7ymgQQOROdD92spWFZKBbIgtywIbGQbjLQKmSMEhioMDPi0D9bEvyjDUth/sMvplqWHu170w1A6yQS2W3OPM31zikYt5XyDnOEfzZ87pqvdZsTWW8FJjukancrixSuQLKFPNgrUku9vw22DyRqbqoI+NbQdKt4IYckpPkKmkVXbgRfD5hLQV2B0WBgSTEt2JMKXNAZMq7gRmwrI8aQLsSFumKIZD1xGpQhUr5e137RbuX//GPUl5mBHdiVfkSW7Ojz1RCn2uh4P55HJZk/dQPZNdHqz08vRIqAmRa+CeSbImzR+1h2Bi4YN0AvCgm4+vXrrs2cAfxSZ8CgAQ74srJMkC3xpGGrW85PRvxbKPdXZowaHlzZYwrO2SilzETUA==
+    CIFS_USERNAME: AgAa3oFfTrhiWjqAP8j9pQugorO9184Pcx5azNfxoXE5fbRTG66cnQEr2bnQSfXX1ULo/Hu8yUkWW4hXO1ZZUlFnu1mdURd0GoqicKtId308jaqgQGC+fmK+222qstgbNGUeGupOh4h0RKMxbEPRjQ0xIQ4uiIqhpTnDzPtJeHATSFVsxEBjG1+vCzgJdpvmmf9AaX/PFjbndnFNmZnU2HSQcgLlm1Ff4ZwmolCeFja1R0bcIbCjUl3vJBkfWQ5jUewDWzmZIOvkq3bKGp4Ojm1FWleo9fhRNNjTqEgqEHcARzndVbxZUw5AOvlKGiovuan5n9Ubic4pFTHGcGBzuUXIdFJxvyZDz04bjPZcwWHd0Ll84gwRX0QatWKOVkh6MdXHSXnx4mnQFufHqRfADi/L6sIcFun5ztbbleuJCtSXh4vdRHzUSxyXst49TfAsKVpLLXlV50BXOf4Fg+LVddG/cMhkhi/ZC1nXc6fREgZAJgtqEJHSCPL2gx8RMWetVM8XK7xU4FDZDqgVacydjs1B6x7u8/rBtnD6AkR/AJZEzaGpvA8XizI8i5EZBj6QbYY+woiSW6WgU5Y6MMbPWM8LqrL4POON3RJWCh0/8eXKx8xZARrrmakncq3OlgDrDhRu37r96jxVzWaWtcWqBVE3vTLtlWpZ+U0tzBg4Au1DZbUh2fx3N7e5Y1JwLIoXPM77RFv27QhYYA==
+  template:
+    metadata:
+      name: longhorn-truenas-cifs-credentials
+      namespace: longhorn-system
     type: Opaque
 ---
 apiVersion: bitnami.com/v1alpha1
@@ -12292,6 +13174,37 @@ spec:
     - hosts:
         - hubble.homelab.olav.ninja
       secretName: hubble-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  labels:
+    app: longhorn-ingress
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.9.0
+    helm.sh/chart: longhorn-1.9.0
+  name: longhorn-ingress
+  namespace: longhorn-system
+spec:
+  rules:
+    - host: longhorn.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: longhorn-frontend
+                port:
+                  number: 80
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - longhorn.homelab.olav.ninja
+      secretName: longhorn-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
