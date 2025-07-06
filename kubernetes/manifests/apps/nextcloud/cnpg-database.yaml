@@ -13,9 +13,9 @@ spec:
       database: nextcloud
       owner: nextcloud
   storage:
-    size: 10G
+    size: 5G
     pvcTemplate:
-      storageClassName: proxmox-csi
-      volumeName: nextcloud-postgresql
+      storageClassName: longhorn-static
+      volumeName: nextcloud-postgresql-longhorn
       accessModes:
         - ReadWriteOnce
