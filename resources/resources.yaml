@@ -6915,23 +6915,9 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 300Gi
-  storageClassName: proxmox-csi
-  volumeName: nextcloud-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nextcloud-mariadb
-  namespace: nextcloud
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: proxmox-csi
-  volumeName: nextcloud-mariadb
+      storage: 310Gi
+  storageClassName: longhorn-static
+  volumeName: nextcloud-data-longhorn
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -13497,9 +13483,9 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: proxmox-csi
-      volumeName: nextcloud-postgresql
-    size: 10G
+      storageClassName: longhorn-static
+      volumeName: nextcloud-postgresql-longhorn
+    size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
