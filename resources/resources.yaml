@@ -6848,8 +6848,8 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: proxmox-csi
-  volumeName: gitea
+  storageClassName: longhorn-static
+  volumeName: gitea-longhorn
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -13425,9 +13425,9 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: proxmox-csi
-      volumeName: gitea-postgresql
-    size: 10G
+      storageClassName: longhorn-static
+      volumeName: gitea-postgresql-longhorn
+    size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
