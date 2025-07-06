@@ -6862,8 +6862,8 @@ spec:
   resources:
     requests:
       storage: 150Gi
-  storageClassName: proxmox-csi
-  volumeName: immich-library
+  storageClassName: longhorn-static
+  volumeName: immich-library-longhorn
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -13462,8 +13462,8 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: proxmox-csi
-      volumeName: immich-postgresql
-    size: 10G
+      volumeName: immich-postgresql-longhorn
+    size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
