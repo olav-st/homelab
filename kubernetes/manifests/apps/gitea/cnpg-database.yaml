@@ -13,9 +13,9 @@ spec:
       database: gitea
       owner: gitea
   storage:
-    size: 10G
+    size: 5G
     pvcTemplate:
-      storageClassName: proxmox-csi
-      volumeName: gitea-postgresql
+      storageClassName: longhorn-static
+      volumeName: gitea-postgresql-longhorn
       accessModes:
         - ReadWriteOnce
