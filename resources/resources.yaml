@@ -13461,7 +13461,7 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: proxmox-csi
+      storageClassName: longhorn-static
       volumeName: immich-postgresql-longhorn
     size: 5G
 ---
