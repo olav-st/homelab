@@ -4,10 +4,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: immich-library
 spec:
-  volumeName: immich-library
+  volumeName: immich-library-longhorn
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 150Gi
-  storageClassName: proxmox-csi
+      storage: 120Gi
+  storageClassName: longhorn-static

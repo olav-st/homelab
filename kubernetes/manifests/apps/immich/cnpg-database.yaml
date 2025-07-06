@@ -30,9 +30,9 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
 
   storage:
-    size: 10G
+    size: 5G
     pvcTemplate:
-      storageClassName: proxmox-csi
-      volumeName: immich-postgresql
+      storageClassName: longhorn-static
+      volumeName: immich-postgresql-longhorn
       accessModes:
         - ReadWriteOnce
