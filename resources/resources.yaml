@@ -6882,8 +6882,8 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: proxmox-csi
-  volumeName: netbird-management
+  storageClassName: longhorn-static
+  volumeName: netbird-management-longhorn
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6902,8 +6902,8 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: proxmox-csi
-  volumeName: netbird-signal
+  storageClassName: longhorn-static
+  volumeName: netbird-signal-longhorn
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
