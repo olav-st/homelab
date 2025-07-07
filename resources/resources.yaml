@@ -6861,7 +6861,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 150Gi
+      storage: 120Gi
   storageClassName: longhorn-static
   volumeName: immich-library-longhorn
 ---
