@@ -14643,6 +14643,7 @@ spec:
       featureGates:
         - LiveMigration
         - NetworkBindingPlugins
+        - HostDevices
     permittedHostDevices:
       usb:
         - resourceName: kubevirt.io/nabu-casa-skyconnect
