@@ -1,0 +1,27 @@
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  name: kubevirt
+  namespace: kubevirt
+spec:
+  configuration:
+    developerConfiguration:
+      featureGates:
+        - LiveMigration
+        - NetworkBindingPlugins
+        - HostDevices
+    smbios:
+      sku: "TalosCloud"
+      version: "v0.1.0"
+      manufacturer: "Talos Virtualization"
+      product: "talosvm"
+      family: "ccio"
+    permittedHostDevices:
+      usb:
+        - resourceName: kubevirt.io/nabu-casa-skyconnect
+          selectors:
+            - vendor: 10c4
+              product: ea60
+  workloadUpdateStrategy:
+    workloadUpdateMethods:
+    - LiveMigrate 

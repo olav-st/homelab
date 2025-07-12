@@ -10,6 +10,7 @@ resources:
   - ./device-plugins
   - ./hajimari
   - ./keycloak
+  - ./kube-virt
   - ./longhorn
   - ./netbird
   - ./oidc-config

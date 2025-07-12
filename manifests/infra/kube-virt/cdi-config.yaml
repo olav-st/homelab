@@ -1,0 +1,14 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: CDI
+metadata:
+  name: cdi
+spec:
+  config:
+    scratchSpaceStorageClass: longhorn
+    podResourceRequirements:
+      requests:
+        cpu: "10m"
+        memory: "60M"
+      limits:
+        cpu: "750m"
+        memory: "2Gi"
