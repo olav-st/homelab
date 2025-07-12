@@ -6999,7 +6999,6 @@ spec:
               amd.com/gpu: 1
               memory: 8096M
             requests:
-              cpu: 500m
               memory: 128M
           volumeMounts:
             - mountPath: /config
