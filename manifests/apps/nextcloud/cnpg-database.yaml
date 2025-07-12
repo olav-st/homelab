@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: nextcloud-postgresql
+  namespace: nextcloud
+spec:
+  instances: 1
+  postgresql:
+    parameters:
+      timezone: Europe/Oslo
+  bootstrap:
+    initdb:
+      database: nextcloud
+      owner: nextcloud
+  storage:
+    size: 5G
+    pvcTemplate:
+      storageClassName: longhorn-static
+      volumeName: nextcloud-postgresql
+      accessModes:
+        - ReadWriteOnce

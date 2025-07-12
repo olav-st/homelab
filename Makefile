@@ -1,5 +1,5 @@
-MANIFEST_INPUT_DIR=kubernetes/manifests
-MANIFEST_OUTPUT_DIR=kubernetes/rendered-manifests
+MANIFEST_INPUT_DIR=manifests
+MANIFEST_OUTPUT_DIR=rendered-manifests
 
 .PHONY: help render-manifests
 .DEFAULT_GOAL := help
@@ -39,7 +39,7 @@ rendered-manifests-diff: render-manifests ## Render Kubernetes manifests and sho
 	git worktree add $(TEMP_DIR) rendered_manifests
 	
 	# Copy rendered manifests to temp directory
-	cp -r kubernetes/rendered-manifests/* $(TEMP_DIR)
+	cp -r rendered-manifests/* $(TEMP_DIR)
 	
 	# Go to temp directory and generate diff
 	@echo "Generating diff..."
@@ -60,7 +60,7 @@ test: apply-rendered-crds ## Test rendered manifests (dry-run)
 render-and-test: render-manifests test
 
 clean-charts: ## Clean downloaded helm chart folders
-	find kubernetes/manifests/ -type d -name "charts" -exec rm -rv {} +
+	find manifests/ -type d -name "charts" -exec rm -rv {} +
 
 clean-manifests: ## Clean generated manifests
 	rm ${MANIFEST_OUTPUT_DIR}/crds/crds.yaml

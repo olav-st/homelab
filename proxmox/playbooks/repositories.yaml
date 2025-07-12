@@ -1,8 +1,0 @@
-- hosts: all
-  become: yes
-  tasks:
-    - name: Proxmox VE pve-no-subscription repository
-      ansible.builtin.apt_repository:
-        state: present
-        repo: deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
-        filename: pve-no-subscription

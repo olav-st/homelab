@@ -1,0 +1,27 @@
+ollama:
+  gpu:
+    enabled: true
+    type: 'amd'
+    number: 1
+
+ingress:
+  enabled: true
+  annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: ollama.homelab.olav.ninja
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ollama-tls-certificate
+      hosts:
+        - ollama.homelab.olav.ninja
+
+persistentVolume:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  storageClass: longhorn-static
+  size: 60Gi
+  volumeName: ollama

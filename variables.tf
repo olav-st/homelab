@@ -1,18 +1,3 @@
-variable "proxmox_ip" {
-  type    = string
-  default = "192.168.0.190"
-}
-
-variable "proxmox_node" {
-  type    = string
-  default = "pve-alpha"
-}
-
-variable "proxmox_cluster" {
-  type    = string
-  default = "homelab"
-}
-
 variable "github_org" {
   type    = string
   default = "olav-st"
@@ -36,11 +21,6 @@ variable "github_token" {
 variable "cluster_name" {
   type    = string
   default = "homelab"
-}
-
-variable "home_assistant_vm_id" {
-  type    = number
-  default = 100
 }
 
 variable "default_gateway" {

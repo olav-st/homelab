@@ -1,7 +1,0 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: netbird-backend-management
-spec:
-  volumeName: netbird-management-longhorn
-  storageClassName: longhorn-static
