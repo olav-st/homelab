@@ -1,6 +1,11 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: bambustudio
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: cert-manager
 ---
 apiVersion: v1
@@ -5791,6 +5796,29 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    app.kubernetes.io/service: bambustudio
+    helm.sh/chart: app-template-4.1.2
+  name: bambustudio
+  namespace: bambustudio
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/controller: bambustudio
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/name: bambustudio
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app: cert-manager
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: cert-manager
@@ -6768,6 +6796,34 @@ value: 1000000000
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: bambustudio-config
+  namespace: bambustudio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn-static
+  volumeName: bambustudio-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bambustudio-library
+  namespace: bambustudio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 25Gi
+  storageClassName: longhorn-static
+  volumeName: bambustudio-library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: gitea
   namespace: gitea
 spec:
@@ -6894,6 +6950,75 @@ spec:
       storage: 50Gi
   storageClassName: longhorn-static
   volumeName: pingvinshare
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/controller: bambustudio
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    helm.sh/chart: app-template-4.1.2
+  name: bambustudio
+  namespace: bambustudio
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/controller: bambustudio
+      app.kubernetes.io/instance: bambustudio
+      app.kubernetes.io/name: bambustudio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/controller: bambustudio
+        app.kubernetes.io/instance: bambustudio
+        app.kubernetes.io/name: bambustudio
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - env:
+            - name: DARK_MODE
+              value: "true"
+            - name: DRINODE
+              value: /dev/dri/renderD128
+            - name: GUID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: Europe/Oslo
+          image: linuxserver/bambustudio:02.01.01
+          name: app
+          resources:
+            limits:
+              amd.com/gpu: 1
+              memory: 8096M
+            requests:
+              cpu: 500m
+              memory: 128M
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /library
+              name: data
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      serviceAccountName: default
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: bambustudio-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: bambustudio-library
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -12365,6 +12490,38 @@ spec:
       name: crossplane-keycloak-credentials
       namespace: keycloak
     source: Secret
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: Bambu Studio
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+  labels:
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    helm.sh/chart: app-template-4.1.2
+  name: bambustudio
+  namespace: bambustudio
+spec:
+  rules:
+    - host: bambustudio.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: bambustudio
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - bambustudio.homelab.olav.ninja
+      secretName: bambustudio-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
