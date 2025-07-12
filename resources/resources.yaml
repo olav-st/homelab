@@ -14484,8 +14484,10 @@ spec:
   config:
     podResourceRequirements:
       limits:
+        cpu: 750m
         memory: 2Gi
       requests:
+        cpu: 10m
         memory: 60M
     scratchSpaceStorageClass: longhorn
 ---
