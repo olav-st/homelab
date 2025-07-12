@@ -21,15 +21,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    pod-security.kubernetes.io/audit: baseline
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/warn: baseline
-  name: csi-proxmox
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: gitea
 ---
 apiVersion: v1
@@ -105,22 +96,6 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline
   name: traefik
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: proxmox-csi
-mountOptions:
-  - noatime
-parameters:
-  cache: writethrough
-  csi.storage.k8s.io/fstype: ext4
-  ssd: "true"
-  storage: local-zfs
-provisioner: csi.proxmox.sinextra.dev
-reclaimPolicy: Retain
-volumeBindingMode: WaitForFirstConsumer
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -241,30 +216,6 @@ metadata:
   namespace: crossplane
 ---
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-controller
-  namespace: csi-proxmox
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-node
-  namespace: csi-proxmox
----
-apiVersion: v1
 automountServiceAccountToken: false
 kind: ServiceAccount
 metadata:
@@ -365,18 +316,6 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: hubble-ui
-  namespace: kube-system
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-cloud-controller-manager
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.9.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
-  name: proxmox-cloud-controller-manager
   namespace: kube-system
 ---
 apiVersion: v1
@@ -661,54 +600,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-controller
-  namespace: csi-proxmox
-rules:
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - watch
-      - list
-      - delete
-      - update
-      - create
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - csistoragecapacities
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-    verbs:
-      - get
-  - apiGroups:
-      - apps
-    resources:
-      - replicasets
-    verbs:
-      - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
     app.kubernetes.io/part-of: cilium
   name: cilium-config-agent
   namespace: kube-system
@@ -843,122 +734,6 @@ rules:
       - services/proxy
     verbs:
       - create
-      - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-controller
-  namespace: csi-proxmox
-rules:
-  - apiGroups:
-      - ""
-    resources:
-      - persistentvolumes
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - persistentvolumeclaims
-    verbs:
-      - get
-      - list
-      - watch
-      - update
-  - apiGroups:
-      - ""
-    resources:
-      - persistentvolumeclaims/status
-    verbs:
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - storageclasses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - csinodes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - volumeattributesclasses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - volumeattachments
-    verbs:
-      - get
-      - list
-      - watch
-      - patch
-  - apiGroups:
-      - storage.k8s.io
-    resources:
-      - volumeattachments/status
-    verbs:
-      - patch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-node
-  namespace: csi-proxmox
-rules:
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
       - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -3098,64 +2873,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/instance: proxmox-cloud-controller-manager
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.9.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
-  name: system:proxmox-cloud-controller-manager
-rules:
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - create
-      - update
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
-      - update
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - nodes/status
-    verbs:
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - serviceaccounts
-    verbs:
-      - create
-      - get
-  - apiGroups:
-      - ""
-    resources:
-      - serviceaccounts/token
-    verbs:
-      - create
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
@@ -3339,20 +3056,6 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: proxmox-csi-plugin-controller
-  namespace: csi-proxmox
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: proxmox-csi-plugin-controller
-subjects:
-  - kind: ServiceAccount
-    name: proxmox-csi-plugin-controller
-    namespace: csi-proxmox
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
   labels:
     app.kubernetes.io/part-of: cilium
   name: cilium-config-agent
@@ -3412,20 +3115,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: hubble-generate-certs
-    namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: system:proxmox-cloud-controller-manager:extension-apiserver-authentication-reader
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: extension-apiserver-authentication-reader
-subjects:
-  - kind: ServiceAccount
-    name: proxmox-cloud-controller-manager
     namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -3884,32 +3573,6 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: proxmox-csi-plugin-controller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: proxmox-csi-plugin-controller
-subjects:
-  - kind: ServiceAccount
-    name: proxmox-csi-plugin-controller
-    namespace: csi-proxmox
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: proxmox-csi-plugin-node
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: proxmox-csi-plugin-node
-subjects:
-  - kind: ServiceAccount
-    name: proxmox-csi-plugin-node
-    namespace: csi-proxmox
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
   labels:
     app.kubernetes.io/instance: sealed-secrets
     app.kubernetes.io/managed-by: Helm
@@ -3925,19 +3588,6 @@ subjects:
   - kind: ServiceAccount
     name: sealed-secrets
     namespace: sealed-secrets
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: system:proxmox-cloud-controller-manager
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:proxmox-cloud-controller-manager
-subjects:
-  - kind: ServiceAccount
-    name: proxmox-cloud-controller-manager
-    namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -4673,8 +4323,6 @@ data:
     - bookmarks:
       - name: OpenWrt
         url: http://192.168.0.1
-      - name: Proxmox
-        url: https://proxmox.homelab.olav.ninja:8006
       group: Infrastructure
     - bookmarks:
       - name: Cloudflare Dashboard
@@ -6849,7 +6497,7 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: longhorn-static
-  volumeName: gitea-longhorn
+  volumeName: gitea
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6863,7 +6511,7 @@ spec:
     requests:
       storage: 120Gi
   storageClassName: longhorn-static
-  volumeName: immich-library-longhorn
+  volumeName: immich-library
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6883,7 +6531,7 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: longhorn-static
-  volumeName: netbird-management-longhorn
+  volumeName: netbird-management
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6903,7 +6551,7 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: longhorn-static
-  volumeName: netbird-signal-longhorn
+  volumeName: netbird-signal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6917,7 +6565,7 @@ spec:
     requests:
       storage: 310Gi
   storageClassName: longhorn-static
-  volumeName: nextcloud-data-longhorn
+  volumeName: nextcloud-data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6936,7 +6584,7 @@ spec:
   resources:
     requests:
       storage: 60Gi
-  storageClassName: proxmox-csi
+  storageClassName: longhorn-static
   volumeName: ollama
 ---
 apiVersion: v1
@@ -6950,7 +6598,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: proxmox-csi
+  storageClassName: longhorn-static
   volumeName: open-webui
 ---
 apiVersion: v1
@@ -6964,7 +6612,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
-  storageClassName: proxmox-csi
+  storageClassName: longhorn-static
   volumeName: pingvinshare
 ---
 apiVersion: apps/v1
@@ -7700,194 +7348,6 @@ spec:
             runAsGroup: 65532
             runAsUser: 65532
       serviceAccountName: rbac-manager
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-controller
-  namespace: csi-proxmox
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: controller
-      app.kubernetes.io/instance: proxmox-csi-plugin
-      app.kubernetes.io/name: proxmox-csi-plugin
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      annotations:
-        checksum/config: ce080eff0c26b50fe73bf9fcda017c8ad47c1000729fd0c555cfe3535c6d6222
-      labels:
-        app.kubernetes.io/component: controller
-        app.kubernetes.io/instance: proxmox-csi-plugin
-        app.kubernetes.io/name: proxmox-csi-plugin
-    spec:
-      containers:
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --cloud-config=/etc/proxmox/config.yaml
-          image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.12.1
-          imagePullPolicy: IfNotPresent
-          name: proxmox-csi-plugin-controller
-          ports: null
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket-dir
-            - mountPath: /etc/proxmox/
-              name: cloud-config
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --timeout=3m
-            - --leader-election
-            - --default-fstype=ext4
-          image: registry.k8s.io/sig-storage/csi-attacher:v4.9.0
-          imagePullPolicy: IfNotPresent
-          name: csi-attacher
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket-dir
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --timeout=3m
-            - --leader-election
-            - --enable-capacity
-            - --capacity-ownerref-level=2
-            - --default-fstype=ext4
-          env:
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-          image: registry.k8s.io/sig-storage/csi-provisioner:v5.3.0
-          imagePullPolicy: IfNotPresent
-          name: csi-provisioner
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket-dir
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --timeout=3m
-            - --handle-volume-inuse-error=false
-            - --leader-election
-          image: registry.k8s.io/sig-storage/csi-resizer:v1.13.2
-          imagePullPolicy: IfNotPresent
-          name: csi-resizer
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket-dir
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-          image: registry.k8s.io/sig-storage/livenessprobe:v2.15.0
-          imagePullPolicy: IfNotPresent
-          name: liveness-probe
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket-dir
-      enableServiceLinks: false
-      hostAliases: []
-      initContainers: []
-      priorityClassName: system-cluster-critical
-      securityContext:
-        fsGroup: 65532
-        fsGroupChangePolicy: OnRootMismatch
-        runAsGroup: 65532
-        runAsNonRoot: true
-        runAsUser: 65532
-      serviceAccountName: proxmox-csi-plugin-controller
-      topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: controller
-              app.kubernetes.io/instance: proxmox-csi-plugin
-              app.kubernetes.io/name: proxmox-csi-plugin
-          maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-      volumes:
-        - emptyDir: {}
-          name: socket-dir
-        - name: cloud-config
-          secret:
-            secretName: proxmox-csi-plugin
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -8694,114 +8154,6 @@ spec:
           name: hubble-ui-nginx-conf
         - emptyDir: {}
           name: tmp-dir
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-cloud-controller-manager
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-cloud-controller-manager
-    app.kubernetes.io/version: v0.9.0
-    helm.sh/chart: proxmox-cloud-controller-manager-0.2.14
-  name: proxmox-cloud-controller-manager
-  namespace: kube-system
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: proxmox-cloud-controller-manager
-      app.kubernetes.io/name: proxmox-cloud-controller-manager
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      annotations:
-        checksum/config: ce080eff0c26b50fe73bf9fcda017c8ad47c1000729fd0c555cfe3535c6d6222
-      labels:
-        app.kubernetes.io/instance: proxmox-cloud-controller-manager
-        app.kubernetes.io/name: proxmox-cloud-controller-manager
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/control-plane
-                    operator: Exists
-      containers:
-        - args:
-            - --v=4
-            - --cloud-provider=proxmox
-            - --cloud-config=/etc/proxmox/config.yaml
-            - --controllers=cloud-node,cloud-node-lifecycle
-            - --leader-elect-resource-name=cloud-controller-manager-proxmox
-            - --use-service-account-credentials
-            - --secure-port=10258
-            - --authorization-always-allow-paths=/healthz,/livez,/readyz,/metrics
-          image: ghcr.io/sergelogvinov/proxmox-cloud-controller-manager:v0.9.0
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: metrics
-              scheme: HTTPS
-            initialDelaySeconds: 20
-            periodSeconds: 30
-            timeoutSeconds: 5
-          name: proxmox-cloud-controller-manager
-          ports:
-            - containerPort: 10258
-              name: metrics
-              protocol: TCP
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /etc/proxmox
-              name: cloud-config
-              readOnly: true
-      enableServiceLinks: false
-      initContainers: []
-      priorityClassName: system-cluster-critical
-      securityContext:
-        fsGroup: 10258
-        fsGroupChangePolicy: OnRootMismatch
-        runAsGroup: 10258
-        runAsNonRoot: true
-        runAsUser: 10258
-      serviceAccountName: proxmox-cloud-controller-manager
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
-          operator: Exists
-        - effect: NoSchedule
-          key: node.cloudprovider.kubernetes.io/uninitialized
-          operator: Exists
-      topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/instance: proxmox-cloud-controller-manager
-              app.kubernetes.io/name: proxmox-cloud-controller-manager
-          maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-      volumes:
-        - name: cloud-config
-          secret:
-            defaultMode: 416
-            items:
-              - key: config.yaml
-                path: config.yaml
-            secretName: proxmox-ccm-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11346,147 +10698,6 @@ spec:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    app.kubernetes.io/instance: proxmox-csi-plugin
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: proxmox-csi-plugin
-    app.kubernetes.io/version: v0.12.1
-    helm.sh/chart: proxmox-csi-plugin-0.3.11
-  name: proxmox-csi-plugin-node
-  namespace: csi-proxmox
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: node
-      app.kubernetes.io/instance: proxmox-csi-plugin
-      app.kubernetes.io/name: proxmox-csi-plugin
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: node
-        app.kubernetes.io/instance: proxmox-csi-plugin
-        app.kubernetes.io/name: proxmox-csi-plugin
-    spec:
-      containers:
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --node-id=$(NODE_NAME)
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-          image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.12.1
-          imagePullPolicy: IfNotPresent
-          name: proxmox-csi-plugin-node
-          resources: {}
-          securityContext:
-            capabilities:
-              add:
-                - SYS_ADMIN
-                - CHOWN
-                - DAC_OVERRIDE
-              drop:
-                - ALL
-            privileged: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket
-            - mountPath: /var/lib/kubelet
-              mountPropagation: Bidirectional
-              name: kubelet
-            - mountPath: /dev
-              name: dev
-            - mountPath: /sys
-              name: sys
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/csi.sock
-          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.14.0
-          imagePullPolicy: IfNotPresent
-          name: csi-node-driver-registrar
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket
-            - mountPath: /registration
-              name: registration
-        - args:
-            - -v=5
-            - --csi-address=unix:///csi/csi.sock
-          image: registry.k8s.io/sig-storage/livenessprobe:v2.15.0
-          imagePullPolicy: IfNotPresent
-          name: liveness-probe
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /csi
-              name: socket
-      enableServiceLinks: false
-      priorityClassName: system-node-critical
-      securityContext:
-        runAsGroup: 0
-        runAsUser: 0
-      serviceAccountName: proxmox-csi-plugin-node
-      tolerations:
-        - effect: NoSchedule
-          key: node.kubernetes.io/unschedulable
-          operator: Exists
-        - effect: NoSchedule
-          key: node.kubernetes.io/disk-pressure
-          operator: Exists
-      volumes:
-        - hostPath:
-            path: /var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/
-            type: DirectoryOrCreate
-          name: socket
-        - hostPath:
-            path: /var/lib/kubelet/plugins_registry/
-            type: Directory
-          name: registration
-        - hostPath:
-            path: /var/lib/kubelet
-            type: Directory
-          name: kubelet
-        - hostPath:
-            path: /dev
-            type: Directory
-          name: dev
-        - hostPath:
-            path: /sys
-            type: Directory
-          name: sys
-  updateStrategy:
-    type: RollingUpdate
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
   name: amdgpu-device-plugin-daemonset
   namespace: kube-system
 spec:
@@ -13426,7 +12637,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: longhorn-static
-      volumeName: gitea-postgresql-longhorn
+      volumeName: gitea-postgresql
     size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -13462,7 +12673,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: longhorn-static
-      volumeName: immich-postgresql-longhorn
+      volumeName: immich-postgresql
     size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -13484,7 +12695,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       storageClassName: longhorn-static
-      volumeName: nextcloud-postgresql-longhorn
+      volumeName: nextcloud-postgresql
     size: 5G
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -13505,7 +12716,7 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: proxmox-csi
+      storageClassName: longhorn-static
       volumeName: pingvinshare-postgresql
     size: 10G
 ---
@@ -13541,17 +12752,6 @@ metadata:
 spec:
   forProvider:
     realm: homelab
----
-apiVersion: storage.k8s.io/v1
-kind: CSIDriver
-metadata:
-  name: csi.proxmox.sinextra.dev
-spec:
-  attachRequired: true
-  podInfoOnMount: true
-  storageCapacity: true
-  volumeLifecycleModes:
-    - Persistent
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
