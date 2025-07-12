@@ -1,0 +1,54 @@
+controllers:
+  bambustudio:
+    containers:
+      app:
+        image:
+          repository: linuxserver/bambustudio
+          tag: 02.01.01 # renovate docker=linuxserver/bambustudio
+        env:
+          PUID: 1000
+          GUID: 1000
+          TZ: Europe/Oslo
+          DARK_MODE: "true"
+          DRINODE: /dev/dri/renderD128
+        resources:
+          requests:
+            memory: 128M
+          limits:
+            amd.com/gpu: 1
+            memory: 8096M
+
+persistence:
+  config:
+    existingClaim: bambustudio-config
+    globalMounts:
+      - path: /config
+  data:
+    existingClaim: bambustudio-library
+    globalMounts:
+      - path: /library
+
+service:
+  app:
+    ports:
+      http:
+        port: &port 3000
+
+ingress:
+  app:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      hajimari.io/enable: 'true'
+      hajimari.io/appName: 'Bambu Studio'
+      hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+    hosts:
+      - host: &hostName bambustudio.homelab.olav.ninja
+        paths:
+          - path: /
+            service:
+              identifier: app
+              port: http
+    tls:
+      - hosts:
+          - *hostName
+        secretName: bambustudio-tls-certificate
