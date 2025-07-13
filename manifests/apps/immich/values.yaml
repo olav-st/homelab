@@ -47,7 +47,7 @@ machine-learning:
       cpu: 10m
       memory: 2Gi
     limits:
-      cpu: 3
+      cpu: 1
       ephemeral-storage: 10Gi
   probes:
     liveness:
