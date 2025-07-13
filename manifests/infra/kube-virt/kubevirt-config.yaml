@@ -22,6 +22,10 @@ spec:
           selectors:
             - vendor: 10c4
               product: ea60
+        - resourceName: kubevirt.io/csr8510-bluetooth-adapter
+          selectors:
+            - vendor: 0a12
+              product: "0001"
   workloadUpdateStrategy:
     workloadUpdateMethods:
     - LiveMigrate 
