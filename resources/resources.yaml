@@ -10162,7 +10162,7 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 3
+              cpu: 1
               ephemeral-storage: 10Gi
             requests:
               cpu: 10m
