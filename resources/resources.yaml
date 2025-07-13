@@ -14650,6 +14650,10 @@ spec:
           selectors:
             - product: ea60
               vendor: 10c4
+        - resourceName: kubevirt.io/csr8510-bluetooth-adapter
+          selectors:
+            - product: "0001"
+              vendor: 0a12
     smbios:
       family: ccio
       manufacturer: Talos Virtualization
