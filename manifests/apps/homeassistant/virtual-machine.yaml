@@ -1,0 +1,73 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: homeassistant-vm
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: homeassistant-vm
+      annotations:
+        kubevirt.io/allow-pod-bridge-network-live-migration: "true" # Live migration disabled due to USB passthrough
+        kubevirt.io/allow-live-migration: "false"
+        io.cilium.no-track-port: "443,8123"
+    spec:
+      evictionStrategy: None # evictionStrategy should be None when using USB passthrough
+      domain:
+        cpu:
+          cores: 2
+        resources:
+          requests:
+            memory: 4G
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: false
+        devices:
+          disks:
+            - name: homeassistant-vm-disk
+              disk:
+                bus: virtio
+          interfaces:
+          - name: podnet
+            masquerade: {}
+            ports:
+            - name: web-ui-http
+              port: 8123
+              protocol: TCP
+            - name: web-ui-https
+              port: 443
+              protocol: TCP
+            - name: mqtt
+              port: 1883
+              protocol: TCP
+            - name: mqtts
+              port: 8883
+              protocol: TCP
+          hostDevices:
+          - name: skyconnect
+            deviceName: kubevirt.io/nabu-casa-skyconnect
+          - name: bluetooth-adapter
+            deviceName: kubevirt.io/csr8510-bluetooth-adapter
+      networks:
+        - name: podnet
+          pod: {}
+      volumes:
+        - name: homeassistant-vm-disk
+          persistentVolumeClaim:
+            claimName: homeassistant-vm-disk
+  dataVolumeTemplates:
+  - metadata:
+      name: homeassistant-vm-disk
+    spec:
+      storage:
+        resources:
+          requests:
+            storage: 32Gi
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: longhorn
+      source:
+        http:
+          url: "https://github.com/home-assistant/operating-system/releases/download/16.0/haos_ova-16.0.qcow2.xz"

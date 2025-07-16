@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ./bambustudio
+  - ./homeassistant
   - ./gitea
   - ./immich
   - ./nextcloud
