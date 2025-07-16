@@ -6,7 +6,13 @@ auth:
 usePasswordFiles: true
 
 production: true
-resourcesPreset: medium
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+  limits:
+    memory: 3072Mi
 
 proxy: edge
 
