@@ -12454,7 +12454,7 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              memory: 2048Mi
+              memory: 3072Mi
             requests:
               cpu: 500m
               memory: 1024Mi
@@ -12517,7 +12517,7 @@ spec:
           name: prepare-write-dirs
           resources:
             limits:
-              memory: 2048Mi
+              memory: 3072Mi
             requests:
               cpu: 500m
               memory: 1024Mi
