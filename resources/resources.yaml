@@ -12454,12 +12454,9 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 750m
-              ephemeral-storage: 2Gi
-              memory: 1536Mi
+              memory: 2048Mi
             requests:
               cpu: 500m
-              ephemeral-storage: 50Mi
               memory: 1024Mi
           securityContext:
             allowPrivilegeEscalation: false
@@ -12520,12 +12517,9 @@ spec:
           name: prepare-write-dirs
           resources:
             limits:
-              cpu: 750m
-              ephemeral-storage: 2Gi
-              memory: 1536Mi
+              memory: 2048Mi
             requests:
               cpu: 500m
-              ephemeral-storage: 50Mi
               memory: 1024Mi
           securityContext:
             allowPrivilegeEscalation: false
