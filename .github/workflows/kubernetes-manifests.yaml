@@ -44,14 +44,13 @@ jobs:
           cacheFrom: ghcr.io/olav-st/homelab-devcontainer
           runCmd: make render-manifests
 
-      - name: Test rendered manifests (dry-run)
+      - name: Validate manifests
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/olav-st/homelab-devcontainer
           cacheFrom: ghcr.io/olav-st/homelab-devcontainer
           runCmd: |
-            make start-dev-cluster
-            make test
+            make validate
 
       - name: Generate diff comment for PR
         if: github.event_name == 'pull_request'

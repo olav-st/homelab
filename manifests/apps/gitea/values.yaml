@@ -28,6 +28,7 @@ gitea:
     service:
       DISABLE_REGISTRATION: true
     server:
+      HTTP_PORT: 3000
       OFFLINE_MODE: false
       LFS_START_SERVER: true
     session:
