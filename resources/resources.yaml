@@ -43,6 +43,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: homeassistant
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: immich
 ---
 apiVersion: v1
@@ -7931,7 +7936,7 @@ spec:
   ports:
     - name: http
       port: 3000
-      targetPort: null
+      targetPort: 3000
   selector:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/name: gitea
@@ -8034,6 +8039,40 @@ spec:
     app.kubernetes.io/instance: hajimari
     app.kubernetes.io/name: hajimari
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    io.cilium/lb-ipam-ips: 192.168.0.95
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8123
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 443
+    - name: http-ha
+      port: 8123
+      protocol: TCP
+      targetPort: 8123
+    - name: mqtt
+      port: 1883
+      protocol: TCP
+      targetPort: 1883
+    - name: mqtts
+      port: 8883
+      protocol: TCP
+      targetPort: 8883
+  selector:
+    kubevirt.io/vm: homeassistant-vm
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -13358,8 +13397,6 @@ spec:
     metadata:
       annotations:
         cilium.io/cilium-configmap-checksum: f44a1b9b9aa3687038dfd8962782ff63b922b65c6e04f629a8dbb091db5e9f29
-        container.apparmor.security.beta.kubernetes.io/cilium-agent: unconfined
-        container.apparmor.security.beta.kubernetes.io/clean-cilium-state: unconfined
       labels:
         app.kubernetes.io/name: cilium-agent
         app.kubernetes.io/part-of: cilium
@@ -13660,6 +13697,9 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-node-critical
       restartPolicy: Always
+      securityContext:
+        appArmorProfile:
+          type: Unconfined
       serviceAccountName: cilium
       terminationGracePeriodSeconds: 1
       tolerations:
@@ -13776,8 +13816,7 @@ spec:
       k8s-app: cilium-envoy
   template:
     metadata:
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/cilium-envoy: unconfined
+      annotations: null
       labels:
         app.kubernetes.io/name: cilium-envoy
         app.kubernetes.io/part-of: cilium
@@ -13892,6 +13931,9 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-node-critical
       restartPolicy: Always
+      securityContext:
+        appArmorProfile:
+          type: Unconfined
       serviceAccountName: cilium-envoy
       terminationGracePeriodSeconds: 1
       tolerations:
@@ -14217,7 +14259,6 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  creationTimestamp: null
   name: immich-postgresql
   namespace: immich
 spec:
@@ -14226,7 +14267,6 @@ spec:
     postgres-password: AgAJAAmqRjNDaheSbzBtB39VjcDeSGEFyFnSmw7a3BlBBVqSuh2PXs01AVo483Qhy5VJQCHt/pkbnyw3bNn25OPmYZVdeoiwl6gZFwquY7fxpNANhvado6xeC0PFNhHAqX0M/U9UL5xPIfMRNc6JztvQaFosJD56EPiC3Mx76LrKc7hIDN8JxXDoba8NaUfQmvPeqX0bXucbDgDFv5yJmHWv4xtuTO6a/xwnt5uYn0nmC0ut07ntFeQSA4RqT2ptauwMy5SwM9JaR6fL8RUVQKX24Imk8s70XeVXE2mwdXu3w0fVx3PKlHcL2OwLumUsxhgW68ypeoHASR+B59mnJgMajYEQY+OwXwaaQNe1VAZyvfgwL4KUv7DvnwPgcUJNFzOowqmtfYzoydwKgtRboWlRvTR2sfWjtxgOXPxFLd/fKMtv1+CVbrRCivOGsBk7bG5k2QTraTuGCq3MlwMRm0vdhFVnOqZ79/Y9H6GZiFwxN+7W8w9wRKqRb7FmfLGgUbsf5UVqUpAqbHy82Uq3SvUwQ+f+rxBFN8RJVP2zDFiM8WBsywMU4Rvcl9SFcnsLTunaHalPMJw+AiflsT5X6hvrTo1S8xYujq2U2TltFTVK5SKRBrkmNVm+MWef1TmClN/2tFTqm0qy3qNrPZXdNzUVBpIyo7gB0EPuOJ6YXKKWI42LLavb12DdmDEsrK5VRTWcK0/RiMCH5e8G
   template:
     metadata:
-      creationTimestamp: null
       name: immich-postgresql
       namespace: immich
     type: Opaque
@@ -14234,7 +14274,6 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  creationTimestamp: null
   name: immich-postgresql-user
   namespace: immich
 spec:
@@ -14246,7 +14285,6 @@ spec:
     username: AgASpZ4/NI10U0e3pa2zB2vfxXyA/aa8pSYyNwCSLcM9Kp8Ag+UxQXC8m6bcm9sWh4nEb0oM7IX8GPUOxSyf5bf31RNMAq4LagOY5jf9WBEuoYUpdoe2m9lKRBXkFXyd1Ip54VLjkWXGLjGV/buDPAm3ebUE6rBHQr5aTGbqe1eQ8WLkFc44rk7jjxLnejAuGiV2SjLXHCocvE9jr2KbQDJbILw0tVlpB9jabP/UVJRSPGrV+yTdvdaKD+PJXnly5uHFk+PPtwn1Z1xm6am4jujWoAgb+FBjcaZdmFECtGdYoLVFPQW33EZQJnM06E+QVU4ssHULvX4s8muNamWcBGnuWxhCflWGvtQZQy6ZF9sWVsn81majrUGfzWaUCQJy8IFvetzhmQsFy8zJFoWHS/bcjo7OrJ/IYxie7Wsy4eq4ph5T9Mvy19TTdyGQUAKAGSI7AbpGK+hKb7TGozklR5KpCViKa9NYm16JJGaLdGjtet6kPF5c99+yy0JXUX1F4ufsuaTOYpO1PYMlyqMKdpZyamNuWJa3Bsr32qguJNtsCU+OVyoR74NgUHteEiIvFuWMdFPXKCsrUwcr89jwW+md/UfjzJXpGwie25nReVMwEeAzmn5obBPYyc2VSCUeXnidJEh902ajeXXwpHb36KjPI9Ak1F1b84GHePUKo75juoZG1PdTYFYidkm4v6ROgvqz7jMB6Dk=
   template:
     metadata:
-      creationTimestamp: null
       name: immich-postgresql-user
       namespace: immich
     type: kubernetes.io/basic-auth
@@ -14443,7 +14481,6 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  creationTimestamp: null
   name: pingvinshare-oidc-credentials
   namespace: pingvinshare
 spec:
@@ -14452,7 +14489,6 @@ spec:
     clientSecret: AgAxLGU9KoY7a7pO9lQNdeEF5z/IugZGcfM8C4eqolsW+1PX0ChD4hnucuhbIW3HaDvDEcV28q4Kwa7t3sHuBIF70+L3Ct0vVSnCeBXsY8kOtYtHkSxhokNGRCjwDLBOv61iWP0MyD0R/xt1uoRjua2O7MmhknkGFgfmZlIr/m4Q0zGK/ZH4r9ARNY4wdsh5FTGiaUspFJnLVTKqryUErcJFLZalKBzatfjUvuUMckKXiCpSlCCXAsFZzrniAvZ9OiXJn9gfRnFh9yhT+C5l9IyGlI0a64tMgJlu68F0YcucO8j39qDjprF3sJhkeDFxE6zrTk0rXM9/P5a490CXxdto3JrX7Jvvuc40S8S9vl6h+bl49wmLtQ6pLZZQ5Apz+HdYP4wtLWDpXAnO+ymVpsGjbg0aCb9UobruynmuZFvFjawqVIznvJLUxQLOpo1c5vNJ3DwWFh2cIR6V35kAicDC7cnyoNe1/wcJYTY+FT7lfnVRV/moQq0nO31h37Nf3CQZQCenmHwbCxyclbGLA7OMBuAFTKEtVXKE0UO27QpA9KbdulXOVbIUMBN89Dl/6tOlrgaAEtFunwOf/rrgm9gUOhAnlFKZC4A7eYOGjtpJti2hypUSfHwsItg7qejPR+Y6daF3qFcNwZgwBi1oK+i33i3ahc5xxuQNq4A5jxSCdYWQgkeN7hIZZfcAyBojmTXmYwm08MisNJMbB7/9QsibgEFHYUMH
   template:
     metadata:
-      creationTimestamp: null
       name: pingvinshare-oidc-credentials
       namespace: pingvinshare
     type: Opaque
@@ -14657,6 +14693,81 @@ spec:
   workloadUpdateStrategy:
     workloadUpdateMethods:
       - LiveMigrate
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: homeassistant-vm
+  namespace: homeassistant
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: homeassistant-vm-disk
+      spec:
+        source:
+          http:
+            url: https://github.com/home-assistant/operating-system/releases/download/16.0/haos_ova-16.0.qcow2.xz
+        storage:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 32Gi
+          storageClassName: longhorn
+  running: true
+  template:
+    metadata:
+      annotations:
+        io.cilium.no-track-port: 443,8123
+        kubevirt.io/allow-live-migration: "false"
+        kubevirt.io/allow-pod-bridge-network-live-migration: "true"
+      labels:
+        kubevirt.io/vm: homeassistant-vm
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: homeassistant-vm-disk
+          hostDevices:
+            - deviceName: kubevirt.io/nabu-casa-skyconnect
+              name: skyconnect
+            - deviceName: kubevirt.io/csr8510-bluetooth-adapter
+              name: bluetooth-adapter
+          interfaces:
+            - masquerade: {}
+              name: podnet
+              ports:
+                - name: web-ui-http
+                  port: 8123
+                  protocol: TCP
+                - name: web-ui-https
+                  port: 443
+                  protocol: TCP
+                - name: mqtt
+                  port: 1883
+                  protocol: TCP
+                - name: mqtts
+                  port: 8883
+                  protocol: TCP
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: false
+        resources:
+          requests:
+            memory: 4G
+      evictionStrategy: None
+      networks:
+        - name: podnet
+          pod: {}
+      volumes:
+        - name: homeassistant-vm-disk
+          persistentVolumeClaim:
+            claimName: homeassistant-vm-disk
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
