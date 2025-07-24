@@ -14769,6 +14769,19 @@ spec:
           persistentVolumeClaim:
             claimName: homeassistant-vm-disk
 ---
+apiVersion: longhorn.io/v1beta1
+kind: RecurringJob
+metadata:
+  name: volume-backup-job
+  namespace: longhorn-system
+spec:
+  concurrency: 1
+  cron: 0 3 * * 6
+  groups:
+    - default
+  retain: 1
+  task: backup
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
