@@ -371,8 +371,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-service-account
   namespace: longhorn-system
 ---
@@ -383,8 +383,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-support-bundle
   namespace: longhorn-system
 ---
@@ -395,8 +395,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-ui-service-account
   namespace: longhorn-system
 ---
@@ -4728,8 +4728,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-role
 rules:
   - apiGroups:
@@ -5705,8 +5705,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-bind
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -5724,8 +5724,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-support-bundle
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -6938,8 +6938,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-default-resource
   namespace: longhorn-system
 ---
@@ -6959,8 +6959,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-default-setting
   namespace: longhorn-system
 ---
@@ -6993,8 +6993,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-storageclass
   namespace: longhorn-system
 ---
@@ -8384,8 +8384,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-admission-webhook
   namespace: longhorn-system
 spec:
@@ -8405,8 +8405,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-backend
   namespace: longhorn-system
 spec:
@@ -8426,8 +8426,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-conversion-webhook
   namespace: longhorn-system
 spec:
@@ -8447,8 +8447,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-frontend
   namespace: longhorn-system
 spec:
@@ -8469,8 +8469,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-recovery-backend
   namespace: longhorn-system
 spec:
@@ -8753,8 +8753,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-critical
 preemptionPolicy: PreemptLowerPriority
 value: 1000000000
@@ -10812,8 +10812,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-driver-deployer
   namespace: longhorn-system
 spec:
@@ -10828,8 +10828,8 @@ spec:
         app.kubernetes.io/instance: longhorn
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: longhorn
-        app.kubernetes.io/version: v1.9.0
-        helm.sh/chart: longhorn-1.9.0
+        app.kubernetes.io/version: v1.9.1
+        helm.sh/chart: longhorn-1.9.1
     spec:
       containers:
         - command:
@@ -10837,7 +10837,7 @@ spec:
             - -d
             - deploy-driver
             - --manager-image
-            - longhornio/longhorn-manager:v1.9.0
+            - longhornio/longhorn-manager:v1.9.1
             - --manager-url
             - http://longhorn-backend:9500/v1
           env:
@@ -10854,18 +10854,18 @@ spec:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
             - name: CSI_ATTACHER_IMAGE
-              value: longhornio/csi-attacher:v4.8.1
+              value: longhornio/csi-attacher:v4.9.0-20250709
             - name: CSI_PROVISIONER_IMAGE
-              value: longhornio/csi-provisioner:v5.2.0
+              value: longhornio/csi-provisioner:v5.3.0-20250709
             - name: CSI_NODE_DRIVER_REGISTRAR_IMAGE
-              value: longhornio/csi-node-driver-registrar:v2.13.0
+              value: longhornio/csi-node-driver-registrar:v2.14.0-20250709
             - name: CSI_RESIZER_IMAGE
-              value: longhornio/csi-resizer:v1.13.2
+              value: longhornio/csi-resizer:v1.14.0-20250709
             - name: CSI_SNAPSHOTTER_IMAGE
-              value: longhornio/csi-snapshotter:v8.2.0
+              value: longhornio/csi-snapshotter:v8.3.0-20250709
             - name: CSI_LIVENESS_PROBE_IMAGE
-              value: longhornio/livenessprobe:v2.15.0
-          image: longhornio/longhorn-manager:v1.9.0
+              value: longhornio/livenessprobe:v2.16.0-20250709
+          image: longhornio/longhorn-manager:v1.9.1
           imagePullPolicy: IfNotPresent
           name: longhorn-driver-deployer
       initContainers:
@@ -10873,7 +10873,7 @@ spec:
             - sh
             - -c
             - while [ $(curl -m 1 -s -o /dev/null -w "%{http_code}" http://longhorn-backend:9500/v1) != "200" ]; do echo waiting; sleep 2; done
-          image: longhornio/longhorn-manager:v1.9.0
+          image: longhornio/longhorn-manager:v1.9.1
           name: wait-longhorn-manager
       priorityClassName: longhorn-critical
       securityContext:
@@ -10888,8 +10888,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-ui
   namespace: longhorn-system
 spec:
@@ -10904,8 +10904,8 @@ spec:
         app.kubernetes.io/instance: longhorn
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: longhorn
-        app.kubernetes.io/version: v1.9.0
-        helm.sh/chart: longhorn-1.9.0
+        app.kubernetes.io/version: v1.9.1
+        helm.sh/chart: longhorn-1.9.1
     spec:
       affinity:
         podAntiAffinity:
@@ -10925,7 +10925,7 @@ spec:
               value: http://longhorn-backend:9500
             - name: LONGHORN_UI_PORT
               value: "8000"
-          image: longhornio/longhorn-ui:v1.9.0
+          image: longhornio/longhorn-ui:v1.9.1
           imagePullPolicy: IfNotPresent
           name: longhorn-ui
           ports:
@@ -13991,8 +13991,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-manager
   namespace: longhorn-system
 spec:
@@ -14006,8 +14006,8 @@ spec:
         app.kubernetes.io/instance: longhorn
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: longhorn
-        app.kubernetes.io/version: v1.9.0
-        helm.sh/chart: longhorn-1.9.0
+        app.kubernetes.io/version: v1.9.1
+        helm.sh/chart: longhorn-1.9.1
     spec:
       containers:
         - command:
@@ -14015,17 +14015,17 @@ spec:
             - -d
             - daemon
             - --engine-image
-            - longhornio/longhorn-engine:v1.9.0
+            - longhornio/longhorn-engine:v1.9.1
             - --instance-manager-image
-            - longhornio/longhorn-instance-manager:v1.9.0
+            - longhornio/longhorn-instance-manager:v1.9.1
             - --share-manager-image
-            - longhornio/longhorn-share-manager:v1.9.0
+            - longhornio/longhorn-share-manager:v1.9.1
             - --backing-image-manager-image
-            - longhornio/backing-image-manager:v1.9.0
+            - longhornio/backing-image-manager:v1.9.1
             - --support-bundle-manager-image
-            - longhornio/support-bundle-kit:v0.0.55
+            - longhornio/support-bundle-kit:v0.0.61
             - --manager-image
-            - longhornio/longhorn-manager:v1.9.0
+            - longhornio/longhorn-manager:v1.9.1
             - --service-account
             - longhorn-service-account
             - --upgrade-version-check
@@ -14046,7 +14046,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: longhornio/longhorn-manager:v1.9.0
+          image: longhornio/longhorn-manager:v1.9.1
           imagePullPolicy: IfNotPresent
           name: longhorn-manager
           ports:
@@ -14086,7 +14086,7 @@ spec:
             - sh
             - -c
             - echo share-manager image pulled && sleep infinity
-          image: longhornio/longhorn-share-manager:v1.9.0
+          image: longhornio/longhorn-share-manager:v1.9.1
           imagePullPolicy: IfNotPresent
           name: pre-pull-share-manager-image
       priorityClassName: longhorn-critical
@@ -15032,8 +15032,8 @@ metadata:
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.9.0
-    helm.sh/chart: longhorn-1.9.0
+    app.kubernetes.io/version: v1.9.1
+    helm.sh/chart: longhorn-1.9.1
   name: longhorn-ingress
   namespace: longhorn-system
 spec:
