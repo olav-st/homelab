@@ -11,5 +11,5 @@ helmCharts:
     releaseName: netbird
     namespace: netbird
     repo: https://netbirdio.github.io/kubernetes-operator
-    version: 0.1.10
+    version: 0.1.12
     valuesFile: values.yaml
