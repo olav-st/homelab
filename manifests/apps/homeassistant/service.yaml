@@ -6,7 +6,7 @@ metadata:
     io.cilium/lb-ipam-ips: 192.168.0.95
     netbird.io/expose: true
 spec:
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   selector:
     kubevirt.io/vm: homeassistant-vm
   ports:

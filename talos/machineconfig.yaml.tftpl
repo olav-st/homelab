@@ -14,13 +14,20 @@ machine:
   network:
     hostname: ${hostname}
     interfaces:
-    - deviceSelector:
-        busPath: "0*"
-      dhcp: true
-      %{ if machine_type == "controlplane" }
-      vip:
-        ip: ${cluster_vip}
-      %{ endif }
+      - interface: br0
+        bridge:
+          interfaces:
+            - enp4s0
+          stp:
+            enabled: true
+        dhcp: true
+        %{ if machine_type == "controlplane" }
+        vip:
+          ip: ${cluster_vip}
+        %{ endif }
+  sysctls:
+      net.bridge.bridge-nf-call-iptables: "0"
+      net.bridge.bridge-nf-call-ip6tables: "0"
   files:
     # Needed for KubeVirt CDI: https://github.com/kubevirt/containerized-data-importer/blob/main/doc/block_cri_ownership_config.md
     - content: |
