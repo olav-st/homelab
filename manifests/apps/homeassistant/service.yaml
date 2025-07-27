@@ -4,6 +4,7 @@ metadata:
   name: homeassistant
   annotations:
     io.cilium/lb-ipam-ips: 192.168.0.95
+    netbird.io/expose: true
 spec:
   externalTrafficPolicy: Cluster
   selector:
