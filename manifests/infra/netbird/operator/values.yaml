@@ -1,7 +1,9 @@
 managementURL: https://netbird.homelab.olav.ninja
 
 netbirdAPI:
-  keyFromSecret: netbird-operator-api-key
+  keyFromSecret:
+    name: netbird-operator-api-key
+    key: NB_API_KEY
 
 ingress:
   enabled: true
