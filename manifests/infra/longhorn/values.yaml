@@ -1,5 +1,5 @@
 defaultSettings:
-  backupCompressionMethod: gzip # to save bandwidth since upload speed is limited
+  backupCompressionMethod: lz4 # tradeoff between bandwidth and cpu usage
   defaultReplicaCount: 1
   defaultDataLocality: best-effort
   nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
