@@ -7173,7 +7173,7 @@ data:
     priority-class: longhorn-critical
     node-down-pod-deletion-policy: delete-both-statefulset-and-deployment-pod
     disable-revision-counter: true
-    backup-compression-method: gzip
+    backup-compression-method: lz4
 kind: ConfigMap
 metadata:
   labels:
