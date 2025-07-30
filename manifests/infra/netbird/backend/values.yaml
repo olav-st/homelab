@@ -23,7 +23,7 @@ idp:
 
 management:
   image:
-    tag: 0.49.0 # renovate: docker=netbirdio/management
+    tag: 0.52.2 # renovate: docker=netbirdio/management
   dnsDomain: netbird
   persistentVolume:
     enabled: true
@@ -52,7 +52,7 @@ relay:
   image:
     repository: netbirdio/relay
     pullPolicy: IfNotPresent
-    tag: 0.49.0 # renovate: docker=netbirdio/relay
+    tag: 0.52.2 # renovate: docker=netbirdio/relay
   service:
     type: ClusterIP
     port: 80
@@ -73,7 +73,7 @@ relay:
 
 signal:
   image:
-    tag: 0.49.0 # renovate: docker=netbirdio/signal
+    tag: 0.52.2 # renovate: docker=netbirdio/signal
   uri: netbird.homelab.olav.ninja:443
   protocol: https
   persistentVolume:
