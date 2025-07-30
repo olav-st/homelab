@@ -14485,16 +14485,6 @@ spec:
       hostPID: true
       initContainers:
         - command:
-            - /install-cni.sh
-          image: ghcr.io/siderolabs/install-cni:v1.10.5
-          name: install-cni
-          securityContext:
-            privileged: true
-          volumeMounts:
-            - mountPath: /host/opt/cni/bin
-              mountPropagation: Bidirectional
-              name: cnibin
-        - command:
             - /usr/src/multus-cni/bin/install_multus
             - -d
             - /host/opt/cni/bin
