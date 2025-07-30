@@ -4,5 +4,6 @@ namespace: homeassistant
 
 resources:
   - namespace.yaml
+  - network-attachment-definition.yaml
   - service.yaml
   - virtual-machine.yaml

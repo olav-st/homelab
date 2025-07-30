@@ -45,6 +45,8 @@ spec:
             - name: mqtts
               port: 8883
               protocol: TCP
+          - name: hostnet
+            bridge: {}
           hostDevices:
           - name: skyconnect
             deviceName: kubevirt.io/nabu-casa-skyconnect
@@ -53,6 +55,9 @@ spec:
       networks:
         - name: podnet
           pod: {}
+        - name: hostnet
+          multus:
+            networkName: hostnet-bridge
       volumes:
         - name: homeassistant-vm-disk
           persistentVolumeClaim:
