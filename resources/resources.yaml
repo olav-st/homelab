@@ -15428,6 +15428,14 @@ spec:
   sharedDevNum: 5
   tolerations: []
 ---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: hostnet-bridge
+  namespace: homeassistant
+spec:
+  config: '{ "cniVersion": "0.3.1", "name": "hostnet", "plugins": [ { "type": "bridge", "bridge": "br0", "disableContainerInterface": true, "macspoofchk": true } ] }'
+---
 apiVersion: keycloak.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -15532,6 +15540,8 @@ spec:
                 - name: mqtts
                   port: 8883
                   protocol: TCP
+            - bridge: {}
+              name: hostnet
         firmware:
           bootloader:
             efi:
@@ -15543,6 +15553,9 @@ spec:
       networks:
         - name: podnet
           pod: {}
+        - multus:
+            networkName: hostnet-bridge
+          name: hostnet
       volumes:
         - name: homeassistant-vm-disk
           persistentVolumeClaim:
