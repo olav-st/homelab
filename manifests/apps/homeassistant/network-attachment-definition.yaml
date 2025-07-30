@@ -11,7 +11,7 @@ spec:
           "type": "bridge",
           "bridge": "br0",
           "disableContainerInterface": true,
-          "macspoofchk": true
+          "macspoofchk": false
         }
       ]
     }'
