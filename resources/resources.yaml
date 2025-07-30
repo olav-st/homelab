@@ -8271,7 +8271,7 @@ metadata:
   name: homeassistant
   namespace: homeassistant
 spec:
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 80
