@@ -7002,6 +7002,7 @@ data:
   debug: "false"
   debug-verbose: ""
   default-lb-service-ipam: lbipam
+  devices: br0
   direct-routing-skip-unreachable: "false"
   dnsproxy-enable-transparent-mode: "true"
   dnsproxy-socket-linger-timeout: "10"
@@ -13777,7 +13778,7 @@ spec:
   template:
     metadata:
       annotations:
-        cilium.io/cilium-configmap-checksum: f44a1b9b9aa3687038dfd8962782ff63b922b65c6e04f629a8dbb091db5e9f29
+        cilium.io/cilium-configmap-checksum: d9c82d9801d3c39d6970889a10e793bff468a80c4680bf325646cae9b0b0b2d9
       labels:
         app.kubernetes.io/name: cilium-agent
         app.kubernetes.io/part-of: cilium
@@ -15196,6 +15197,8 @@ metadata:
   namespace: kube-system
 spec:
   externalIPs: true
+  interfaces:
+    - br0
   loadBalancerIPs: true
 ---
 apiVersion: cilium.io/v2alpha1
