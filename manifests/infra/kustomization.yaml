@@ -12,6 +12,7 @@ resources:
   - ./keycloak
   - ./kube-virt
   - ./longhorn
+  - ./multus
   - ./netbird
   - ./oidc-config
   - ./sealed-secrets
