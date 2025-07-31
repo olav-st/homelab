@@ -475,8 +475,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-master
   namespace: nextcloud
 ---
@@ -7643,8 +7643,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.10
-    helm.sh/chart: nextcloud-6.6.10
+    app.kubernetes.io/version: 31.0.7
+    helm.sh/chart: nextcloud-7.0.0
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -7661,8 +7661,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.10
-    helm.sh/chart: nextcloud-6.6.10
+    app.kubernetes.io/version: 31.0.7
+    helm.sh/chart: nextcloud-7.0.0
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -7687,14 +7687,15 @@ data:
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
     # End of replica configuration
+  users.acl: ""
 kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-configuration
   namespace: nextcloud
 ---
@@ -7800,8 +7801,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-health
   namespace: nextcloud
 ---
@@ -7817,6 +7818,9 @@ data:
     if [[ -f /opt/bitnami/redis/mounted-etc/redis.conf ]];then
         cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
     fi
+    if [[ -f /opt/bitnami/redis/mounted-etc/users.acl ]];then
+        cp /opt/bitnami/redis/mounted-etc/users.acl /opt/bitnami/redis/etc/users.acl
+    fi
     ARGS=("--port" "${REDIS_PORT}")
     ARGS+=("--requirepass" "${REDIS_PASSWORD}")
     ARGS+=("--masterauth" "${REDIS_PASSWORD}")
@@ -7829,8 +7833,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-scripts
   namespace: nextcloud
 ---
@@ -9101,8 +9105,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.10
-    helm.sh/chart: nextcloud-6.6.10
+    app.kubernetes.io/version: 31.0.7
+    helm.sh/chart: nextcloud-7.0.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -9124,8 +9128,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-headless
   namespace: nextcloud
 spec:
@@ -9147,8 +9151,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-master
   namespace: nextcloud
 spec:
@@ -12022,8 +12026,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.10
-    helm.sh/chart: nextcloud-6.6.10
+    app.kubernetes.io/version: 31.0.7
+    helm.sh/chart: nextcloud-7.0.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -12094,7 +12098,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:30.0.10-apache
+          image: nextcloud:31.0.7-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -12235,7 +12239,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:30.0.10-apache
+          image: nextcloud:31.0.7-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -13468,8 +13472,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-master
   namespace: nextcloud
 spec:
@@ -13484,17 +13488,17 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
+        checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
-        checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
+        checksum/scripts: 0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e
         checksum/secret: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       labels:
         app.kubernetes.io/component: master
         app.kubernetes.io/instance: nextcloud
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: redis
-        app.kubernetes.io/version: 7.2.5
-        helm.sh/chart: redis-19.6.4
+        app.kubernetes.io/version: 8.0.1
+        helm.sh/chart: redis-21.1.3
     spec:
       affinity:
         nodeAffinity: null
@@ -13512,7 +13516,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - args:
-            - -c
+            - -ec
             - /opt/bitnami/scripts/start-scripts/start-master.sh
           command:
             - /bin/bash
@@ -13523,22 +13527,19 @@ spec:
               value: master
             - name: ALLOW_EMPTY_PASSWORD
               value: "no"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: nextcloud-redis-credentials
+            - name: REDIS_PASSWORD_FILE
+              value: /opt/bitnami/redis/secrets/redis-password
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT
               value: "6379"
-          image: docker.io/bitnami/redis:7.2.5-debian-12-r4
+          image: docker.io/bitnami/redis:8.0.1-debian-12-r1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
               command:
-                - sh
-                - -c
+                - /bin/bash
+                - -ec
                 - /health/ping_liveness_local.sh 5
             failureThreshold: 5
             initialDelaySeconds: 20
@@ -13552,8 +13553,8 @@ spec:
           readinessProbe:
             exec:
               command:
-                - sh
-                - -c
+                - /bin/bash
+                - -ec
                 - /health/ping_readiness_local.sh 1
             failureThreshold: 5
             initialDelaySeconds: 20
@@ -13586,6 +13587,8 @@ spec:
               name: start-scripts
             - mountPath: /health
               name: health
+            - mountPath: /opt/bitnami/redis/secrets/
+              name: redis-password
             - mountPath: /data
               name: redis-data
             - mountPath: /opt/bitnami/redis/mounted-etc
@@ -13613,6 +13616,12 @@ spec:
             defaultMode: 493
             name: nextcloud-redis-health
           name: health
+        - name: redis-password
+          secret:
+            items:
+              - key: password
+                path: redis-password
+            secretName: nextcloud-redis-credentials
         - configMap:
             name: nextcloud-redis-configuration
           name: config
@@ -13895,8 +13904,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-master
   namespace: nextcloud
 spec:
@@ -16430,8 +16439,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 30.0.10
-    helm.sh/chart: nextcloud-6.6.10
+    app.kubernetes.io/version: 31.0.7
+    helm.sh/chart: nextcloud-7.0.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -16672,8 +16681,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.4
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.3
   name: nextcloud-redis
   namespace: nextcloud
 spec:
