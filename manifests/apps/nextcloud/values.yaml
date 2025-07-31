@@ -60,3 +60,20 @@ ingress:
 phpClientHttpsFix:
   enabled: true
   protocol: https
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    existingSecret: nextcloud-redis-credentials
+    existingSecretPasswordKey: password
+  # Since Redis is used for caching only, you might want to use a storageClass with different reclaim policy and backup settings
+  global:
+    storageClass: ""
+  master:
+    persistence:
+      enabled: false
+  replica:
+    persistence:
+      enabled: false
