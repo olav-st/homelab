@@ -47,6 +47,7 @@ spec:
               protocol: TCP
           - name: hostnet
             bridge: {}
+            macAddress: EE:88:64:5F:EA:95
           hostDevices:
           - name: skyconnect
             deviceName: kubevirt.io/nabu-casa-skyconnect
