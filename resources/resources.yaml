@@ -14889,10 +14889,10 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
             requests:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
           securityContext:
             privileged: true
           terminationMessagePolicy: FallbackToLogsOnError
@@ -14935,7 +14935,7 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 15Mi
+              memory: 30Mi
           securityContext:
             privileged: true
           terminationMessagePolicy: FallbackToLogsOnError
