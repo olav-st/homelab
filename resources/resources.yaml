@@ -11609,11 +11609,15 @@ spec:
               name: config
             - mountPath: /var/log
               name: varlog
+            - mountPath: /var/run
+              name: varrun
       volumes:
         - emptyDir: {}
           name: config
         - emptyDir: {}
           name: varlog
+        - emptyDir: {}
+          name: varrun
 ---
 apiVersion: apps/v1
 kind: Deployment
