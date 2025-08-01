@@ -7,4 +7,5 @@ resources:
 
 patches:
   - path: patches/fix-install-command.yaml
+  - path: patches/fix-memory-limit.yaml
   - path: patches/fix-mount-path.yaml

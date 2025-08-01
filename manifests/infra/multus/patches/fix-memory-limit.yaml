@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-multus-ds
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: kube-multus
+          resources:
+            requests:
+              memory: "100Mi"
+            limits:
+              memory: "100Mi"
+      initContainers:
+        - name: install-multus-binary
+          resources:
+            requests:
+              memory: "30Mi"
