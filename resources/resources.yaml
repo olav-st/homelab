@@ -16831,28 +16831,6 @@ spec:
       volumeName: nextcloud-postgresql
     size: 5G
 ---
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: pingvinshare-postgresql
-  namespace: pingvinshare
-spec:
-  bootstrap:
-    initdb:
-      database: pingvinshare
-      owner: pingvinshare
-  instances: 1
-  postgresql:
-    parameters:
-      timezone: Europe/Oslo
-  storage:
-    pvcTemplate:
-      accessModes:
-        - ReadWriteOnce
-      storageClassName: longhorn-static
-      volumeName: pingvinshare-postgresql
-    size: 5G
----
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa
 metadata:
