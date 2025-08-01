@@ -85,14 +85,18 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: varlog
+            - name: var-log
               mountPath: /var/log
-            - name: varrun
+            - name: var-run
               mountPath: /var/run
+            - name: var-lib-netbird
+              mountPath: /var/lib/netbird
       volumes:
         - name: config
           emptyDir: { }
-        - name: varlog
+        - name: var-log
           emptyDir: { }
-        - name: varrun
+        - name: var-run
+          emptyDir: { }
+        - name: var-lib-netbird
           emptyDir: { }
