@@ -13,7 +13,7 @@ spec:
       database: pingvinshare
       owner: pingvinshare
   storage:
-    size: 10G
+    size: 5G
     pvcTemplate:
       storageClassName: longhorn-static
       volumeName: pingvinshare-postgresql
