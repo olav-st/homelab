@@ -85,6 +85,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: varlog
+              mountPath: /var/log
       volumes:
         - name: config
+          emptyDir: { }
+        - name: varlog
           emptyDir: { }
