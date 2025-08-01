@@ -16851,7 +16851,7 @@ spec:
         - ReadWriteOnce
       storageClassName: longhorn-static
       volumeName: pingvinshare-postgresql
-    size: 10G
+    size: 5G
 ---
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa
