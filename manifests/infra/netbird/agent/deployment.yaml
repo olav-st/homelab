@@ -87,8 +87,12 @@ spec:
               mountPath: /config
             - name: varlog
               mountPath: /var/log
+            - name: varrun
+              mountPath: /var/run
       volumes:
         - name: config
           emptyDir: { }
         - name: varlog
+          emptyDir: { }
+        - name: varrun
           emptyDir: { }
