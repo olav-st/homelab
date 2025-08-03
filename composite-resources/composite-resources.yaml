@@ -1,3 +1,14 @@
+apiVersion: netbird.homelab.olav.ninja/v1alpha1
+kind: XServiceNBResource
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  addressType: clusterIP
+  networkID: cvrdcevm0qos7387j9sg
+  serviceName: traefik
+  serviceNamespace: traefik
+---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
