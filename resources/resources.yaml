@@ -3469,15 +3469,6 @@ rules:
       - get
       - watch
       - list
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - watch
-      - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -10533,10 +10524,10 @@ spec:
             - --log-format=text
             - --interval=1m
             - --source=service
-            - --source=ingress
             - --policy=upsert-only
             - --registry=txt
             - --provider=cloudflare
+            - --publish-internal-services
           env:
             - name: CF_API_TOKEN
               valueFrom:
