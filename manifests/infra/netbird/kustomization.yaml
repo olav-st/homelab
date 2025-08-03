@@ -4,7 +4,6 @@ namespace: netbird
 
 resources:
   - namespace.yaml
-  - ./agent
   - ./backend
   - ./dashboard
   - ./operator
