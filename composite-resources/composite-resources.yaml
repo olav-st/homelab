@@ -5,6 +5,7 @@ metadata:
   namespace: traefik
 spec:
   addressType: clusterIP
+  nbResourceName: traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
   serviceName: traefik
   serviceNamespace: traefik
