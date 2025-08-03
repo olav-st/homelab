@@ -9389,6 +9389,7 @@ metadata:
   name: traefik
   namespace: traefik
 spec:
+  clusterIP: 10.96.100.100
   externalTrafficPolicy: Local
   internalTrafficPolicy: Local
   loadBalancerIP: 192.168.0.90
@@ -14246,65 +14247,6 @@ spec:
       served: true
 ---
 apiVersion: apiextensions.crossplane.io/v1
-kind: CompositeResourceDefinition
-metadata:
-  name: xservicenbresources.netbird.homelab.olav.ninja
-  namespace: crossplane
-spec:
-  group: netbird.homelab.olav.ninja
-  names:
-    kind: XServiceNBResource
-    plural: xservicenbresources
-  versions:
-    - name: v1alpha1
-      referenceable: true
-      schema:
-        openAPIV3Schema:
-          properties:
-            spec:
-              properties:
-                addressType:
-                  description: Type of address to use for NBResource (clusterIP, loadBalancerIP, or dns)
-                  enum:
-                    - clusterIP
-                    - loadBalancerIP
-                    - dns
-                  type: string
-                groups:
-                  description: NetBird groups for the resource
-                  items:
-                    type: string
-                  type: array
-                nbResourceName:
-                  description: Name for the NBResource
-                  type: string
-                networkID:
-                  description: NetBird network ID
-                  type: string
-                serviceName:
-                  description: Name of the Kubernetes service to observe
-                  type: string
-                serviceNamespace:
-                  description: Namespace of the Kubernetes service
-                  type: string
-              required:
-                - serviceName
-                - serviceNamespace
-                - networkID
-                - addressType
-                - groups
-                - nbResourceName
-              type: object
-            status:
-              properties:
-                nbResourceReady:
-                  description: Whether the NBResource has been created successfully
-                  type: boolean
-              type: object
-          type: object
-      served: true
----
-apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: keycloak-oidc-client
@@ -14491,85 +14433,6 @@ spec:
         kind: GoTemplate
         source: Inline
       step: create-service-account-role
-    - functionRef:
-        name: function-auto-ready
-      step: automatically-detect-ready-composed-resources
----
-apiVersion: apiextensions.crossplane.io/v1
-kind: Composition
-metadata:
-  name: service-nbresource
-  namespace: crossplane
-spec:
-  compositeTypeRef:
-    apiVersion: netbird.homelab.olav.ninja/v1alpha1
-    kind: XServiceNBResource
-  mode: Pipeline
-  pipeline:
-    - functionRef:
-        name: function-extra-resources
-      input:
-        apiVersion: extra-resources.fn.crossplane.io/v1beta1
-        kind: Input
-        spec:
-          extraResources:
-            - apiVersion: v1
-              into: Service
-              kind: Service
-              resource:
-                name: '{{ .observed.composite.resource.spec.serviceName }}'
-                namespace: '{{ .observed.composite.resource.spec.serviceNamespace }}'
-              type: Resource
-      step: pull-extra-resources
-    - functionRef:
-        name: function-go-templating
-      input:
-        apiVersion: gotemplating.fn.crossplane.io/v1beta1
-        inline:
-          template: |
-            {{- $services := index (index .context "apiextensions.crossplane.io/extra-resources") "Service" }}
-            {{- if $services }}
-            {{- $service := index $services 0 }}
-            {{- $addressType := .observed.composite.resource.spec.addressType }}
-            {{- $address := "" }}
-            {{- if eq $addressType "clusterIP" }}
-            {{- $address = index (index $service "spec") "clusterIP" }}
-            {{- else if eq $addressType "loadBalancerIP" }}
-            {{- $status := index $service "status" }}
-            {{- if $status }}
-            {{- $loadBalancer := index $status "loadBalancer" }}
-            {{- if $loadBalancer }}
-            {{- $ingress := index $loadBalancer "ingress" }}
-            {{- if $ingress }}
-            {{- $firstIngress := index $ingress 0 }}
-            {{- $address = index $firstIngress "ip" }}
-            {{- end }}
-            {{- end }}
-            {{- end }}
-            {{- else if eq $addressType "dns" }}
-            {{- $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
-            {{- end }}
-            {{- if $address }}
-            apiVersion: netbird.io/v1
-            kind: NBResource
-            metadata:
-              annotations:
-                gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-nbresource
-              name: {{ .observed.composite.resource.spec.nbResourceName }}
-              namespace: {{ .observed.composite.resource.spec.serviceNamespace }}
-            spec:
-              address: {{ $address }}
-              groups:
-              {{- range .observed.composite.resource.spec.groups }}
-              - {{ . }}
-              {{- end }}
-              name: {{ .observed.composite.resource.spec.nbResourceName }}
-              networkID: {{ .observed.composite.resource.spec.networkID }}
-            {{- end }}
-            {{- end }}
-        kind: GoTemplate
-        source: Inline
-      step: create-nbresource
     - functionRef:
         name: function-auto-ready
       step: automatically-detect-ready-composed-resources
@@ -16385,6 +16248,18 @@ spec:
   task: backup
 ---
 apiVersion: netbird.io/v1
+kind: NBResource
+metadata:
+  name: traefik-clusterip
+  namespace: traefik
+spec:
+  address: 10.96.100.100
+  groups:
+    - homelab-traefik-traefik
+  name: traefik-traefik-clusterip
+  networkID: cvrdcevm0qos7387j9sg
+---
+apiVersion: netbird.io/v1
 kind: NBRoutingPeer
 metadata:
   finalizers:
@@ -17098,14 +16973,6 @@ metadata:
   namespace: crossplane
 spec:
   package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.5.0
----
-apiVersion: pkg.crossplane.io/v1beta1
-kind: Function
-metadata:
-  name: function-extra-resources
-  namespace: crossplane
-spec:
-  package: ghcr.io/crossplane-contrib/function-extra-resources:v0.0.0-20250728070002-0fc1f1591d98
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
