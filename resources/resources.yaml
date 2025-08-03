@@ -14498,7 +14498,7 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: service-nbresource-v4
+  name: service-nbresource
   namespace: crossplane
 spec:
   compositeTypeRef:
