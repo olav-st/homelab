@@ -14264,7 +14264,6 @@ spec:
             spec:
               properties:
                 addressType:
-                  default: clusterIP
                   description: Type of address to use for NBResource (clusterIP, loadBalancerIP, or dns)
                   enum:
                     - clusterIP
@@ -14277,7 +14276,7 @@ spec:
                     type: string
                   type: array
                 nbResourceName:
-                  description: Name for the NBResource (optional, defaults to serviceName-serviceNamespace)
+                  description: Name for the NBResource
                   type: string
                 networkID:
                   description: NetBird network ID
@@ -14292,27 +14291,15 @@ spec:
                 - serviceName
                 - serviceNamespace
                 - networkID
+                - addressType
+                - groups
+                - nbResourceName
               type: object
             status:
               properties:
-                addressType:
-                  description: The address type that was used
-                  type: string
                 nbResourceReady:
                   description: Whether the NBResource has been created successfully
                   type: boolean
-                selectedAddress:
-                  description: The address selected for the NBResource based on addressType
-                  type: string
-                serviceClusterIP:
-                  description: Observed cluster IP of the service
-                  type: string
-                serviceDNS:
-                  description: DNS name of the service
-                  type: string
-                serviceLoadBalancerIP:
-                  description: Observed load balancer IP of the service
-                  type: string
               type: object
           type: object
       served: true
@@ -14520,40 +14507,51 @@ spec:
   mode: Pipeline
   pipeline:
     - functionRef:
-        name: function-go-templating
+        name: function-extra-resources
       input:
-        apiVersion: gotemplating.fn.crossplane.io/v1beta1
-        inline:
-          template: |
-            apiVersion: meta.gotemplating.fn.crossplane.io/v1alpha1
-            kind: ExtraResources
-            requirements:
-              service:
-                apiVersion: v1
-                kind: Service
-                matchName: {{ .observed.composite.resource.spec.serviceName }}
-                matchNamespace: {{ .observed.composite.resource.spec.serviceNamespace }}
-        kind: GoTemplate
-        source: Inline
-      step: fetch-service
+        apiVersion: extra-resources.fn.crossplane.io/v1beta1
+        kind: Input
+        spec:
+          extraResources:
+            - apiVersion: v1
+              into: Service
+              kind: Service
+              selector:
+                matchLabels:
+                  - key: metadata.name
+                    type: Value
+                    value: '{{ .observed.composite.resource.spec.serviceName }}'
+                  - key: metadata.namespace
+                    type: Value
+                    value: '{{ .observed.composite.resource.spec.serviceNamespace }}'
+                maxMatch: 1
+                minMatch: 1
+              type: Selector
+      step: pull-extra-resources
     - functionRef:
         name: function-go-templating
       input:
         apiVersion: gotemplating.fn.crossplane.io/v1beta1
         inline:
           template: |
-            {{- if .extraResources }}
-            {{- if .extraResources.service }}
-            {{- if .extraResources.service.items }}
-            {{- $service := (index .extraResources.service.items 0).resource }}
-            {{- $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
+            {{- $services := index (index .context "apiextensions.crossplane.io/extra-resources") "Service" }}
+            {{- if $services }}
+            {{- $service := index $services 0 }}
+            {{- $addressType := .observed.composite.resource.spec.addressType }}
             {{- $address := "" }}
             {{- if eq $addressType "clusterIP" }}
-            {{- $address = $service.spec.clusterIP }}
+            {{- $address = index (index $service "spec") "clusterIP" }}
             {{- else if eq $addressType "loadBalancerIP" }}
-            {{- if and $service.status $service.status.loadBalancer $service.status.loadBalancer.ingress }}
-            {{- $ingress := index $service.status.loadBalancer.ingress 0 }}
-            {{- $address = $ingress.ip }}
+            {{- $status := index $service "status" }}
+            {{- if $status }}
+            {{- $loadBalancer := index $status "loadBalancer" }}
+            {{- if $loadBalancer }}
+            {{- $ingress := index $loadBalancer "ingress" }}
+            {{- if $ingress }}
+            {{- $firstIngress := index $ingress 0 }}
+            {{- $address = index $firstIngress "ip" }}
+            {{- end }}
+            {{- end }}
             {{- end }}
             {{- else if eq $addressType "dns" }}
             {{- $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
@@ -14564,19 +14562,16 @@ spec:
             metadata:
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-nbresource
-              name: {{ .observed.composite.resource.spec.nbResourceName | default (printf "%s-%s" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace) }}
+              name: {{ .observed.composite.resource.spec.nbResourceName }}
               namespace: {{ .observed.composite.resource.spec.serviceNamespace }}
             spec:
               address: {{ $address }}
               groups:
-              {{- $groups := .observed.composite.resource.spec.groups | default (list (printf "homelab-%s-%s" .observed.composite.resource.spec.serviceNamespace .observed.composite.resource.spec.serviceName)) }}
-              {{- range $groups }}
+              {{- range .observed.composite.resource.spec.groups }}
               - {{ . }}
               {{- end }}
-              name: {{ .observed.composite.resource.spec.nbResourceName | default (printf "%s-%s" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace) }}
+              name: {{ .observed.composite.resource.spec.nbResourceName }}
               networkID: {{ .observed.composite.resource.spec.networkID }}
-            {{- end }}
-            {{- end }}
             {{- end }}
             {{- end }}
         kind: GoTemplate
