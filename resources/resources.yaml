@@ -14247,6 +14247,78 @@ spec:
       served: true
 ---
 apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xservicenbresources.netbird.homelab.olav.ninja
+  namespace: crossplane
+spec:
+  group: netbird.homelab.olav.ninja
+  names:
+    kind: XServiceNBResource
+    plural: xservicenbresources
+  versions:
+    - name: v1alpha1
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                addressType:
+                  default: clusterIP
+                  description: Type of address to use for NBResource (clusterIP, loadBalancerIP, or dns)
+                  enum:
+                    - clusterIP
+                    - loadBalancerIP
+                    - dns
+                  type: string
+                groups:
+                  description: NetBird groups for the resource
+                  items:
+                    type: string
+                  type: array
+                nbResourceName:
+                  description: Name for the NBResource (optional, defaults to serviceName-serviceNamespace)
+                  type: string
+                networkID:
+                  description: NetBird network ID
+                  type: string
+                serviceName:
+                  description: Name of the Kubernetes service to observe
+                  type: string
+                serviceNamespace:
+                  description: Namespace of the Kubernetes service
+                  type: string
+              required:
+                - serviceName
+                - serviceNamespace
+                - networkID
+              type: object
+            status:
+              properties:
+                addressType:
+                  description: The address type that was used
+                  type: string
+                nbResourceReady:
+                  description: Whether the NBResource has been created successfully
+                  type: boolean
+                selectedAddress:
+                  description: The address selected for the NBResource based on addressType
+                  type: string
+                serviceClusterIP:
+                  description: Observed cluster IP of the service
+                  type: string
+                serviceDNS:
+                  description: DNS name of the service
+                  type: string
+                serviceLoadBalancerIP:
+                  description: Observed load balancer IP of the service
+                  type: string
+              type: object
+          type: object
+      served: true
+---
+apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: keycloak-oidc-client
@@ -14433,6 +14505,118 @@ spec:
         kind: GoTemplate
         source: Inline
       step: create-service-account-role
+    - functionRef:
+        name: function-auto-ready
+      step: automatically-detect-ready-composed-resources
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: service-nbresource
+  namespace: crossplane
+spec:
+  compositeTypeRef:
+    apiVersion: netbird.homelab.olav.ninja/v1alpha1
+    kind: XServiceNBResource
+  mode: Pipeline
+  pipeline:
+    - functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        inline:
+          template: |
+            apiVersion: meta.gotemplating.fn.crossplane.io/v1alpha1
+            kind: ExtraResources
+            requirements:
+              service:
+                apiVersion: v1
+                kind: Service
+                matchName: {{ .observed.composite.resource.spec.serviceName }}
+                matchNamespace: {{ .observed.composite.resource.spec.serviceNamespace }}
+        kind: GoTemplate
+        source: Inline
+      step: observe-service
+    - functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        inline:
+          template: |
+            {{ if and (ne .observed.resources nil) (ne .extraResources nil) }}
+            {{ $service := (index (index .extraResources "service").items 0).resource }}
+            {{ $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
+            {{ $address := "" }}
+            {{ if eq $addressType "clusterIP" }}
+              {{ $address = $service.spec.clusterIP }}
+            {{ else if eq $addressType "loadBalancerIP" }}
+              {{ if $service.status.loadBalancer.ingress }}
+                {{ $ingress := index $service.status.loadBalancer.ingress 0 }}
+                {{ $address = $ingress.ip | default $ingress.hostname }}
+              {{ end }}
+            {{ else if eq $addressType "dns" }}
+              {{ $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
+            {{ end }}
+            {{ if $address }}
+            apiVersion: netbird.io/v1
+            kind: NBResource
+            metadata:
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-nbresource
+              name: {{ .observed.composite.resource.spec.nbResourceName | default (printf "%s-%s" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace) }}
+              namespace: {{ .observed.composite.resource.spec.serviceNamespace }}
+            spec:
+              address: {{ $address }}
+              groups: {{ .observed.composite.resource.spec.groups | default (list (printf "homelab-%s-%s" .observed.composite.resource.spec.serviceNamespace .observed.composite.resource.spec.serviceName)) | toYaml | nindent 6 }}
+              name: {{ .observed.composite.resource.spec.nbResourceName | default (printf "%s-%s" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace) }}
+              networkID: {{ .observed.composite.resource.spec.networkID }}
+            {{ end }}
+            {{ end }}
+        kind: GoTemplate
+        source: Inline
+      step: create-nbresource
+    - functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        inline:
+          template: |
+            {{ if and (ne .observed.resources nil) (ne .extraResources nil) }}
+            {{ $service := (index (index .extraResources "service").items 0).resource }}
+            {{ $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
+            {{ $clusterIP := $service.spec.clusterIP }}
+            {{ $loadBalancerIP := "" }}
+            {{ if $service.status.loadBalancer.ingress }}
+              {{ $ingress := index $service.status.loadBalancer.ingress 0 }}
+              {{ $loadBalancerIP = $ingress.ip }}
+            {{ end }}
+            {{ $dnsName := printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
+
+            apiVersion: meta.gotemplating.fn.crossplane.io/v1alpha1
+            kind: CompositeConnectionDetails
+            metadata:
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: connection-details
+            data:
+              serviceClusterIP: {{ $clusterIP | default "" | b64enc }}
+              serviceLoadBalancerIP: {{ $loadBalancerIP | default "" | b64enc }}
+              serviceDNS: {{ $dnsName | b64enc }}
+              addressType: {{ $addressType | b64enc }}
+              {{ $selectedAddress := "" }}
+              {{ if eq $addressType "clusterIP" }}
+                {{ $selectedAddress = $clusterIP }}
+              {{ else if eq $addressType "loadBalancerIP" }}
+                {{ $selectedAddress = $loadBalancerIP }}
+              {{ else if eq $addressType "dns" }}
+                {{ $selectedAddress = $dnsName }}
+              {{ end }}
+              selectedAddress: {{ $selectedAddress | b64enc }}
+              serviceName: {{ .observed.composite.resource.spec.serviceName | b64enc }}
+              serviceNamespace: {{ .observed.composite.resource.spec.serviceNamespace | b64enc }}
+            {{ end }}
+        kind: GoTemplate
+        source: Inline
+      step: update-status
     - functionRef:
         name: function-auto-ready
       step: automatically-detect-ready-composed-resources
