@@ -8628,10 +8628,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    external-dns.alpha.kubernetes.io/internal-hostname: homeassistant.homelab.olav.ninja
-    io.cilium/lb-ipam-ips: 192.168.0.95
-    netbird.io/expose: "true"
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -8659,7 +8655,7 @@ spec:
       targetPort: 8883
   selector:
     kubevirt.io/vm: homeassistant-vm
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -17100,6 +17096,22 @@ spec:
       services:
         - name: gitea-ssh
           port: 22
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: HostSNI(`homeassistant.homelab.olav.ninja`)
+      services:
+        - name: homeassistant
+          port: 443
+  tls:
+    passthrough: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
