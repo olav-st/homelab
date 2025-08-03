@@ -5,6 +5,8 @@ metadata:
   namespace: traefik
 spec:
   addressType: clusterIP
+  groups:
+    - homelab-traefik-traefik
   nbResourceName: traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
   serviceName: traefik
