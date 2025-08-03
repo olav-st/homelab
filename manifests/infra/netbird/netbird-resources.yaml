@@ -1,0 +1,13 @@
+apiVersion: netbird.io/v1
+kind: NBResource
+metadata:
+  name: kubernetes-clusterip
+  namespace: default
+spec:
+  address: 10.96.100.100
+  groups:
+  - homelab-default-api-access
+  name: default-kubernetes-api-clusterip
+  networkID: cvrdcevm0qos7387j9sg
+  tcpPorts:
+  - 443
