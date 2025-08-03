@@ -17105,7 +17105,7 @@ metadata:
   name: function-extra-resources
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-extra-resources:v0.0.0-20250728070002-0fc1f1591d98
+  package: ghcr.io/crossplane-contrib/function-extra-resources:v0.0.0-20250728070002-0fc1f1591d98
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
