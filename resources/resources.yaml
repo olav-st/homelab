@@ -17114,6 +17114,14 @@ spec:
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
 metadata:
+  name: function-extra-resources
+  namespace: crossplane
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-extra-resources:v0.1.0
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
   name: function-go-templating
   namespace: crossplane
 spec:
