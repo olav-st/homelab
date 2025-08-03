@@ -3,4 +3,4 @@ kind: Function
 metadata:
   name: function-extra-resources
 spec:
-  package: ghcr.io/crossplane-contrib/function-extra-resources:v0.0.0-20250728070002-0fc1f1591d98 # renovate: github-releases=crossplane-contrib/function-extra-resources
+  package: ghcr.io/crossplane-contrib/function-extra-resources:v0.1.0 # renovate: github-releases=crossplane-contrib/function-extra-resources
