@@ -14535,28 +14535,30 @@ spec:
                 matchNamespace: {{ .observed.composite.resource.spec.serviceNamespace }}
         kind: GoTemplate
         source: Inline
-      step: observe-service
+      step: fetch-service
     - functionRef:
         name: function-go-templating
       input:
         apiVersion: gotemplating.fn.crossplane.io/v1beta1
         inline:
           template: |
-            {{ if and (ne .observed.resources nil) (ne .extraResources nil) }}
-            {{ $service := (index (index .extraResources "service").items 0).resource }}
-            {{ $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
-            {{ $address := "" }}
-            {{ if eq $addressType "clusterIP" }}
-              {{ $address = $service.spec.clusterIP }}
-            {{ else if eq $addressType "loadBalancerIP" }}
-              {{ if $service.status.loadBalancer.ingress }}
-                {{ $ingress := index $service.status.loadBalancer.ingress 0 }}
-                {{ $address = $ingress.ip | default $ingress.hostname }}
-              {{ end }}
-            {{ else if eq $addressType "dns" }}
-              {{ $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
-            {{ end }}
-            {{ if $address }}
+            {{- if .extraResources }}
+            {{- if .extraResources.service }}
+            {{- if .extraResources.service.items }}
+            {{- $service := (index .extraResources.service.items 0).resource }}
+            {{- $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
+            {{- $address := "" }}
+            {{- if eq $addressType "clusterIP" }}
+            {{- $address = $service.spec.clusterIP }}
+            {{- else if eq $addressType "loadBalancerIP" }}
+            {{- if and $service.status $service.status.loadBalancer $service.status.loadBalancer.ingress }}
+            {{- $ingress := index $service.status.loadBalancer.ingress 0 }}
+            {{- $address = $ingress.ip }}
+            {{- end }}
+            {{- else if eq $addressType "dns" }}
+            {{- $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
+            {{- end }}
+            {{- if $address }}
             apiVersion: netbird.io/v1
             kind: NBResource
             metadata:
@@ -14566,56 +14568,20 @@ spec:
               namespace: {{ .observed.composite.resource.spec.serviceNamespace }}
             spec:
               address: {{ $address }}
-              groups: {{ .observed.composite.resource.spec.groups | default (list (printf "homelab-%s-%s" .observed.composite.resource.spec.serviceNamespace .observed.composite.resource.spec.serviceName)) | toYaml | nindent 6 }}
+              groups:
+              {{- $groups := .observed.composite.resource.spec.groups | default (list (printf "homelab-%s-%s" .observed.composite.resource.spec.serviceNamespace .observed.composite.resource.spec.serviceName)) }}
+              {{- range $groups }}
+              - {{ . }}
+              {{- end }}
               name: {{ .observed.composite.resource.spec.nbResourceName | default (printf "%s-%s" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace) }}
               networkID: {{ .observed.composite.resource.spec.networkID }}
-            {{ end }}
-            {{ end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
         kind: GoTemplate
         source: Inline
       step: create-nbresource
-    - functionRef:
-        name: function-go-templating
-      input:
-        apiVersion: gotemplating.fn.crossplane.io/v1beta1
-        inline:
-          template: |
-            {{ if and (ne .observed.resources nil) (ne .extraResources nil) }}
-            {{ $service := (index (index .extraResources "service").items 0).resource }}
-            {{ $addressType := .observed.composite.resource.spec.addressType | default "clusterIP" }}
-            {{ $clusterIP := $service.spec.clusterIP }}
-            {{ $loadBalancerIP := "" }}
-            {{ if $service.status.loadBalancer.ingress }}
-              {{ $ingress := index $service.status.loadBalancer.ingress 0 }}
-              {{ $loadBalancerIP = $ingress.ip }}
-            {{ end }}
-            {{ $dnsName := printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
-
-            apiVersion: meta.gotemplating.fn.crossplane.io/v1alpha1
-            kind: CompositeConnectionDetails
-            metadata:
-              annotations:
-                gotemplating.fn.crossplane.io/composition-resource-name: connection-details
-            data:
-              serviceClusterIP: {{ $clusterIP | default "" | b64enc }}
-              serviceLoadBalancerIP: {{ $loadBalancerIP | default "" | b64enc }}
-              serviceDNS: {{ $dnsName | b64enc }}
-              addressType: {{ $addressType | b64enc }}
-              {{ $selectedAddress := "" }}
-              {{ if eq $addressType "clusterIP" }}
-                {{ $selectedAddress = $clusterIP }}
-              {{ else if eq $addressType "loadBalancerIP" }}
-                {{ $selectedAddress = $loadBalancerIP }}
-              {{ else if eq $addressType "dns" }}
-                {{ $selectedAddress = $dnsName }}
-              {{ end }}
-              selectedAddress: {{ $selectedAddress | b64enc }}
-              serviceName: {{ .observed.composite.resource.spec.serviceName | b64enc }}
-              serviceNamespace: {{ .observed.composite.resource.spec.serviceNamespace | b64enc }}
-            {{ end }}
-        kind: GoTemplate
-        source: Inline
-      step: update-status
     - functionRef:
         name: function-auto-ready
       step: automatically-detect-ready-composed-resources

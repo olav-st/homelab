@@ -1,7 +1,7 @@
 apiVersion: netbird.homelab.olav.ninja/v1alpha1
 kind: XServiceNBResource
 metadata:
-  name: traefik
+  name: traefik-clusterip
   namespace: traefik
 spec:
   addressType: clusterIP
