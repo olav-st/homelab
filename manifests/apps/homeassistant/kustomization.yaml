@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: homeassistant
 
 resources:
+  - ingress-route.yaml
   - namespace.yaml
   - network-attachment-definition.yaml
   - service.yaml
