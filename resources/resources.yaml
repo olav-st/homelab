@@ -8631,7 +8631,6 @@ metadata:
   name: homeassistant
   namespace: homeassistant
 spec:
-  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 80
