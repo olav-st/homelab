@@ -33,6 +33,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: external-dns
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: gitea
 ---
 apiVersion: v1
@@ -252,6 +257,19 @@ metadata:
     helm.sh/chart: crossplane-1.20.0
   name: rbac-manager
   namespace: crossplane
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/version: 0.18.0
+    helm.sh/chart: external-dns-1.18.0
+  name: external-dns
+  namespace: external-dns
 ---
 apiVersion: v1
 automountServiceAccountToken: false
@@ -3413,6 +3431,58 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/version: 0.18.0
+    helm.sh/chart: external-dns-1.18.0
+  name: external-dns
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
     app.kubernetes.io/instance: hajimari
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: hajimari
@@ -5878,6 +5948,25 @@ subjects:
   - kind: ServiceAccount
     name: rbac-manager
     namespace: crossplane
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/version: 0.18.0
+    helm.sh/chart: external-dns-1.18.0
+  name: external-dns-viewer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: external-dns
+subjects:
+  - kind: ServiceAccount
+    name: external-dns
+    namespace: external-dns
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -8405,6 +8494,28 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/version: 0.18.0
+    helm.sh/chart: external-dns-1.18.0
+  name: external-dns
+  namespace: external-dns
+spec:
+  ports:
+    - name: http
+      port: 7979
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/name: external-dns
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app: gitea
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
@@ -10388,6 +10499,95 @@ spec:
             runAsGroup: 65532
             runAsUser: 65532
       serviceAccountName: rbac-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/version: 0.18.0
+    helm.sh/chart: external-dns-1.18.0
+  name: external-dns
+  namespace: external-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: external-dns
+      app.kubernetes.io/name: external-dns
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: external-dns
+        app.kubernetes.io/name: external-dns
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - --log-level=info
+            - --log-format=text
+            - --interval=1m
+            - --source=service
+            - --source=ingress
+            - --policy=upsert-only
+            - --registry=txt
+            - --provider=cloudflare
+          env:
+            - name: CF_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: apiKey
+                  name: cloudflare-api-key
+            - name: CF_API_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: email
+                  name: cloudflare-api-key
+          image: registry.k8s.io/external-dns/external-dns:v0.18.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: external-dns
+          ports:
+            - containerPort: 7979
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+      securityContext:
+        fsGroup: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: external-dns
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -15370,6 +15570,20 @@ spec:
     metadata:
       name: netbird-turn-credentials
       namespace: coturn
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: cloudflare-api-key
+  namespace: external-dns
+spec:
+  encryptedData:
+    apiKey: AgB9xOER45zd+vqDjKi9npBwC+kgiMMcGeMFShpbFoWE9bm/6Mcyg5logppoE/HYeqPTV8EyuMCQTXTC9kuEMo9htBrSa+9e3YtjJ1TWt4bQr3sy5LtWwWh+S8aL+ZVMwhsrnGHwMQFGNq07008pwSFJMkSPhZewqB4YEY5Gvkok9jgKyOfhelihv0OoJd2XZm4VQvD8r+7IKI/GTVFJ/Ih80G6V9YLEXj2jeUspFp+qhI84SE22ODZMjRFhpBDKqiZgQGWrVx5IJh7WV/aBb76uzbl2aD6v8MjbEWaPC380XLDv5uPKi1tOmXexeQWZhrw6JYINsgVXrfvTgn9uvJ07RG2kMvhppCEkhG1fXD+LdWCyFWjQJVl/NofWyhu2LrSowQBbqSEzRbwv7ZVE/IrosD2rCGyqstPBWev7fF0rAnd8UvESm8UodttvDNLWiUQtMFiHTc/h7aI/m/rQm8mv80GsyH7O9cYU788dZ0zU1DGWjn5nlOhh9amM4OeaP5oYyFwfNJLZDMy4AnrQ2fSdUTEKKA2gm0U9sTlVYvJ5lVjH49mpEtUm/V2w+glbjK9Y+YrKAav0z1hkcke5VUNYu2C9M1Yf1X2AW0aWtwEXwRFJDp6dR+eCNcCc7Ka2VOz/DG4pY4rMj9GraaRnPxVzdDvWmIKSyPIGkvf+HDKiiAKHdtKITWwNMEpJ3b9nkoU7rYbg/eeQnhx8tqM2iynYLsvALuusEg5CxI3VCvBBn0B7W3Aj6Kej
+    email: AgBV3ulEZ4JeK7Nky2N578bBkCfowM1TG4tCVlkuaDV/TeDLGH/868LvR2gF9Lo71X5wZ9OLuAYssLWGGgJ2/qAery0pXVA8ay9DBNwkWz1jjntOEMDru2ewc3VY2ZLgqvr5y9cRz/svMNoJPxZHCe9SavstQ3hWnJqhPCN5pzWTaD3WYGA7DeWGZN4j9M9SwVRyfE657dnKJiY2vkBeI5wa56pTEihLxHX12ibYp8fS4MTUz8repKF4tZ9LcM++X3N5uUEeJcUIrrFL7Bt6KiLr4mUqBOuPheOabloEG1MaiO7TK/PtCeddR1VAMikwp9ZmReu8vS1C+9MULeHxqJ11UUY/aW9GjsiUTf4PlXg1+W7Yq3BA5BG7mmhSFDZQxSm3QmoCdpA43cCgF5JLcUql02gn4XlFObmHn1pSPzeTQCzOsqmbwpLeAxy5RbmczJtasA/EtE17IgibwigYKXssCSMI1nEDqT9ueU9ktmyEy1rkhxX5oNpyhxxB1hcegPNStGN3P9KH6rcVdw+9mTc/KoIT8Kc8McW8MkF8G2esKR6p4MQqVNbNSK194RVw1tnGFjz0/HQHniXHmtXT1dTCxRlxf78X4dVc7qW7HfFVCCyjWEBgwo8/6QpU4PpuewFnSmsxfYS1v1RPBi0+2/IZCqopp8ffakeUWNG9tZeVgQE1p8uLD82KbMCHV4LCg9D6VLrPiFded6si7K5hK+GfC1Uz
+  template:
+    metadata:
+      name: cloudflare-api-key
+      namespace: external-dns
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
