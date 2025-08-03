@@ -14498,7 +14498,7 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: service-nbresource
+  name: service-nbresource-v4
   namespace: crossplane
 spec:
   compositeTypeRef:
@@ -14516,17 +14516,10 @@ spec:
             - apiVersion: v1
               into: Service
               kind: Service
-              selector:
-                matchLabels:
-                  - key: metadata.name
-                    type: Value
-                    value: '{{ .observed.composite.resource.spec.serviceName }}'
-                  - key: metadata.namespace
-                    type: Value
-                    value: '{{ .observed.composite.resource.spec.serviceNamespace }}'
-                maxMatch: 1
-                minMatch: 1
-              type: Selector
+              resource:
+                name: '{{ .observed.composite.resource.spec.serviceName }}'
+                namespace: '{{ .observed.composite.resource.spec.serviceNamespace }}'
+              type: Resource
       step: pull-extra-resources
     - functionRef:
         name: function-go-templating
