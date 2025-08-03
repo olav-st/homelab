@@ -9,6 +9,7 @@ resources:
   - provider-config.yaml
   - xrds.yaml
   - functions/auto-ready.yaml
+  - functions/extra-resources.yaml
   - functions/go-templating.yaml
   - https://doc.crds.dev/raw/github.com/crossplane/crossplane@v1.20.0 # renovate: github-releases=crossplane/crossplane
   - https://doc.crds.dev/raw/github.com/crossplane-contrib/provider-keycloak@v2.1.0 # renovate: github-releases=crossplane-contrib/provider-keycloak

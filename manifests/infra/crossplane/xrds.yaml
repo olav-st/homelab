@@ -109,3 +109,58 @@ spec:
             - realm
         required:
         - spec
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xservicenbresources.netbird.homelab.olav.ninja
+spec:
+  group: netbird.homelab.olav.ninja
+  names:
+    kind: XServiceNBResource
+    plural: xservicenbresources
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              serviceName:
+                type: string
+                description: "Name of the Kubernetes service to observe"
+              serviceNamespace:
+                type: string
+                description: "Namespace of the Kubernetes service"
+              networkID:
+                type: string
+                description: "NetBird network ID"
+              addressType:
+                type: string
+                enum: ["clusterIP", "loadBalancerIP", "dns"]
+                description: "Type of address to use for NBResource (clusterIP, loadBalancerIP, or dns)"
+              groups:
+                type: array
+                items:
+                  type: string
+                description: "NetBird groups for the resource"
+              nbResourceName:
+                type: string
+                description: "Name for the NBResource"
+            required:
+            - serviceName
+            - serviceNamespace
+            - networkID
+            - addressType
+            - groups
+            - nbResourceName
+          status:
+            type: object
+            properties:
+              nbResourceReady:
+                type: boolean
+                description: "Whether the NBResource has been created successfully"

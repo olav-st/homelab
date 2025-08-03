@@ -188,3 +188,83 @@ spec:
     - step: automatically-detect-ready-composed-resources
       functionRef:
         name: function-auto-ready
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: service-nbresource
+spec:
+  compositeTypeRef:
+    apiVersion: netbird.homelab.olav.ninja/v1alpha1
+    kind: XServiceNBResource
+  mode: Pipeline
+  pipeline:
+  - step: pull-extra-resources
+    functionRef:
+      name: function-extra-resources
+    input:
+      apiVersion: extra-resources.fn.crossplane.io/v1beta1
+      kind: Input
+      spec:
+        extraResources:
+          - kind: Service
+            into: Service
+            apiVersion: v1
+            type: Resource
+            resource:
+              name: "{{ .observed.composite.resource.spec.serviceName }}"
+              namespace: "{{ .observed.composite.resource.spec.serviceNamespace }}"
+
+  - step: create-nbresource
+    functionRef:
+      name: function-go-templating
+    input:
+      apiVersion: gotemplating.fn.crossplane.io/v1beta1
+      kind: GoTemplate
+      source: Inline
+      inline:
+        template: |
+          {{- $services := index (index .context "apiextensions.crossplane.io/extra-resources") "Service" }}
+          {{- if $services }}
+          {{- $service := index $services 0 }}
+          {{- $addressType := .observed.composite.resource.spec.addressType }}
+          {{- $address := "" }}
+          {{- if eq $addressType "clusterIP" }}
+          {{- $address = index (index $service "spec") "clusterIP" }}
+          {{- else if eq $addressType "loadBalancerIP" }}
+          {{- $status := index $service "status" }}
+          {{- if $status }}
+          {{- $loadBalancer := index $status "loadBalancer" }}
+          {{- if $loadBalancer }}
+          {{- $ingress := index $loadBalancer "ingress" }}
+          {{- if $ingress }}
+          {{- $firstIngress := index $ingress 0 }}
+          {{- $address = index $firstIngress "ip" }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- else if eq $addressType "dns" }}
+          {{- $address = printf "%s.%s.svc.cluster.local" .observed.composite.resource.spec.serviceName .observed.composite.resource.spec.serviceNamespace }}
+          {{- end }}
+          {{- if $address }}
+          apiVersion: netbird.io/v1
+          kind: NBResource
+          metadata:
+            annotations:
+              gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-nbresource
+            name: {{ .observed.composite.resource.spec.nbResourceName }}
+            namespace: {{ .observed.composite.resource.spec.serviceNamespace }}
+          spec:
+            address: {{ $address }}
+            groups:
+            {{- range .observed.composite.resource.spec.groups }}
+            - {{ . }}
+            {{- end }}
+            name: {{ .observed.composite.resource.spec.nbResourceName }}
+            networkID: {{ .observed.composite.resource.spec.networkID }}
+          {{- end }}
+          {{- end }}
+
+  - step: automatically-detect-ready-composed-resources
+    functionRef:
+      name: function-auto-ready
