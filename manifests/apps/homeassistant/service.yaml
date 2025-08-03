@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: homeassistant
 spec:
-  externalTrafficPolicy: Local
   selector:
     kubevirt.io/vm: homeassistant-vm
   ports:
