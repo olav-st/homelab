@@ -8046,7 +8046,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea
   namespace: gitea
@@ -8218,7 +8218,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea-init
   namespace: gitea
@@ -8251,7 +8251,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea-inline-config
   namespace: gitea
@@ -8548,7 +8548,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea-http
   namespace: gitea
@@ -8572,7 +8572,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea-ssh
   namespace: gitea
@@ -10623,7 +10623,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea
   namespace: gitea
@@ -10638,7 +10638,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: b2558f490b2826bbec90a035d47713ce920a12139b37306b6bd0ba43e3db4388
+        checksum/config: 6512bcb412e34ff8968382825596662389220481d670a8f01f855e2d7f8089d5
         checksum/oauth_0: 01764dcd9b49e15763176a4daa8f8e10f4902756616d3e834ef1341e80062ad5
       labels:
         app: gitea
@@ -10646,7 +10646,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: gitea
         app.kubernetes.io/version: 1.24.3
-        helm.sh/chart: gitea-12.1.2
+        helm.sh/chart: gitea-12.1.3
         version: 1.24.3
     spec:
       containers:
@@ -16275,7 +16275,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea
   namespace: gitea
@@ -17174,7 +17174,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.3
-    helm.sh/chart: gitea-12.1.2
+    helm.sh/chart: gitea-12.1.3
     version: 1.24.3
   name: gitea-test-connection
   namespace: gitea
