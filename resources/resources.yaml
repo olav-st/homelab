@@ -3469,6 +3469,20 @@ rules:
       - get
       - watch
       - list
+  - apiGroups:
+      - externaldns.k8s.io
+    resources:
+      - dnsendpoints
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - externaldns.k8s.io
+    resources:
+      - dnsendpoints/status
+    verbs:
+      - '*'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -9416,7 +9430,6 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: netbird.homelab.olav.ninja,keycloak.homelab.olav.ninja
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
     netbird.io/expose: "true"
   labels:
@@ -10557,6 +10570,7 @@ spec:
             - --log-level=info
             - --log-format=text
             - --interval=1m
+            - --source=crd
             - --source=service
             - --policy=upsert-only
             - --registry=txt
