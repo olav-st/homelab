@@ -9416,6 +9416,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: netbird.homelab.olav.ninja,keycloak.homelab.olav.ninja
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
     netbird.io/expose: "true"
   labels:
