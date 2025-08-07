@@ -16,4 +16,5 @@ env:
         key: email
 
 sources:
+  - crd
   - service
