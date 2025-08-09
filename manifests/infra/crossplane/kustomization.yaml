@@ -11,7 +11,7 @@ resources:
   - functions/auto-ready.yaml
   - functions/go-templating.yaml
   - https://doc.crds.dev/raw/github.com/crossplane/crossplane@v1.20.1 # renovate: github-releases=crossplane/crossplane
-  - https://doc.crds.dev/raw/github.com/crossplane-contrib/provider-keycloak@v2.3.0 # renovate: github-releases=crossplane-contrib/provider-keycloak
+  - https://doc.crds.dev/raw/github.com/crossplane-contrib/provider-keycloak@v2.4.0 # renovate: github-releases=crossplane-contrib/provider-keycloak
 
 helmCharts:
 - name: crossplane
