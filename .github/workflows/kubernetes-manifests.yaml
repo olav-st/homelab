@@ -112,3 +112,26 @@ jobs:
           git add .
           git commit -m "chore: Update rendered manifests (from $main_sha)" || echo "No changes to commit"
           git push origin rendered_manifests
+
+  check-remote-manifests:
+    name: Check URLs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check remote manifest URLs
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/olav-st/homelab-devcontainer
+          cacheFrom: ghcr.io/olav-st/homelab-devcontainer
+          runCmd: make check-remote-manifests

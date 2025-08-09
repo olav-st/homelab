@@ -8,6 +8,31 @@ help: ## Show help
 	@echo "Available targets:"
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+check-remote-manifests:
+	@find . -name "kustomization.yaml" | while read file; do \
+		echo "Processing $$file"; \
+		yq e '.resources[]' "$$file" | grep -E '^https?://' | while read url; do \
+			echo "Checking $$url"; \
+			attempt=1; \
+			while [ $$attempt -le 3 ]; do \
+				if curl -fsSL --max-time 30 "$$url" -o /dev/null; then \
+					echo "OK"; \
+					break; \
+				else \
+					echo "Attempt $$attempt failed for $$url"; \
+					if [ $$attempt -lt 3 ]; then \
+						echo "Retrying in 60 seconds..."; \
+						sleep 60; \
+					else \
+						echo "Failed to reach $$url after 3 attempts"; \
+						exit 1; \
+					fi; \
+				fi; \
+				attempt=$$((attempt+1)); \
+			done; \
+		done; \
+	done
+
 render-manifests: ## Render Kubernetes manifests using Kustomize
 	$(eval TEMP_MANIFESTS_FILE := $(shell mktemp))
 	kustomize build --enable-helm ${MANIFEST_INPUT_DIR} > ${TEMP_MANIFESTS_FILE}
