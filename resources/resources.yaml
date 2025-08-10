@@ -16066,6 +16066,37 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  labels:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
+  name: keycloak-console
+  namespace: keycloak
+spec:
+  rules:
+    - host: keycloak.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak-http
+                port:
+                  name: http
+            path: /admin
+            pathType: Prefix
+  tls:
+    - hosts:
+        - keycloak.homelab.olav.ninja
+      secretName: keycloak-tls-secret
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
   labels:
     app.kubernetes.io/name: hubble-ui
     app.kubernetes.io/part-of: cilium
