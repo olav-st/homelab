@@ -311,31 +311,16 @@ metadata:
   namespace: immich
 ---
 apiVersion: v1
-automountServiceAccountToken: true
+imagePullSecrets: []
 kind: ServiceAccount
 metadata:
   labels:
-    app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
   name: keycloak
-  namespace: keycloak
----
-apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
-  name: keycloak-postgresql
   namespace: keycloak
 ---
 apiVersion: v1
@@ -7108,38 +7093,29 @@ metadata:
 ---
 apiVersion: v1
 data:
-  BITNAMI_DEBUG: "false"
-  JAVA_OPTS_APPEND: -Djgroups.dns.query=keycloak-headless.keycloak.svc.cluster.local
-  KC_BOOTSTRAP_ADMIN_PASSWORD_FILE: /opt/bitnami/keycloak/secrets/pazzword
-  KC_BOOTSTRAP_ADMIN_USERNAME: admin
-  KC_CACHE: ispn
-  KC_CACHE_CONFIG_FILE: cache-ispn.xml
-  KC_CACHE_STACK: jdbc-ping
-  KC_DB_PASSWORD_FILE: /opt/bitnami/keycloak/secrets/db-password
-  KC_DB_SCHEMA: public
-  KC_DB_URL: jdbc:postgresql://keycloak-postgresql:5432/bitnami_keycloak?currentSchema=public
-  KC_DB_USERNAME: bn_keycloak
-  KC_HOSTNAME: https://keycloak.homelab.olav.ninja/
-  KC_HOSTNAME_STRICT: "false"
-  KC_HTTP_MANAGEMENT_PORT: "9000"
-  KC_HTTP_PORT: "8080"
-  KC_HTTP_RELATIVE_PATH: /
-  KC_LOG_CONSOLE_OUTPUT: default
-  KC_LOG_LEVEL: INFO
-  KC_METRICS_ENABLED: "false"
-  KC_SPI_ADMIN_REALM: master
-  KEYCLOAK_PRODUCTION: "true"
+  keycloak.cli: |
+    embed-server --server-config=standalone-ha.xml --std-out=echo
+    batch
+
+    echo Configuring node identifier
+
+    ## Sets the node identifier to the node name (= pod name). Node identifiers have to be unique. They can have a
+    ## maximum length of 23 characters. Thus, the chart's fullname template truncates its length accordingly.
+    /subsystem=transactions:write-attribute(name=node-identifier, value=${jboss.node.name})
+
+    echo Finished configuring node identifier
+
+    run-batch
+    stop-embedded-server
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak-env-vars
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
+  name: keycloak-startup
   namespace: keycloak
 ---
 apiVersion: v1
@@ -8321,6 +8297,21 @@ metadata:
 type: Opaque
 ---
 apiVersion: v1
+data:
+  postgresql-password: a2V5Y2xvYWs=
+  postgresql-postgres-password: MlpNMXZmbmxxNQ==
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-10.16.2
+  name: keycloak-postgresql
+  namespace: keycloak
+type: Opaque
+---
+apiVersion: v1
 kind: Endpoints
 metadata:
   name: external-cluster
@@ -8835,41 +8826,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: keycloak
+    app.kubernetes.io/component: headless
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak
-  namespace: keycloak
-spec:
-  ports:
-    - name: http
-      nodePort: null
-      port: 80
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-  sessionAffinity: None
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
   name: keycloak-headless
   namespace: keycloak
 spec:
@@ -8879,50 +8841,73 @@ spec:
       port: 8080
       protocol: TCP
       targetPort: http
-  publishNotReadyAddresses: true
   selector:
-    app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
   type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: primary
+    app.kubernetes.io/component: http
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
+  name: keycloak-http
+  namespace: keycloak
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: https
+    - name: http-management
+      port: 9990
+      protocol: TCP
+      targetPort: http-management
+  selector:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/name: keycloak
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
+    helm.sh/chart: postgresql-10.16.2
   name: keycloak-postgresql
   namespace: keycloak
 spec:
   ports:
     - name: tcp-postgresql
-      nodePort: null
       port: 5432
       targetPort: tcp-postgresql
   selector:
-    app.kubernetes.io/component: primary
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/name: postgresql
-  sessionAffinity: None
+    role: primary
   type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: primary
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
-  name: keycloak-postgresql-hl
+    helm.sh/chart: postgresql-10.16.2
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: keycloak-postgresql-headless
   namespace: keycloak
 spec:
   clusterIP: None
@@ -8932,7 +8917,6 @@ spec:
       targetPort: tcp-postgresql
   publishNotReadyAddresses: true
   selector:
-    app.kubernetes.io/component: primary
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/name: postgresql
   type: ClusterIP
@@ -13272,88 +13256,113 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
   name: keycloak
   namespace: keycloak
 spec:
   podManagementPolicy: Parallel
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/component: keycloak
       app.kubernetes.io/instance: keycloak
       app.kubernetes.io/name: keycloak
-      app.kubernetes.io/part-of: keycloak
   serviceName: keycloak-headless
   template:
     metadata:
       annotations:
-        checksum/configmap-env-vars: b3ba6a7c0aaecc4e58c04307513029f2f2accf792ad23babd709d15f186d824a
+        checksum/config-startup: f875cea0a33f040d43f2834887e6a2fd3661e284623b699c10262fa2d1148bcf
+        checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       labels:
-        app.kubernetes.io/component: keycloak
         app.kubernetes.io/instance: keycloak
-        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: keycloak
-        app.kubernetes.io/part-of: keycloak
-        app.kubernetes.io/version: 26.3.2
-        helm.sh/chart: keycloak-25.0.0
     spec:
       affinity:
-        nodeAffinity: null
-        podAffinity: null
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
                 labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: NotIn
+                      values:
+                        - test
                   matchLabels:
-                    app.kubernetes.io/component: keycloak
                     app.kubernetes.io/instance: keycloak
                     app.kubernetes.io/name: keycloak
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-      automountServiceAccountToken: true
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+              weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/component
+                    operator: NotIn
+                    values:
+                      - test
+                matchLabels:
+                  app.kubernetes.io/instance: keycloak
+                  app.kubernetes.io/name: keycloak
+              topologyKey: kubernetes.io/hostname
       containers:
-        - env:
-            - name: KUBERNETES_NAMESPACE
+        - args: []
+          command: []
+          env:
+            - name: DB_VENDOR
+              value: postgres
+            - name: DB_ADDR
+              value: keycloak-postgresql
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: keycloak
+            - name: DB_USER
+              value: keycloak
+            - name: DB_PASSWORD
               valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.namespace
-          envFrom:
-            - configMapRef:
-                name: keycloak-env-vars
-          image: docker.io/bitnami/keycloak:26.3.2-debian-12-r2
+                secretKeyRef:
+                  key: postgresql-password
+                  name: keycloak-postgresql
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: pazzword
+                  name: keycloak-admin-password
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_PROXY
+              value: edge
+            - name: KC_HTTP_ENABLED
+              value: "true"
+          envFrom: null
+          image: quay.io/keycloak/keycloak:17.0.1-legacy
           imagePullPolicy: IfNotPresent
           livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 120
-            periodSeconds: 1
-            successThreshold: 1
-            tcpSocket:
+            httpGet:
+              path: /auth/
               port: http
+            initialDelaySeconds: 0
             timeoutSeconds: 5
           name: keycloak
           ports:
             - containerPort: 8080
               name: http
               protocol: TCP
-            - containerPort: 7800
-              name: discovery
+            - containerPort: 8443
+              name: https
+              protocol: TCP
+            - containerPort: 9990
+              name: http-management
+              protocol: TCP
           readinessProbe:
-            failureThreshold: 3
             httpGet:
-              path: /realms/master
+              path: /auth/realms/master
               port: http
             initialDelaySeconds: 30
-            periodSeconds: 10
-            successThreshold: 1
             timeoutSeconds: 1
           resources:
             limits:
@@ -13362,106 +13371,62 @@ spec:
               cpu: 500m
               memory: 1024Mi
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
             runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
+            runAsUser: 1000
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /auth/
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 1
           volumeMounts:
-            - mountPath: /tmp
-              name: empty-dir
-              subPath: tmp-dir
-            - mountPath: /bitnami/keycloak
-              name: empty-dir
-              subPath: app-volume-dir
-            - mountPath: /opt/bitnami/keycloak/conf
-              name: empty-dir
-              subPath: app-conf-dir
-            - mountPath: /opt/bitnami/keycloak/lib/quarkus
-              name: empty-dir
-              subPath: app-quarkus-dir
-            - mountPath: /opt/bitnami/keycloak/data
-              name: empty-dir
-              subPath: app-data-dir
-            - mountPath: /opt/bitnami/keycloak/providers
-              name: empty-dir
-              subPath: app-providers-dir
-            - mountPath: /opt/bitnami/keycloak/themes
-              name: empty-dir
-              subPath: app-themes-dir
-            - mountPath: /opt/bitnami/keycloak/secrets
-              name: keycloak-secrets
+            - mountPath: /opt/jboss/startup-scripts/keycloak.cli
+              name: startup
+              readOnly: true
+              subPath: keycloak.cli
       enableServiceLinks: true
       initContainers:
-        - args:
-            - -ec
+        - command:
+            - sh
+            - -c
             - |
-              . /opt/bitnami/scripts/liblog.sh
+              echo 'Waiting for PostgreSQL to become ready...'
 
-              info "Copying writable dirs to empty dir"
-              # In order to not break the application functionality we need to make some
-              # directories writable, so we need to copy it to an empty dir volume
-              cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/lib/quarkus /emptydir/app-quarkus-dir
-              cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/data /emptydir/app-data-dir
-              cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/providers /emptydir/app-providers-dir
-              cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/themes /emptydir/app-themes-dir
-              info "Copy operation completed"
-          command:
-            - /bin/bash
-          image: docker.io/bitnami/keycloak:26.3.2-debian-12-r2
+              until printf "." && nc -z -w 2 keycloak-postgresql 5432; do
+                  sleep 2;
+              done;
+
+              echo 'PostgreSQL OK ✓'
+          image: docker.io/busybox:1.32
           imagePullPolicy: IfNotPresent
-          name: prepare-write-dirs
+          name: pgchecker
           resources:
             limits:
-              cpu: 150m
-              ephemeral-storage: 2Gi
-              memory: 192Mi
+              cpu: 20m
+              memory: 32Mi
             requests:
-              cpu: 100m
-              ephemeral-storage: 50Mi
-              memory: 128Mi
+              cpu: 20m
+              memory: 32Mi
           securityContext:
             allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
+            runAsGroup: 1000
             runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /emptydir
-              name: empty-dir
+            runAsUser: 1000
+      restartPolicy: Always
       securityContext:
-        fsGroup: 1001
-        fsGroupChangePolicy: Always
-        supplementalGroups: []
-        sysctls: []
+        fsGroup: 1000
       serviceAccountName: keycloak
+      terminationGracePeriodSeconds: 60
       volumes:
-        - emptyDir: {}
-          name: empty-dir
-        - name: keycloak-secrets
-          projected:
-            sources:
-              - secret:
-                  name: keycloak-admin-password
-              - secret:
-                  items:
-                    - key: password
-                      path: db-password
-                  name: keycloak-db-credentials
+        - configMap:
+            defaultMode: 365
+            items:
+              - key: keycloak.cli
+                path: keycloak.cli
+            name: keycloak-startup
+          name: startup
   updateStrategy:
     type: RollingUpdate
 ---
@@ -13473,18 +13438,17 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
+    helm.sh/chart: postgresql-10.16.2
   name: keycloak-postgresql
   namespace: keycloak
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: primary
       app.kubernetes.io/instance: keycloak
       app.kubernetes.io/name: postgresql
-  serviceName: keycloak-postgresql-hl
+      role: primary
+  serviceName: keycloak-postgresql-headless
   template:
     metadata:
       labels:
@@ -13492,22 +13456,13 @@ spec:
         app.kubernetes.io/instance: keycloak
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: postgresql
-        app.kubernetes.io/version: 17.5.0
-        helm.sh/chart: postgresql-16.7.21
+        helm.sh/chart: postgresql-10.16.2
+        role: primary
       name: keycloak-postgresql
     spec:
       affinity:
         nodeAffinity: null
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: primary
-                    app.kubernetes.io/instance: keycloak
-                    app.kubernetes.io/name: postgresql
-                topologyKey: kubernetes.io/hostname
-              weight: 1
+        podAffinity: null
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
@@ -13516,6 +13471,8 @@ spec:
                     app.kubernetes.io/component: primary
                     app.kubernetes.io/instance: keycloak
                     app.kubernetes.io/name: postgresql
+                namespaces:
+                  - keycloak
                 topologyKey: kubernetes.io/hostname
               weight: 1
       automountServiceAccountToken: false
@@ -13529,14 +13486,20 @@ spec:
               value: /bitnami/postgresql
             - name: PGDATA
               value: /bitnami/postgresql/data
+            - name: POSTGRES_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-postgres-password
+                  name: keycloak-postgresql
             - name: POSTGRES_USER
-              value: bn_keycloak
-            - name: POSTGRES_PASSWORD_FILE
-              value: /opt/bitnami/postgresql/secrets/password
-            - name: POSTGRES_POSTGRES_PASSWORD_FILE
-              value: /opt/bitnami/postgresql/secrets/postgres-password
-            - name: POSTGRES_DATABASE
-              value: bitnami_keycloak
+              value: keycloak
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-password
+                  name: keycloak-postgresql
+            - name: POSTGRES_DB
+              value: keycloak
             - name: POSTGRESQL_ENABLE_LDAP
               value: "no"
             - name: POSTGRESQL_ENABLE_TLS
@@ -13553,20 +13516,20 @@ spec:
               value: error
             - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
               value: pgaudit
-          image: docker.io/bitnami/postgresql:17.5.0-debian-12-r20
+          image: docker.io/bitnami/postgresql:11.14.0-debian-10-r28
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
-                - exec pg_isready -U "bn_keycloak" -d "dbname=bitnami_keycloak" -h 127.0.0.1 -p 5432
+                - exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p 5432
             failureThreshold: 6
             initialDelaySeconds: 30
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
-          name: postgresql
+          name: keycloak-postgresql
           ports:
             - containerPort: 5432
               name: tcp-postgresql
@@ -13577,7 +13540,7 @@ spec:
                 - -c
                 - -e
                 - |
-                  exec pg_isready -U "bn_keycloak" -d "dbname=bitnami_keycloak" -h 127.0.0.1 -p 5432
+                  exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p 5432
                   [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
             failureThreshold: 6
             initialDelaySeconds: 5
@@ -13585,65 +13548,34 @@ spec:
             successThreshold: 1
             timeoutSeconds: 5
           resources:
-            limits:
-              cpu: 150m
-              ephemeral-storage: 2Gi
-              memory: 192Mi
             requests:
-              cpu: 100m
-              ephemeral-storage: 50Mi
-              memory: 128Mi
+              cpu: 250m
+              memory: 256Mi
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
-            runAsNonRoot: true
             runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
           volumeMounts:
-            - mountPath: /tmp
-              name: empty-dir
-              subPath: tmp-dir
-            - mountPath: /opt/bitnami/postgresql/conf
-              name: empty-dir
-              subPath: app-conf-dir
-            - mountPath: /opt/bitnami/postgresql/tmp
-              name: empty-dir
-              subPath: app-tmp-dir
-            - mountPath: /opt/bitnami/postgresql/secrets/
-              name: postgresql-password
             - mountPath: /dev/shm
               name: dshm
             - mountPath: /bitnami/postgresql
               name: data
-      hostIPC: false
-      hostNetwork: false
+              subPath: null
       securityContext:
         fsGroup: 1001
-        fsGroupChangePolicy: Always
-        supplementalGroups: []
-        sysctls: []
-      serviceAccountName: keycloak-postgresql
       volumes:
-        - emptyDir: {}
-          name: empty-dir
-        - name: postgresql-password
-          secret:
-            secretName: keycloak-db-credentials
         - emptyDir:
             medium: Memory
           name: dshm
-        - emptyDir: {}
-          name: data
   updateStrategy:
-    rollingUpdate: {}
     type: RollingUpdate
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -14036,48 +13968,6 @@ spec:
       app.kubernetes.io/component: master
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: redis
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak
-  namespace: keycloak
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: keycloak
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/name: keycloak
-      app.kubernetes.io/part-of: keycloak
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
-  name: keycloak-postgresql
-  namespace: keycloak
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/name: postgresql
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -16389,13 +16279,11 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
   labels:
-    app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
+    app.kubernetes.io/version: 17.0.1-legacy
+    helm.sh/chart: keycloak-18.10.0
   name: keycloak
   namespace: keycloak
 spec:
@@ -16405,15 +16293,15 @@ spec:
         paths:
           - backend:
               service:
-                name: keycloak
+                name: keycloak-http
                 port:
                   name: http
             path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
   tls:
     - hosts:
         - keycloak.homelab.olav.ninja
-      secretName: keycloak.homelab.olav.ninja-tls
+      secretName: keycloak-tls-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16819,63 +16707,6 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: redis
-  policyTypes:
-    - Ingress
-    - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak
-  namespace: keycloak
-spec:
-  egress:
-    - {}
-  ingress:
-    - ports:
-        - port: 8080
-        - port: 7800
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: keycloak
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/name: keycloak
-      app.kubernetes.io/part-of: keycloak
-  policyTypes:
-    - Ingress
-    - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/component: primary
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.5.0
-    helm.sh/chart: postgresql-16.7.21
-  name: keycloak-postgresql
-  namespace: keycloak
-spec:
-  egress:
-    - {}
-  ingress:
-    - ports:
-        - port: 5432
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/name: postgresql
   policyTypes:
     - Ingress
     - Egress
