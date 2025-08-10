@@ -6,7 +6,6 @@ resources:
   - certificates.yaml
   - namespace.yaml
   - secrets.yaml
-  - servers-transport.yaml
   - ingress-admin.yaml
   - middleware.yaml
   - realms.yaml

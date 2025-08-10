@@ -4,8 +4,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.middlewares: keycloak-ipallowlist@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https 
-    traefik.ingress.kubernetes.io/service.serverstransport: keycloak-keycloak-custom-root-ca@kubernetescrd
   name: keycloak-admin
 spec:
   ingressClassName: traefik

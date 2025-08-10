@@ -1,7 +1,0 @@
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
-metadata:
-  name: keycloak-custom-root-ca
-spec:  
-  rootCAsSecrets:
-    - keycloak-ca-crt
