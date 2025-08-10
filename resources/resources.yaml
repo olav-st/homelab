@@ -13233,6 +13233,21 @@ spec:
               value: edge
             - name: KC_HTTP_ENABLED
               value: "true"
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              value: keycloak-postgresql-rw
+            - name: KC_DB_URL_PORT
+              value: "5432"
+            - name: KC_DB_URL_DATABASE
+              value: keycloak
+            - name: KC_DB_USERNAME
+              value: keycloak
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: keycloak-postgresql-app
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
@@ -13255,18 +13270,6 @@ spec:
               value: https://keycloak.homelab.olav.ninja
             - name: KC_HOSTNAME_ADMIN_URL
               value: https://keycloak.homelab.olav.ninja
-            - name: DB_VENDOR
-              value: postgres
-            - name: DB_ADDR
-              value: keycloak-postgresql-rw
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_DATABASE
-              value: keycloak
-            - name: DB_USER_FILE
-              value: /secrets/db-creds/user
-            - name: DB_PASSWORD_FILE
-              value: /secrets/db-creds/password
           envFrom: null
           image: quay.io/keycloak/keycloak:26.0.7
           imagePullPolicy: IfNotPresent
@@ -13313,26 +13316,41 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 5
             timeoutSeconds: 1
-          volumeMounts:
-            - mountPath: /secrets/admin-creds
-              name: admin-creds
-              readOnly: true
-            - mountPath: /secrets/db-creds
-              name: db-creds
-              readOnly: true
+          volumeMounts: null
       enableServiceLinks: true
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              echo 'Waiting for Database to become ready...'
+
+              until printf "." && nc -z -w 2 keycloak-postgresql-rw 5432; do
+                  sleep 2;
+              done;
+
+              echo 'Database OK ✓'
+          image: docker.io/busybox:1.32
+          imagePullPolicy: IfNotPresent
+          name: dbchecker
+          resources:
+            limits:
+              cpu: 20m
+              memory: 32Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
       serviceAccountName: keycloak-keycloakx
       terminationGracePeriodSeconds: 60
-      volumes:
-        - name: admin-creds
-          secret:
-            secretName: keycloak-admin-password
-        - name: db-creds
-          secret:
-            secretName: keycloak-postgresql-app
+      volumes: null
   updateStrategy:
     type: RollingUpdate
 ---
