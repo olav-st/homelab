@@ -1,11 +1,17 @@
-auth:
-  adminUser: admin
-  existingSecret: keycloak-admin-password
-  passwordSecretKey: pazzword
-
-usePasswordFiles: true
-
-production: true
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    value: admin
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-admin-password
+        key: pazzword
+  - name: KC_HOSTNAME_STRICT
+    value: "false"
+  - name: KC_PROXY
+    value: edge
+  - name: KC_HTTP_ENABLED
+    value: "true"
 
 resources:
   requests:
@@ -14,22 +20,33 @@ resources:
   limits:
     memory: 3072Mi
 
-proxy: edge
-
 ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  hostname: keycloak.homelab.olav.ninja
-  path: /
-  tls: true
+  rules:
+    - host: keycloak.homelab.olav.ninja
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - keycloak.homelab.olav.ninja
+      secretName: keycloak-tls-secret
 
 postgresql:
   enabled: true
   auth:
     existingSecret: keycloak-db-credentials
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+      replicationPasswordKey: replication-password
   primary:
     persistence:
       enabled: false
-    podAffinityPreset: soft # prefer running on the same node as the main pod
+
+service:
+  type: ClusterIP
+  httpPort: 8080
