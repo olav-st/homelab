@@ -13235,7 +13235,7 @@ spec:
             - name: KC_CACHE_STACK
               value: kubernetes
             - name: KC_PROXY_HEADERS
-              value: edge
+              value: forwarded
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_DB
