@@ -7124,15 +7124,10 @@ data:
   KC_HTTP_MANAGEMENT_PORT: "9000"
   KC_HTTP_PORT: "8080"
   KC_HTTP_RELATIVE_PATH: /
-  KC_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
-  KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
-  KC_HTTPS_PORT: "8443"
   KC_LOG_CONSOLE_OUTPUT: default
   KC_LOG_LEVEL: INFO
   KC_METRICS_ENABLED: "false"
   KC_SPI_ADMIN_REALM: master
-  KEYCLOAK_ENABLE_HTTPS: "true"
-  KEYCLOAK_HTTPS_USE_PEM: "true"
   KEYCLOAK_PRODUCTION: "true"
 kind: ConfigMap
 metadata:
@@ -8856,11 +8851,6 @@ spec:
       port: 80
       protocol: TCP
       targetPort: http
-    - name: https
-      nodePort: null
-      port: 443
-      protocol: TCP
-      targetPort: https
   selector:
     app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
@@ -8889,10 +8879,6 @@ spec:
       port: 8080
       protocol: TCP
       targetPort: http
-    - name: https
-      port: 8443
-      protocol: TCP
-      targetPort: https
   publishNotReadyAddresses: true
   selector:
     app.kubernetes.io/component: keycloak
@@ -13309,7 +13295,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap-env-vars: ff4210fdc0bb740b49431f4d8bce13f9c99a4b5bf6254fb1a921304f659ca329
+        checksum/configmap-env-vars: b3ba6a7c0aaecc4e58c04307513029f2f2accf792ad23babd709d15f186d824a
       labels:
         app.kubernetes.io/component: keycloak
         app.kubernetes.io/instance: keycloak
@@ -13340,10 +13326,6 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-            - name: KC_HTTP_ENABLED
-              value: "true"
-            - name: KC_HTTPS_REDIRECT
-              value: "true"
           envFrom:
             - configMapRef:
                 name: keycloak-env-vars
@@ -13361,9 +13343,6 @@ spec:
           ports:
             - containerPort: 8080
               name: http
-              protocol: TCP
-            - containerPort: 8443
-              name: https
               protocol: TCP
             - containerPort: 7800
               name: discovery
@@ -13419,9 +13398,6 @@ spec:
               subPath: app-themes-dir
             - mountPath: /opt/bitnami/keycloak/secrets
               name: keycloak-secrets
-            - mountPath: /opt/bitnami/keycloak/certs
-              name: certificates
-              readOnly: true
       enableServiceLinks: true
       initContainers:
         - args:
@@ -13486,10 +13462,6 @@ spec:
                     - key: password
                       path: db-password
                   name: keycloak-db-credentials
-        - name: certificates
-          secret:
-            defaultMode: 420
-            secretName: keycloak-crt
   updateStrategy:
     type: RollingUpdate
 ---
@@ -15962,66 +15934,6 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak-ca-crt
-  namespace: keycloak
-spec:
-  commonName: keycloak-ca
-  isCA: true
-  issuerRef:
-    kind: Issuer
-    name: keycloak-clusterissuer
-  secretName: keycloak-ca-crt
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  labels:
-    app.kubernetes.io/component: keycloak
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak-crt
-  namespace: keycloak
-spec:
-  commonName: keycloak.keycloak.svc.cluster.local
-  dnsNames:
-    - '*.keycloak'
-    - '*.keycloak.svc'
-    - '*.keycloak.svc.cluster.local'
-    - '*.keycloak'
-    - '*.keycloak.keycloak'
-    - '*.keycloak.keycloak.svc'
-    - '*.keycloak.keycloak.svc.cluster.local'
-    - '*.keycloak-headless'
-    - '*.keycloak-headless.keycloak'
-    - '*.keycloak-headless.keycloak.svc'
-    - '*.keycloak-headless.keycloak.svc.cluster.local'
-  duration: 2160h
-  issuerRef:
-    kind: Issuer
-    name: keycloak-ca-issuer
-  privateKey:
-    algorithm: RSA
-    size: 2048
-  renewBefore: 360h
-  secretName: keycloak-crt
-  subject:
-    organizations:
-      - Keycloak
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
   name: keycloak-jwt-signing-certificate
   namespace: keycloak
 spec:
@@ -16085,37 +15997,6 @@ kind: Issuer
 metadata:
   name: inteldeviceplugins-selfsigned-issuer
   namespace: intel-device-plugins
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak-ca-issuer
-  namespace: keycloak
-spec:
-  ca:
-    secretName: keycloak-ca-crt
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/part-of: keycloak
-    app.kubernetes.io/version: 26.3.2
-    helm.sh/chart: keycloak-25.0.0
-  name: keycloak-clusterissuer
-  namespace: keycloak
 spec:
   selfSigned: {}
 ---
@@ -16507,8 +16388,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: keycloak-keycloak-custom-root-ca@kubernetescrd
   labels:
     app.kubernetes.io/component: keycloak
     app.kubernetes.io/instance: keycloak
@@ -16528,7 +16407,7 @@ spec:
               service:
                 name: keycloak
                 port:
-                  name: https
+                  name: http
             path: /
             pathType: ImplementationSpecific
   tls:
@@ -16542,8 +16421,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.middlewares: keycloak-ipallowlist@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: keycloak-keycloak-custom-root-ca@kubernetescrd
   name: keycloak-admin
   namespace: keycloak
 spec:
@@ -16965,7 +16842,6 @@ spec:
   ingress:
     - ports:
         - port: 8080
-        - port: 8443
         - port: 7800
   podSelector:
     matchLabels:
@@ -17275,15 +17151,6 @@ spec:
     sslRedirect: true
     stsPreload: false
     stsSeconds: 15552000
----
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
-metadata:
-  name: keycloak-custom-root-ca
-  namespace: keycloak
-spec:
-  rootCAsSecrets:
-    - keycloak-ca-crt
 ---
 apiVersion: user.keycloak.crossplane.io/v1alpha1
 kind: User
