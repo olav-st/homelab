@@ -13254,10 +13254,7 @@ spec:
             - name: KEYCLOAK_USER
               value: admin
             - name: KEYCLOAK_PASSWORD_FILE
-              valueFrom:
-                secretKeyRef:
-                  key: pazzword
-                  name: keycloak-admin-password
+              value: /secrets/admin-creds/pazzword
             - name: KC_HOSTNAME_STRICT
               value: "false"
             - name: KC_PROXY
@@ -13324,6 +13321,9 @@ spec:
               name: startup
               readOnly: true
               subPath: keycloak.cli
+            - mountPath: /secrets/admin-creds
+              name: admin-creds
+              readOnly: true
             - mountPath: /secrets/db-creds
               name: db-creds
               readOnly: true
@@ -13341,6 +13341,9 @@ spec:
                 path: keycloak.cli
             name: keycloak-startup
           name: startup
+        - name: admin-creds
+          secret:
+            secretName: keycloak-admin-password
         - name: db-creds
           secret:
             secretName: keycloak-postgresql-app
