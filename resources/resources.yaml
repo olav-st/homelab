@@ -16091,7 +16091,7 @@ spec:
                 name: keycloak-http
                 port:
                   name: http
-            path: /auth/admin
+            path: /admin
             pathType: Prefix
   tls:
     - hosts:
