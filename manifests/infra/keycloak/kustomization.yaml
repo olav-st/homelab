@@ -12,9 +12,9 @@ resources:
   - builtin-objects.yaml
 
 helmCharts:
-- name: keycloak
+- name: keycloakx
   releaseName: keycloak
   namespace: keycloak
   repo: oci://ghcr.io/codecentric/helm-charts
-  version: 18.10.0
+  version: 7.0.1
   valuesFile: values.yaml

@@ -1,35 +1,24 @@
+command:
+  - "/opt/keycloak/bin/kc.sh"
+  - "start"
+  - "--http-port=8080"
+  - "--hostname-strict=false"
+
 extraEnv: |
-  - name: KEYCLOAK_USER
+  - name: KC_BOOTSTRAP_ADMIN_USERNAME
     value: admin
-  - name: KEYCLOAK_PASSWORD_FILE
-    value: /secrets/admin-creds/pazzword
-  - name: KC_HOSTNAME_STRICT
-    value: "false"
-  - name: KC_PROXY
-    value: edge
-  - name: KC_HTTP_ENABLED
-    value: "true"
+  - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-admin-password
+        key: pazzword
   - name: KEYCLOAK_FRONTEND_URL
     value: "https://keycloak.homelab.olav.ninja"
-  - name: KC_HOSTNAME_PATH
-    value: "/"
-  - name: KC_HOSTNAME_URL
-    value: "https://keycloak.homelab.olav.ninja"
-  - name: KC_HOSTNAME_ADMIN_URL
-    value: "https://keycloak.homelab.olav.ninja"
-
-  - name: DB_VENDOR
-    value: postgres
-  - name: DB_ADDR
-    value: keycloak-postgresql-rw
-  - name: DB_PORT
-    value: "5432"
-  - name: DB_DATABASE
-    value: keycloak
-  - name: DB_USER_FILE
-    value: /secrets/db-creds/user
-  - name: DB_PASSWORD_FILE
-    value: /secrets/db-creds/password
+  - name: KC_HOSTNAME
+    value: "keycloak.homelab.olav.ninja"
+  - name: JAVA_OPTS_APPEND
+    value: >-
+      -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
 
 resources:
   requests:
@@ -53,25 +42,29 @@ ingress:
         - keycloak.homelab.olav.ninja
       secretName: keycloak-tls-secret
 
-postgresql:
-  enabled: false # We use CNPG to create the database instead
+dbchecker:
+  enabled: true
 
-extraVolumeMounts: |
-  - name: admin-creds
-    mountPath: /secrets/admin-creds
-    readOnly: true
-  - name: db-creds
-    mountPath: /secrets/db-creds
-    readOnly: true
-
-extraVolumes: |
-  - name: admin-creds
-    secret:
-      secretName: keycloak-admin-password
-  - name: db-creds
-    secret:
-      secretName: keycloak-postgresql-app
+database:
+  vendor: postgres
+  hostname: keycloak-postgresql-rw
+  port: 5432
+  database: keycloak
+  username: keycloak
+  existingSecret: keycloak-postgresql-app
+  existingSecretKey: password
 
 service:
   type: ClusterIP
   httpPort: 8080
+
+proxy:
+  enabled: true
+  mode: xforwarded
+  http:
+    enabled: true
+
+http:
+  relativePath: /
+  internalPort: http-internal
+  internalScheme: HTTP
