@@ -1,17 +1,26 @@
 extraEnv: |
-  - name: KEYCLOAK_ADMIN
+  - name: KEYCLOAK_USER
     value: admin
-  - name: KEYCLOAK_ADMIN_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: keycloak-admin-password
-        key: pazzword
+  - name: KEYCLOAK_PASSWORD_FILE
+    value: /secrets/admin-creds/pazzword
   - name: KC_HOSTNAME_STRICT
     value: "false"
   - name: KC_PROXY
     value: edge
   - name: KC_HTTP_ENABLED
     value: "true"
+  - name: DB_VENDOR
+    value: postgres
+  - name: DB_ADDR
+    value: keycloak-postgresql-rw
+  - name: DB_PORT
+    value: "5432"
+  - name: DB_DATABASE
+    value: keycloak
+  - name: DB_USER_FILE
+    value: /secrets/db-creds/user
+  - name: DB_PASSWORD_FILE
+    value: /secrets/db-creds/password
 
 resources:
   requests:
@@ -36,16 +45,23 @@ ingress:
       secretName: keycloak-tls-secret
 
 postgresql:
-  enabled: true
-  auth:
-    existingSecret: keycloak-db-credentials
-    secretKeys:
-      adminPasswordKey: postgres-password
-      userPasswordKey: password
-      replicationPasswordKey: replication-password
-  primary:
-    persistence:
-      enabled: false
+  enabled: false # We use CNPG to create the database instead
+
+extraVolumeMounts: |
+  - name: admin-creds
+    mountPath: /secrets/admin-creds
+    readOnly: true
+  - name: db-creds
+    mountPath: /secrets/db-creds
+    readOnly: true
+
+extraVolumes: |
+  - name: admin-creds
+    secret:
+      secretName: keycloak-admin-password
+  - name: db-creds
+    secret:
+      secretName: keycloak-postgresql-app
 
 service:
   type: ClusterIP
