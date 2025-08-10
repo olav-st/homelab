@@ -13222,7 +13222,12 @@ spec:
                   app.kubernetes.io/name: keycloakx
               topologyKey: kubernetes.io/hostname
       containers:
-        - env:
+        - command:
+            - /opt/keycloak/bin/kc.sh
+            - start
+            - --http-port=8080
+            - --hostname-strict=false
+          env:
             - name: KC_HTTP_RELATIVE_PATH
               value: /
             - name: KC_CACHE
@@ -13256,8 +13261,6 @@ spec:
               value: admin
             - name: KEYCLOAK_PASSWORD_FILE
               value: /secrets/admin-creds/pazzword
-            - name: KC_HOSTNAME_STRICT
-              value: "false"
             - name: KC_PROXY
               value: edge
             - name: KC_HTTP_ENABLED
@@ -13270,6 +13273,8 @@ spec:
               value: https://keycloak.homelab.olav.ninja
             - name: KC_HOSTNAME_ADMIN_URL
               value: https://keycloak.homelab.olav.ninja
+            - name: JAVA_OPTS_APPEND
+              value: -Djgroups.dns.query=keycloak-keycloakx-headless
           envFrom: null
           image: quay.io/keycloak/keycloak:26.0.7
           imagePullPolicy: IfNotPresent
