@@ -311,16 +311,17 @@ metadata:
   namespace: immich
 ---
 apiVersion: v1
+automountServiceAccountToken: true
 imagePullSecrets: []
 kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.0.7
+    helm.sh/chart: keycloakx-7.0.1
+  name: keycloak-keycloakx
   namespace: keycloak
 ---
 apiVersion: v1
@@ -7093,33 +7094,6 @@ metadata:
 ---
 apiVersion: v1
 data:
-  keycloak.cli: |
-    embed-server --server-config=standalone-ha.xml --std-out=echo
-    batch
-
-    echo Configuring node identifier
-
-    ## Sets the node identifier to the node name (= pod name). Node identifiers have to be unique. They can have a
-    ## maximum length of 23 characters. Thus, the chart's fullname template truncates its length accordingly.
-    /subsystem=transactions:write-attribute(name=node-identifier, value=${jboss.node.name})
-
-    echo Finished configuring node identifier
-
-    run-batch
-    stop-embedded-server
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak-startup
-  namespace: keycloak
----
-apiVersion: v1
-data:
   agent-not-ready-taint-key: node.cilium.io/agent-not-ready
   auto-direct-node-routes: "false"
   bpf-distributed-lru: "false"
@@ -8814,10 +8788,10 @@ metadata:
     app.kubernetes.io/component: headless
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak-headless
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.0.7
+    helm.sh/chart: keycloakx-7.0.1
+  name: keycloak-keycloakx-headless
   namespace: keycloak
 spec:
   clusterIP: None
@@ -8828,7 +8802,7 @@ spec:
       targetPort: http
   selector:
     app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/name: keycloakx
   type: ClusterIP
 ---
 apiVersion: v1
@@ -8838,13 +8812,17 @@ metadata:
     app.kubernetes.io/component: http
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak-http
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.0.7
+    helm.sh/chart: keycloakx-7.0.1
+  name: keycloak-keycloakx-http
   namespace: keycloak
 spec:
   ports:
+    - name: http-internal
+      port: 9000
+      protocol: TCP
+      targetPort: http-internal
     - name: http
       port: 8080
       protocol: TCP
@@ -8853,13 +8831,9 @@ spec:
       port: 8443
       protocol: TCP
       targetPort: https
-    - name: http-management
-      port: 9990
-      protocol: TCP
-      targetPort: http-management
   selector:
     app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/name: keycloakx
   type: ClusterIP
 ---
 apiVersion: v1
@@ -13199,27 +13173,27 @@ metadata:
   labels:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.0.7
+    helm.sh/chart: keycloakx-7.0.1
+  name: keycloak-keycloakx
   namespace: keycloak
 spec:
-  podManagementPolicy: Parallel
+  podManagementPolicy: OrderedReady
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/name: keycloak
-  serviceName: keycloak-headless
+      app.kubernetes.io/name: keycloakx
+  serviceName: keycloak-keycloakx-headless
   template:
     metadata:
       annotations:
-        checksum/config-startup: f875cea0a33f040d43f2834887e6a2fd3661e284623b699c10262fa2d1148bcf
+        checksum/config-startup: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       labels:
         app.kubernetes.io/instance: keycloak
-        app.kubernetes.io/name: keycloak
+        app.kubernetes.io/name: keycloakx
     spec:
       affinity:
         podAntiAffinity:
@@ -13233,8 +13207,8 @@ spec:
                         - test
                   matchLabels:
                     app.kubernetes.io/instance: keycloak
-                    app.kubernetes.io/name: keycloak
-                topologyKey: failure-domain.beta.kubernetes.io/zone
+                    app.kubernetes.io/name: keycloakx
+                topologyKey: topology.kubernetes.io/zone
               weight: 100
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
@@ -13245,12 +13219,24 @@ spec:
                       - test
                 matchLabels:
                   app.kubernetes.io/instance: keycloak
-                  app.kubernetes.io/name: keycloak
+                  app.kubernetes.io/name: keycloakx
               topologyKey: kubernetes.io/hostname
       containers:
-        - args: []
-          command: []
-          env:
+        - env:
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /
+            - name: KC_CACHE
+              value: ispn
+            - name: KC_CACHE_STACK
+              value: kubernetes
+            - name: KC_PROXY_HEADERS
+              value: edge
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
             - name: KEYCLOAK_USER
               value: admin
             - name: KEYCLOAK_PASSWORD_FILE
@@ -13282,12 +13268,13 @@ spec:
             - name: DB_PASSWORD_FILE
               value: /secrets/db-creds/password
           envFrom: null
-          image: quay.io/keycloak/keycloak:17.0.1-legacy
+          image: quay.io/keycloak/keycloak:26.0.7
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
-              path: /auth/
-              port: http
+              path: /health/live
+              port: http-internal
+              scheme: HTTP
             initialDelaySeconds: 0
             timeoutSeconds: 5
           name: keycloak
@@ -13295,17 +13282,18 @@ spec:
             - containerPort: 8080
               name: http
               protocol: TCP
+            - containerPort: 9000
+              name: http-internal
+              protocol: TCP
             - containerPort: 8443
               name: https
               protocol: TCP
-            - containerPort: 9990
-              name: http-management
-              protocol: TCP
           readinessProbe:
             httpGet:
-              path: /auth/realms/master
-              port: http
-            initialDelaySeconds: 30
+              path: /health/ready
+              port: http-internal
+              scheme: HTTP
+            initialDelaySeconds: 10
             timeoutSeconds: 1
           resources:
             limits:
@@ -13319,16 +13307,13 @@ spec:
           startupProbe:
             failureThreshold: 60
             httpGet:
-              path: /auth/
-              port: http
-            initialDelaySeconds: 30
+              path: /health
+              port: http-internal
+              scheme: HTTP
+            initialDelaySeconds: 15
             periodSeconds: 5
             timeoutSeconds: 1
           volumeMounts:
-            - mountPath: /opt/jboss/startup-scripts/keycloak.cli
-              name: startup
-              readOnly: true
-              subPath: keycloak.cli
             - mountPath: /secrets/admin-creds
               name: admin-creds
               readOnly: true
@@ -13339,16 +13324,9 @@ spec:
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
-      serviceAccountName: keycloak
+      serviceAccountName: keycloak-keycloakx
       terminationGracePeriodSeconds: 60
       volumes:
-        - configMap:
-            defaultMode: 365
-            items:
-              - key: keycloak.cli
-                path: keycloak.cli
-            name: keycloak-startup
-          name: startup
         - name: admin-creds
           secret:
             secretName: keycloak-admin-password
@@ -16047,10 +16025,10 @@ metadata:
   labels:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloak
-    app.kubernetes.io/version: 17.0.1-legacy
-    helm.sh/chart: keycloak-18.10.0
-  name: keycloak
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.0.7
+    helm.sh/chart: keycloakx-7.0.1
+  name: keycloak-keycloakx
   namespace: keycloak
 spec:
   rules:
@@ -16059,7 +16037,7 @@ spec:
         paths:
           - backend:
               service:
-                name: keycloak-http
+                name: keycloak-keycloakx-http
                 port:
                   name: http
             path: /
