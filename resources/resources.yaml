@@ -13251,9 +13251,9 @@ spec:
         - args: []
           command: []
           env:
-            - name: KEYCLOAK_ADMIN
+            - name: KEYCLOAK_USER
               value: admin
-            - name: KEYCLOAK_ADMIN_PASSWORD
+            - name: KEYCLOAK_PASSWORD_FILE
               valueFrom:
                 secretKeyRef:
                   key: pazzword
