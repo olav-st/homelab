@@ -16626,15 +16626,6 @@ spec:
     initdb:
       database: keycloak
       owner: keycloak
-  ephemeralVolumeSource:
-    volumeClaimTemplate:
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi
-        storageClassName: standard
   instances: 1
   postgresql:
     parameters:
