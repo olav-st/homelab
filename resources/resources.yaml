@@ -13261,6 +13261,8 @@ spec:
               value: edge
             - name: KC_HTTP_ENABLED
               value: "true"
+            - name: KC_HOSTNAME_URL
+              value: keycloak.homelab.olav.ninja
             - name: DB_VENDOR
               value: postgres
             - name: DB_ADDR
