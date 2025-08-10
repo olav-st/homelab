@@ -13340,6 +13340,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: KC_HTTP_ENABLED
+              value: "true"
             - name: KC_HTTPS_REDIRECT
               value: "true"
           envFrom:
