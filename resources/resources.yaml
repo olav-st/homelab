@@ -13263,8 +13263,6 @@ spec:
               value: /secrets/admin-creds/pazzword
             - name: KC_PROXY
               value: edge
-            - name: KC_HTTP_ENABLED
-              value: "true"
             - name: KEYCLOAK_FRONTEND_URL
               value: https://keycloak.homelab.olav.ninja
             - name: KC_HOSTNAME_PATH
