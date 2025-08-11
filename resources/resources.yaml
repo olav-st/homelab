@@ -13265,6 +13265,8 @@ spec:
               value: https://keycloak.homelab.olav.ninja
             - name: KC_HOSTNAME
               value: keycloak.homelab.olav.ninja
+            - name: KC_PROXY_HEADERS
+              value: xforwarded
             - name: JAVA_OPTS_APPEND
               value: -Djgroups.dns.query=keycloak-keycloakx-headless
           envFrom: null
