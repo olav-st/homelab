@@ -13257,9 +13257,9 @@ spec:
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
-            - name: KEYCLOAK_USER
+            - name: KEYCLOAK_ADMIN
               value: admin
-            - name: KEYCLOAK_PASSWORD_FILE
+            - name: KEYCLOAK_ADMIN_PASSWORD_FILE
               value: /secrets/admin-creds/pazzword
             - name: KEYCLOAK_FRONTEND_URL
               value: https://keycloak.homelab.olav.ninja
