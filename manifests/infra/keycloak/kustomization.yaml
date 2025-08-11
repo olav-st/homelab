@@ -16,5 +16,5 @@ helmCharts:
   releaseName: keycloak
   namespace: keycloak
   repo: oci://ghcr.io/codecentric/helm-charts
-  version: 7.0.1
+  version: 7.1.1
   valuesFile: values.yaml
