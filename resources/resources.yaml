@@ -13313,7 +13313,10 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 5
             timeoutSeconds: 1
-          volumeMounts: null
+          volumeMounts:
+            - mountPath: /secrets/admin-creds
+              name: admin-creds
+              readOnly: true
       enableServiceLinks: true
       initContainers:
         - command:
@@ -13347,7 +13350,10 @@ spec:
         fsGroup: 1000
       serviceAccountName: keycloak-keycloakx
       terminationGracePeriodSeconds: 60
-      volumes: null
+      volumes:
+        - name: admin-creds
+          secret:
+            secretName: keycloak-admin-password
   updateStrategy:
     type: RollingUpdate
 ---
