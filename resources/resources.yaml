@@ -15863,7 +15863,7 @@ metadata:
   name: kubernetes-clusterip
   namespace: default
 spec:
-  address: 10.96.100.100
+  address: 10.96.0.1
   groups:
     - homelab-default-api-access
   name: default-kubernetes-api-clusterip
