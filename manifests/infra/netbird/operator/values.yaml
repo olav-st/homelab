@@ -16,4 +16,4 @@ ingress:
 cluster:
   name: homelab
 
-routingClientImage: netbirdio/netbird:0.54.0-rootless # renovate: docker=netbirdio/netbird
+routingClientImage: netbirdio/netbird:0.54.1-rootless # renovate: docker=netbirdio/netbird
