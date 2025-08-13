@@ -17,6 +17,7 @@ spec:
     - code
     - device_code
     - password
+  groupsClaim: groups
   redirectUris:
     - "/*"
   webOrigins:

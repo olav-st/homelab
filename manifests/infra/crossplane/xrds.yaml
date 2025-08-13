@@ -63,6 +63,9 @@ spec:
                   type: string
                 description: |-
                   A list of grant types that should be enabled for the client
+              groupsClaim:
+                type: string
+                description: If set, this claim will be populated with the Keycloak groups that the user is a member of
               postLogoutRedirectUris:
                 type: array
                 items:
