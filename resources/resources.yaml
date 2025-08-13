@@ -13843,6 +13843,9 @@ spec:
                   items:
                     type: string
                   type: array
+                groupsClaim:
+                  description: If set, this claim will be populated with the Keycloak groups that the user is a member of
+                  type: string
                 postLogoutRedirectUris:
                   description: A list of valid URIs a browser is permitted to redirect to after a successful logout.
                   items:
