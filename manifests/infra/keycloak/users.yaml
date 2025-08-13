@@ -30,3 +30,31 @@ spec:
           namespace: keycloak
     realmIdRef:
       name: homelab
+---
+apiVersion: user.keycloak.crossplane.io/v1alpha1
+kind: Groups
+metadata:
+  name: homelab-olav
+spec:
+  forProvider:
+    exhaustive: true
+    groupIdsRefs:
+      - name: homelab
+    realmIdRef:
+      name: homelab
+    userIdRef:
+      name: olav
+---
+apiVersion: user.keycloak.crossplane.io/v1alpha1
+kind: Groups
+metadata:
+  name: homelab-jiyoung
+spec:
+  forProvider:
+    exhaustive: true
+    groupIdsRefs:
+      - name: homelab
+    realmIdRef:
+      name: homelab
+    userIdRef:
+      name: jiyoung

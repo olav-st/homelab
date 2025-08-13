@@ -5,6 +5,7 @@ namespace: keycloak
 resources:
   - certificates.yaml
   - cnpg-database.yaml
+  - groups.yaml
   - namespace.yaml
   - secrets.yaml
   - realms.yaml

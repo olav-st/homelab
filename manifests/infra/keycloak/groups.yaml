@@ -1,0 +1,10 @@
+---
+apiVersion: group.keycloak.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  name: homelab
+spec:
+  forProvider:
+    name: homelab
+    realmIdRef:
+      name: homelab
