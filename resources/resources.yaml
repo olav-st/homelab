@@ -15710,6 +15710,17 @@ spec:
   sharedDevNum: 5
   tolerations: []
 ---
+apiVersion: group.keycloak.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  name: homelab
+  namespace: keycloak
+spec:
+  forProvider:
+    name: homelab
+    realmIdRef:
+      name: homelab
+---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
 metadata:
@@ -16724,6 +16735,36 @@ spec:
     sslRedirect: true
     stsPreload: false
     stsSeconds: 15552000
+---
+apiVersion: user.keycloak.crossplane.io/v1alpha1
+kind: Groups
+metadata:
+  name: homelab-jiyoung
+  namespace: keycloak
+spec:
+  forProvider:
+    exhaustive: true
+    groupIdsRefs:
+      name: homelab
+    realmIdRef:
+      name: homelab
+    userIdRef:
+      name: jiyoung
+---
+apiVersion: user.keycloak.crossplane.io/v1alpha1
+kind: Groups
+metadata:
+  name: homelab-olav
+  namespace: keycloak
+spec:
+  forProvider:
+    exhaustive: true
+    groupIdsRefs:
+      name: homelab
+    realmIdRef:
+      name: homelab
+    userIdRef:
+      name: olav
 ---
 apiVersion: user.keycloak.crossplane.io/v1alpha1
 kind: User
