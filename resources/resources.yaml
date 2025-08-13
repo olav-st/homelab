@@ -16745,7 +16745,7 @@ spec:
   forProvider:
     exhaustive: true
     groupIdsRefs:
-      name: homelab
+      - name: homelab
     realmIdRef:
       name: homelab
     userIdRef:
@@ -16760,7 +16760,7 @@ spec:
   forProvider:
     exhaustive: true
     groupIdsRefs:
-      name: homelab
+      - name: homelab
     realmIdRef:
       name: homelab
     userIdRef:
