@@ -64,6 +64,7 @@ spec:
     - code
     - device_code
     - password
+  groupsClaim: groups
   postLogoutRedirectUris:
     - https://netbird.homelab.olav.ninja/*
   realm: homelab
@@ -92,6 +93,7 @@ spec:
     - code
     - device_code
     - password
+  groupsClaim: groups
   realm: homelab
   redirectUris:
     - /*

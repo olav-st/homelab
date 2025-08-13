@@ -13995,7 +13995,7 @@ spec:
                 gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-sub-mapper
             spec:
               forProvider:
-                name: Username as sub claim
+                name: Username as 'sub' claim
                 protocol: openid-connect
                 protocolMapper: oidc-usermodel-property-mapper
                 config:
@@ -14011,6 +14011,40 @@ spec:
         kind: GoTemplate
         source: Inline
       step: create-usermodel-property-mapper
+    - functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        inline:
+          template: |
+            {{ if ne $.observed.resources nil }}
+            {{ if .observed.composite.resource.spec.groupsClaim }}
+            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            kind: ProtocolMapper
+            metadata:
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: {{ .observed.composite.resource.metadata.name }}-groups-mapper
+            spec:
+              forProvider:
+                name: Groups as '{{ .observed.composite.resource.spec.groupsClaim }}' claim
+                protocol: openid-connect
+                protocolMapper: oidc-group-membership-mapper
+                config:
+                  claim.name: {{ .observed.composite.resource.spec.groupsClaim }}
+                  full.path: 'false'
+                  id.token.claim: 'true'
+                  access.token.claim: 'true'
+                  lightweight.claim: 'false'
+                  userinfo.token.claim: 'true'
+                  introspection.token.claim: 'true'
+                clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
+                realmIdRef:
+                  name: {{ .observed.composite.resource.spec.realm }}
+            {{ end }}
+            {{ end }}
+        kind: GoTemplate
+        source: Inline
+      step: create-group-membership-mapper
     - functionRef:
         name: function-go-templating
       input:
