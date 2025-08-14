@@ -12,14 +12,7 @@ auth:
     useIDToken: false
 
 idp:
-  managerType: keycloak
-  clientID: netbird-backend
-  secretKeyRef:
-    name: netbird-backend-oidc-credentials
-    key: clientSecret
-  grantType: client_credentials
-  adminEndpoint: https://keycloak.homelab.olav.ninja/admin/realms/homelab
-  tokenEndpoint: https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token
+  managerType: none
 
 management:
   image:

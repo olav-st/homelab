@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: netbird
 
 resources:
-  - oidc-client.yaml
   - secrets.yaml
 
 helmCharts:
