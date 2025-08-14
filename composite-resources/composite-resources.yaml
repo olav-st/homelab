@@ -78,36 +78,6 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
-  name: netbird-backend
-  namespace: netbird
-spec:
-  clientId: netbird-backend
-  clientSecretSecretRef:
-    key: clientSecret
-    name: netbird-backend-oidc-credentials
-    namespace: netbird
-  description: Netbird Backend Client
-  displayName: Netbird Backend
-  grantTypes:
-    - client_credentials
-    - code
-    - device_code
-    - password
-  groupsClaim: groups
-  realm: homelab
-  redirectUris:
-    - /*
-  serviceAccountRoles:
-    - client: builtin-homelab-realm-management
-      realm: homelab
-      role: view-users
-  type: CONFIDENTIAL
-  webOrigins:
-    - +
----
-apiVersion: oidc.homelab.olav.ninja/v1alpha1
-kind: XOidcClient
-metadata:
   name: nextcloud
   namespace: nextcloud
 spec:
