@@ -15914,7 +15914,7 @@ metadata:
 spec:
   address: 10.96.0.1
   groups:
-    - homelab-default-api-access
+    - homelab
   name: default-kubernetes-api-clusterip
   networkID: cvrdcevm0qos7387j9sg
   tcpPorts:
@@ -15928,7 +15928,7 @@ metadata:
 spec:
   address: 10.96.100.100
   groups:
-    - homelab-traefik-traefik
+    - homelab
   name: traefik-traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
 ---
