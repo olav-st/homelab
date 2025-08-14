@@ -11,9 +11,20 @@ ingress:
     enabled: true
     groups:
       - homelab
+    policies:
+      - homelab
   router:
     enabled: true
     replicas: 1
+  policies:
+    homelab:
+      name: Homelab Allow All
+      description: Allow connections between all peers in the homelab group
+      sourceGroups:
+        - homelab
+      destinationGroups:
+        - homelab
+      bidirectional: true
 
 cluster:
   name: homelab
