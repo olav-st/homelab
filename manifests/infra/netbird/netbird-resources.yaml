@@ -6,7 +6,7 @@ metadata:
 spec:
   address: 10.96.0.1
   groups:
-  - homelab-default-api-access
+  - homelab
   name: default-kubernetes-api-clusterip
   networkID: cvrdcevm0qos7387j9sg
   tcpPorts:

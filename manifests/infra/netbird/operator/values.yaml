@@ -9,6 +9,8 @@ ingress:
   enabled: true
   kubernetesAPI:
     enabled: true
+    groups:
+      - homelab
   router:
     enabled: true
     replicas: 1
