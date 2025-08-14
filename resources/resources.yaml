@@ -15898,6 +15898,7 @@ spec:
   bidirectional: true
   description: Allow connections between all peers and peers in the homelab group
   name: Homelab Allow All
+  ports: 1-65535
   sourceGroups:
     - homelab
 ---
