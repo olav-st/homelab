@@ -15900,7 +15900,6 @@ spec:
   name: Homelab Allow All
   sourceGroups:
     - homelab
-    - All
 ---
 apiVersion: netbird.io/v1
 kind: NBResource
