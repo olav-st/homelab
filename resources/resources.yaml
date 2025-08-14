@@ -15896,10 +15896,11 @@ metadata:
   namespace: netbird
 spec:
   bidirectional: true
-  description: Allow connections between all peers in the homelab group
+  description: Allow connections between all peers and peers in the homelab group
   name: Homelab Allow All
   sourceGroups:
     - homelab
+    - All
 ---
 apiVersion: netbird.io/v1
 kind: NBResource
