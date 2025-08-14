@@ -9340,6 +9340,7 @@ metadata:
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
     netbird.io/expose: "true"
     netbird.io/groups: homelab
+    netbird.io/policy: homelab
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
@@ -15206,6 +15207,7 @@ spec:
                   - homelab
                   name: default-kubernetes-api
                   networkID: ${NETWORK_ID}
+                  policyName: "homelab"
                   tcpPorts:
                   - 443
           image: bitnami/kubectl:latest
@@ -15907,6 +15909,27 @@ spec:
   task: backup
 ---
 apiVersion: netbird.io/v1
+kind: NBPolicy
+metadata:
+  finalizers:
+    - netbird.io/cleanup
+  labels:
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/instance: netbird
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kubernetes-operator
+    app.kubernetes.io/version: 0.1.4
+    helm.sh/chart: kubernetes-operator-0.1.13
+  name: homelab
+  namespace: netbird
+spec:
+  bidirectional: true
+  description: Allow connections between all peers in the homelab group
+  name: Homelab Allow All
+  sourceGroups:
+    - homelab
+---
+apiVersion: netbird.io/v1
 kind: NBResource
 metadata:
   name: kubernetes-clusterip
@@ -15917,6 +15940,7 @@ spec:
     - homelab
   name: default-kubernetes-api-clusterip
   networkID: cvrdcevm0qos7387j9sg
+  policyName: homelab
   tcpPorts:
     - 443
 ---
@@ -15931,6 +15955,7 @@ spec:
     - homelab
   name: traefik-traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
+  policyName: homelab
 ---
 apiVersion: netbird.io/v1
 kind: NBRoutingPeer
