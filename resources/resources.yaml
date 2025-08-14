@@ -9339,6 +9339,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
     netbird.io/expose: "true"
+    netbird.io/groups: homelab
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
@@ -15202,7 +15203,7 @@ spec:
                 spec:
                   address: kubernetes.default.svc.cluster.local
                   groups:
-                  - homelab-default-api-access
+                  - homelab
                   name: default-kubernetes-api
                   networkID: ${NETWORK_ID}
                   tcpPorts:
