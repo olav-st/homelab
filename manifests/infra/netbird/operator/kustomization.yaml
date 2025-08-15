@@ -4,7 +4,6 @@ namespace: netbird
 
 resources:
   - secrets.yaml
-  - https://doc.crds.dev/raw/github.com/netbirdio/kubernetes-operator@helm-v0.1.7 # renovate: github-releases=netbirdio/kubernetes-operator extractVersion=^helm-(?<version>.*)$
 
 helmCharts:
   - name: kubernetes-operator
@@ -12,4 +11,5 @@ helmCharts:
     namespace: netbird
     repo: https://netbirdio.github.io/kubernetes-operator
     version: 0.1.13
+    includeCRDs: true
     valuesFile: values.yaml
