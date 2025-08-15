@@ -9340,7 +9340,8 @@ metadata:
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
     netbird.io/expose: "true"
     netbird.io/groups: homelab
-    netbird.io/policy: homelab
+    netbird.io/policy: traefik
+    netbird.io/policy-source-groups: homelab
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
@@ -12035,6 +12036,7 @@ spec:
             - --cluster-name=homelab
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
+            - --allow-automatic-policy-creation
             - --netbird-client-image=netbirdio/netbird:0.54.2-rootless
           command:
             - /manager
@@ -15194,7 +15196,7 @@ spec:
                   - homelab
                   name: default-kubernetes-api
                   networkID: ${NETWORK_ID}
-                  policyName: "homelab"
+                  policyName: "kubernetes-api"
                   tcpPorts:
                   - 443
           image: bitnami/kubectl:latest
@@ -15912,7 +15914,7 @@ spec:
     - homelab
   name: default-kubernetes-api-clusterip
   networkID: cvrdcevm0qos7387j9sg
-  policyName: homelab
+  policyName: kubernetes-api
   tcpPorts:
     - 443
 ---
@@ -15927,7 +15929,7 @@ spec:
     - homelab
   name: traefik-traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
-  policyName: homelab
+  policyName: traefik
 ---
 apiVersion: netbird.io/v1
 kind: NBRoutingPeer
