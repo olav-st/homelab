@@ -22,7 +22,7 @@ ingress:
       description: Allow connections between all peers and peers in the homelab group
       sourceGroups:
         - homelab
-      ports: 1-65535
+      ports: []
       bidirectional: true
 
 cluster:
