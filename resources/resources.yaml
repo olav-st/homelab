@@ -15899,7 +15899,12 @@ spec:
   description: Allow connections between all peers and peers in the homelab group
   name: Homelab Allow All
   ports:
-    - 443 445 1883 8883
+    - 80
+    - 443
+    - 445
+    - 1883
+    - 8080
+    - 8883
   sourceGroups:
     - homelab
 ---
