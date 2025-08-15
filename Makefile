@@ -9,40 +9,31 @@ help: ## Show help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 check-remote-manifests:
-	@find . -name "kustomization.yaml" | while read file; do \
+	@for file in $$(find . -name "kustomization.yaml"); do \
 		echo "Processing $$file"; \
-		yq e '.resources[]' "$$file" | grep -E '^https?://' | while read url; do \
+		for url in $$(yq e '.resources[]' "$$file" | grep -E '^https?://'); do \
 			echo "Checking $$url"; \
 			attempt=1; \
-			while [ $$attempt -le 3 ]; do \
+			success=false; \
+			while [ $$attempt -le 3 ] && [ "$$success" = "false" ]; do \
 				response_size=$$(curl -fsSL --max-time 30 "$$url" --write-out '%{size_download}' -o /dev/null); \
 				curl_exit_code=$$?; \
-				if [ $$curl_exit_code -eq 0 ]; then \
-					if [ "$$response_size" -gt 0 ]; then \
-						echo "OK ($$response_size bytes)"; \
-						break; \
-					else \
-						echo "Error: $$url returned empty response (0 bytes)"; \
-						if [ $$attempt -lt 3 ]; then \
-							echo "Retrying in 60 seconds..."; \
-							sleep 60; \
-						else \
-							echo "Failed: $$url returned empty response after 3 attempts"; \
-							exit 1; \
-						fi; \
-					fi; \
+				if [ $$curl_exit_code -eq 0 ] && [ "$$response_size" -gt 0 ]; then \
+					echo "OK ($$response_size bytes)"; \
+					success=true; \
 				else \
 					echo "Attempt $$attempt failed for $$url"; \
 					if [ $$attempt -lt 3 ]; then \
 						echo "Retrying in 60 seconds..."; \
 						sleep 60; \
-					else \
-						echo "Failed to reach $$url after 3 attempts"; \
-						exit 1; \
 					fi; \
 				fi; \
 				attempt=$$((attempt+1)); \
 			done; \
+			if [ "$$success" = "false" ]; then \
+				echo "Failed to reach $$url after 3 attempts"; \
+				exit 1; \
+			fi; \
 		done; \
 	done
 
