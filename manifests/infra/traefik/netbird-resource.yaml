@@ -8,4 +8,4 @@ spec:
   - homelab
   name: traefik-traefik-clusterip
   networkID: cvrdcevm0qos7387j9sg
-  policyName: homelab
+  policyName: traefik
