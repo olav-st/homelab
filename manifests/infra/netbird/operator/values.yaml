@@ -7,13 +7,12 @@ netbirdAPI:
 
 ingress:
   enabled: true
-  allowAutomaticPolicyCreation: true
   kubernetesAPI:
     enabled: true
     groups:
       - homelab
     policies:
-      - kubernetes-api
+      - homelab
   router:
     enabled: true
     replicas: 1
@@ -23,6 +22,7 @@ ingress:
       description: Allow connections between all peers and peers in the homelab group
       sourceGroups:
         - homelab
+      ports: []
       bidirectional: true
 
 cluster:

@@ -9,6 +9,6 @@ spec:
   - homelab
   name: default-kubernetes-api-clusterip
   networkID: cvrdcevm0qos7387j9sg
-  policyName: kubernetes-api
+  policyName: homelab
   tcpPorts:
   - 443
