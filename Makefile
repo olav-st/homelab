@@ -15,9 +15,22 @@ check-remote-manifests:
 			echo "Checking $$url"; \
 			attempt=1; \
 			while [ $$attempt -le 3 ]; do \
-				if curl -fsSL --max-time 30 "$$url" -o /dev/null; then \
-					echo "OK"; \
-					break; \
+				response_size=$$(curl -fsSL --max-time 30 "$$url" --write-out '%{size_download}' -o /dev/null); \
+				curl_exit_code=$$?; \
+				if [ $$curl_exit_code -eq 0 ]; then \
+					if [ "$$response_size" -gt 0 ]; then \
+						echo "OK ($$response_size bytes)"; \
+						break; \
+					else \
+						echo "Error: $$url returned empty response (0 bytes)"; \
+						if [ $$attempt -lt 3 ]; then \
+							echo "Retrying in 60 seconds..."; \
+							sleep 60; \
+						else \
+							echo "Failed: $$url returned empty response after 3 attempts"; \
+							exit 1; \
+						fi; \
+					fi; \
 				else \
 					echo "Attempt $$attempt failed for $$url"; \
 					if [ $$attempt -lt 3 ]; then \
