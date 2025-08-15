@@ -13,3 +13,6 @@ helmCharts:
     version: 0.1.13
     includeCRDs: true
     valuesFile: values.yaml
+
+patches:
+  - path: patches/fix-nbpolicy-ports.yaml

@@ -1,0 +1,12 @@
+apiVersion: netbird.io/v1
+kind: NBPolicy
+metadata:
+  name: homelab
+spec:
+  ports:
+    - 80
+    - 443
+    - 445
+    - 1883
+    - 8080
+    - 8883
