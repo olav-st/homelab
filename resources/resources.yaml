@@ -8410,6 +8410,7 @@ kind: Service
 metadata:
   annotations:
     io.cilium/lb-ipam-ips: 192.168.0.91
+    lbipam.cilium.io/sharing-key: coturn
   labels:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
@@ -8438,6 +8439,7 @@ kind: Service
 metadata:
   annotations:
     io.cilium/lb-ipam-ips: 192.168.0.91
+    lbipam.cilium.io/sharing-key: coturn
   labels:
     app.kubernetes.io/instance: coturn
     app.kubernetes.io/managed-by: Helm
