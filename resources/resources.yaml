@@ -9340,9 +9340,6 @@ kind: Service
 metadata:
   annotations:
     external-dns.alpha.kubernetes.io/internal-hostname: homelab.olav.ninja,*.homelab.olav.ninja
-    netbird.io/expose: "true"
-    netbird.io/groups: homelab
-    netbird.io/policy: homelab
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
@@ -15143,72 +15140,6 @@ spec:
             - NBRoutingPeer
           image: bitnami/kubectl:latest
           name: pre-delete
-      restartPolicy: Never
-      serviceAccountName: netbird-kubernetes-operator
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  annotations:
-    helm.sh/hook: post-upgrade,post-install
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    app.kubernetes.io/component: operator
-    app.kubernetes.io/instance: netbird
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kubernetes-operator
-    app.kubernetes.io/version: 0.1.4
-    helm.sh/chart: kubernetes-operator-0.1.13
-  name: netbird-kubernetes-operator-kubernetes-service-expose
-  namespace: netbird
-spec:
-  backoffLimit: 3
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: operator
-        app.kubernetes.io/instance: netbird
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: kubernetes-operator
-        app.kubernetes.io/version: 0.1.4
-        helm.sh/chart: kubernetes-operator-0.1.13
-      name: netbird-kubernetes-operator
-    spec:
-      containers:
-        - args:
-            - kubectl delete NBResource --ignore-not-found -n default kubernetes; export NETWORK_ID=$(kubectl get NBRoutingPeer -n netbird router -o 'jsonpath={.status.networkID}'); echo "$NBRESOURCE_VALUE" | envsubst | kubectl apply -f -
-          command:
-            - bash
-            - -c
-          env:
-            - name: NBRESOURCE_VALUE
-              value: |
-                apiVersion: netbird.io/v1
-                kind: NBResource
-                metadata:
-                  finalizers:
-                  - netbird.io/cleanup
-                  name: kubernetes
-                  namespace: default
-                spec:
-                  address: kubernetes.default.svc.cluster.local
-                  groups:
-                  - homelab
-                  name: default-kubernetes-api
-                  networkID: ${NETWORK_ID}
-                  policyName: "homelab"
-                  tcpPorts:
-                  - 443
-          image: bitnami/kubectl:latest
-          name: apply-nbresource
-      initContainers:
-        - args:
-            - kubectl wait --for 'jsonpath={.status.networkID}' -n netbird nbroutingpeer router;
-          command:
-            - bash
-            - -c
-          image: bitnami/kubectl:latest
-          name: wait-network-ready
       restartPolicy: Never
       serviceAccountName: netbird-kubernetes-operator
 ---
