@@ -15093,7 +15093,7 @@ spec:
                 metadata:
                   finalizers:
                   - netbird.io/cleanup
-                  name: ${SERVICE_NAME}-${SERVICE_NAMESPACE}
+                  name: ${SERVICE_NAME}-clusterip
                   namespace: ${SERVICE_NAMESPACE}
                 spec:
                   address: ${CLUSTER_IP}
