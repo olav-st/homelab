@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: netbird
 
 resources:
+  - jobs.yaml
   - secrets.yaml
 
 helmCharts:

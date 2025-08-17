@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - netbird-resources.yaml
   - ./backend
   - ./dashboard
   - ./operator

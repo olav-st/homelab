@@ -1,0 +1,100 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: netbird-clusterip-expose
+  annotations:
+    helm.sh/hook: post-upgrade,post-install
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: netbird-clusterip-expose
+    spec:
+      initContainers:
+      - name: wait-network-ready
+        image: "bitnami/kubectl:latest"
+        command:
+        - bash
+        - -c
+        args:
+        - kubectl wait --for 'jsonpath={.status.networkID}' -n netbird nbroutingpeer router; 
+      containers:
+      - name: apply-nbresource
+        image: "bitnami/kubectl:latest"
+        env:
+        - name: NBRESOURCE_TEMPLATE
+          value: |
+            apiVersion: netbird.io/v1
+            kind: NBResource
+            metadata:
+              finalizers:
+              - netbird.io/cleanup
+              name: ${SERVICE_NAME}-clusterip
+              namespace: ${SERVICE_NAMESPACE}
+            spec:
+              address: ${CLUSTER_IP}
+              groups:
+                - homelab
+              name: ${SERVICE_NAME}-clusterip
+              networkID: ${NETWORK_ID}
+              policyName: homelab
+              tcpPorts: [${SERVICE_PORTS}]
+        command:
+        - bash
+        - -c
+        args:
+        - |
+          # Get the network ID
+          export NETWORK_ID=$(kubectl get NBRoutingPeer -n netbird router -o 'jsonpath={.status.networkID}')
+          
+          # Find all services with the netbird.io/expose annotation set to true
+          services=$(kubectl get services --all-namespaces -o json | \
+            jq -r '.items[] | select(.metadata.annotations["netbird.io/expose"] == "true") | 
+            "\(.metadata.namespace) \(.metadata.name) \(.spec.clusterIP) \([.spec.ports[].port] | join(" "))"')
+          
+          if [ -z "$services" ]; then
+            echo "No services found with netbird.io/expose annotation set to true"
+            exit 0
+          fi
+          
+          echo "Found services to expose:"
+          echo "$services"
+          
+          # Process each service
+          echo "$services" | while read -r namespace service_name cluster_ip ports; do
+            # Skip if any required field is empty or null
+            if [ -z "$namespace" ] || [ -z "$service_name" ] || [ -z "$cluster_ip" ] || [ "$cluster_ip" = "null" ]; then
+              echo "Skipping service $service_name in namespace $namespace: missing required fields"
+              continue
+            fi
+            
+            # Skip headless services (ClusterIP: None)
+            if [ "$cluster_ip" = "None" ]; then
+              echo "Skipping headless service $service_name in namespace $namespace"
+              continue
+            fi
+            
+            echo "Processing service: $service_name in namespace: $namespace"
+            
+            # Delete existing NBResource if it exists
+            kubectl delete NBResource --ignore-not-found -n "$namespace" "${service_name}-${namespace}" 2>/dev/null || true
+            
+            # Set environment variables for substitution
+            export SERVICE_NAME="$service_name"
+            export SERVICE_NAMESPACE="$namespace"
+            export CLUSTER_IP="$cluster_ip"
+            export SERVICE_PORTS=$(echo "$ports" | tr ' ' ',')
+            
+            # Create NBResource
+            echo "Creating NBResource for $service_name with IP $cluster_ip and ports $ports"
+            echo "$NBRESOURCE_TEMPLATE" | envsubst | kubectl apply -f -
+            
+            if [ $? -eq 0 ]; then
+              echo "Successfully created NBResource for $service_name"
+            else
+              echo "Failed to create NBResource for $service_name"
+            fi
+          done
+      serviceAccountName: netbird-kubernetes-operator
+      restartPolicy: Never
