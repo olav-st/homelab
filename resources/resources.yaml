@@ -15081,7 +15081,7 @@ spec:
     spec:
       containers:
         - args:
-            - "# Get the network ID\nexport NETWORK_ID=$(kubectl get NBRoutingPeer -n netbird router -o 'jsonpath={.status.networkID}')\n\n# Find all services with the netbird.io/expose annotation set to true\nservices=$(kubectl get services --all-namespaces -o json | \\\n  jq -r '.items[] | select(.metadata.annotations[\"netbird.io/expose\"] == \"true\") | \n  \"\\(.metadata.namespace) \\(.metadata.name) \\(.spec.clusterIP) \\([.spec.ports[].port] | join(\",\"))\"')\n\nif [ -z \"$services\" ]; then\n  echo \"No services found with netbird.io/expose: true\"\n  exit 0\nfi\n\necho \"Found services to expose:\"\necho \"$services\"\n\n# Process each service\necho \"$services\" | while read -r namespace service_name cluster_ip ports; do\n  # Skip if any required field is empty or null\n  if [ -z \"$namespace\" ] || [ -z \"$service_name\" ] || [ -z \"$cluster_ip\" ] || [ \"$cluster_ip\" = \"null\" ]; then\n    echo \"Skipping service $service_name in namespace $namespace: missing required fields\"\n    continue\n  fi\n  \n  # Skip headless services (ClusterIP: None)\n  if [ \"$cluster_ip\" = \"None\" ]; then\n    echo \"Skipping headless service $service_name in namespace $namespace\"\n    continue\n  fi\n  \n  echo \"Processing service: $service_name in namespace: $namespace\"\n  \n  # Delete existing NBResource if it exists\n  kubectl delete NBResource --ignore-not-found -n \"$namespace\" \"${service_name}-${namespace}\" 2>/dev/null || true\n  \n  # Set environment variables for substitution\n  export SERVICE_NAME=\"$service_name\"\n  export SERVICE_NAMESPACE=\"$namespace\"\n  export CLUSTER_IP=\"$cluster_ip\"\n  export SERVICE_PORTS=\"$ports\"\n  \n  # Create NBResource\n  echo \"Creating NBResource for $service_name with IP $cluster_ip and ports $ports\"\n  echo \"$NBRESOURCE_TEMPLATE\" | envsubst | kubectl apply -f -\n  \n  if [ $? -eq 0 ]; then\n    echo \"Successfully created NBResource for $service_name\"\n  else\n    echo \"Failed to create NBResource for $service_name\"\n  fi\ndone\n"
+            - "# Get the network ID\nexport NETWORK_ID=$(kubectl get NBRoutingPeer -n netbird router -o 'jsonpath={.status.networkID}')\n\n# Find all services with the netbird.io/expose annotation set to true\nservices=$(kubectl get services --all-namespaces -o json | \\\n  jq -r '.items[] | select(.metadata.annotations[\"netbird.io/expose\"] == \"true\") | \n  \"\\(.metadata.namespace) \\(.metadata.name) \\(.spec.clusterIP) \\([.spec.ports[].port] | join(\" \"))\"')\n\nif [ -z \"$services\" ]; then\n  echo \"No services found with netbird.io/expose annotation set to true\"\n  exit 0\nfi\n\necho \"Found services to expose:\"\necho \"$services\"\n\n# Process each service\necho \"$services\" | while read -r namespace service_name cluster_ip ports; do\n  # Skip if any required field is empty or null\n  if [ -z \"$namespace\" ] || [ -z \"$service_name\" ] || [ -z \"$cluster_ip\" ] || [ \"$cluster_ip\" = \"null\" ]; then\n    echo \"Skipping service $service_name in namespace $namespace: missing required fields\"\n    continue\n  fi\n  \n  # Skip headless services (ClusterIP: None)\n  if [ \"$cluster_ip\" = \"None\" ]; then\n    echo \"Skipping headless service $service_name in namespace $namespace\"\n    continue\n  fi\n  \n  echo \"Processing service: $service_name in namespace: $namespace\"\n  \n  # Delete existing NBResource if it exists\n  kubectl delete NBResource --ignore-not-found -n \"$namespace\" \"${service_name}-${namespace}\" 2>/dev/null || true\n  \n  # Set environment variables for substitution\n  export SERVICE_NAME=\"$service_name\"\n  export SERVICE_NAMESPACE=\"$namespace\"\n  export CLUSTER_IP=\"$cluster_ip\"\n  export SERVICE_PORTS=$(echo \"$ports\" | tr ' ' ',')\n  \n  # Create NBResource\n  echo \"Creating NBResource for $service_name with IP $cluster_ip and ports $ports\"\n  echo \"$NBRESOURCE_TEMPLATE\" | envsubst | kubectl apply -f -\n  \n  if [ $? -eq 0 ]; then\n    echo \"Successfully created NBResource for $service_name\"\n  else\n    echo \"Failed to create NBResource for $service_name\"\n  fi\ndone\n"
           command:
             - bash
             - -c
@@ -15093,7 +15093,7 @@ spec:
                 metadata:
                   finalizers:
                   - netbird.io/cleanup
-                  name: ${SERVICE_NAME}-${SERVICE_NAMESPACE}-clusterip
+                  name: ${SERVICE_NAME}-${SERVICE_NAMESPACE}
                   namespace: ${SERVICE_NAMESPACE}
                 spec:
                   address: ${CLUSTER_IP}
@@ -15102,9 +15102,9 @@ spec:
                   name: ${SERVICE_NAME}-clusterip
                   networkID: ${NETWORK_ID}
                   policyName: homelab
-                  tcpPorts: ${SERVICE_PORTS}
+                  tcpPorts: [${SERVICE_PORTS}]
           image: bitnami/kubectl:latest
-          name: apply-nbresources
+          name: apply-nbresource
       initContainers:
         - args:
             - kubectl wait --for 'jsonpath={.status.networkID}' -n netbird nbroutingpeer router;
