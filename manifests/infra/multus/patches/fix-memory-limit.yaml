@@ -12,9 +12,9 @@ spec:
             requests:
               memory: "100Mi"
             limits:
-              memory: "100Mi"
+              memory: "512Mi"
       initContainers:
         - name: install-multus-binary
           resources:
             requests:
-              memory: "30Mi"
+              memory: "64Mi"
