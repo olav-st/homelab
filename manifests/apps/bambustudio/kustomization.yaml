@@ -13,3 +13,9 @@ helmCharts:
     repo: https://bjw-s-labs.github.io/helm-charts
     version: 4.2.0
     valuesFile: values.yaml
+
+patches:
+  - path: patches/remove-replicas.yaml
+    target:
+      kind: Deployment
+      name: bambustudio

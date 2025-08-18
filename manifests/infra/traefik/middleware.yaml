@@ -14,3 +14,20 @@ spec:
     # Referrer-Policy: same-origin
     referrerPolicy: 'same-origin'
     sslRedirect: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier
+  namespace: traefik
+spec:
+  plugin:
+    sablier:
+      group: default
+      dynamic:
+        displayName: Homelab
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 1m
