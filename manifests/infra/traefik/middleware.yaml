@@ -18,14 +18,14 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: sablier
+  name: sablier-bambustudio
   namespace: traefik
 spec:
   plugin:
     sablier:
-      group: default
+      group: bambustudio
       dynamic:
-        displayName: Homelab
+        displayName: Bambu Studio
         refreshFrequency: 5s
         showDetails: "true"
         theme: ghost
