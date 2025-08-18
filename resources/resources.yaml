@@ -9634,7 +9634,7 @@ metadata:
     app.kubernetes.io/name: bambustudio
     helm.sh/chart: app-template-4.2.0
     sablier.enable: "true"
-    sablier.group: default
+    sablier.group: bambustudio
   name: bambustudio
   namespace: bambustudio
 spec:
@@ -16116,7 +16116,7 @@ metadata:
     hajimari.io/appName: Bambu Studio
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
-    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-bambustudio@kubernetescrd
   labels:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
@@ -16923,17 +16923,17 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: sablier
+  name: sablier-bambustudio
   namespace: traefik
 spec:
   plugin:
     sablier:
       dynamic:
-        displayName: Homelab
+        displayName: Bambu Studio
         refreshFrequency: 5s
         showDetails: "true"
         theme: ghost
-      group: default
+      group: bambustudio
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 1m
 ---
