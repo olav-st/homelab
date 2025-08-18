@@ -9633,6 +9633,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
     helm.sh/chart: app-template-4.2.0
+    sablier.enable: "true"
+    sablier.group: default
   name: bambustudio
   namespace: bambustudio
 spec:
