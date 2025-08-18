@@ -1,7 +1,10 @@
 controllers:
   pingvinshare:
+    type: deployment
     strategy: Recreate
-
+    labels:
+      sablier.enable: "true"
+      sablier.group: pingvinshare
     initContainers:
       config-processor:
         image:
@@ -78,6 +81,7 @@ ingress:
   app:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-pingvinshare@kubernetescrd
       hajimari.io/enable: 'true'
       hajimari.io/appName: 'Pingvin Share'
       hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg

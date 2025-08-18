@@ -31,3 +31,20 @@ spec:
         theme: ghost
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 1m
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier-pingvinshare
+  namespace: traefik
+spec:
+  plugin:
+    sablier:
+      group: pingvinshare
+      dynamic:
+        displayName: Pingvin Share
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 1m
