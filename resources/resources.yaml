@@ -12553,7 +12553,6 @@ metadata:
   name: pingvinshare
   namespace: pingvinshare
 spec:
-  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
