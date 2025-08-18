@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: sablier
+
+resources:
+  - namespace.yaml
+
+helmCharts:
+- name: sablier
+  releaseName: sablier
+  namespace: sablier
+  repo: https://sablierapp.github.io/helm-charts
+  version: 1.0.3

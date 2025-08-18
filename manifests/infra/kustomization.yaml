@@ -16,5 +16,6 @@ resources:
   - ./multus
   - ./netbird
   - ./oidc-config
+  - ./sablier
   - ./sealed-secrets
   - ./traefik
