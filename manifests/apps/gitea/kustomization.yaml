@@ -18,3 +18,9 @@ helmCharts:
     repo: https://dl.gitea.io/charts/
     version: 12.1.3
     valuesFile: values.yaml
+
+patches:
+  - path: patches/remove-replicas.yaml
+    target:
+      kind: Deployment
+      name: gitea
