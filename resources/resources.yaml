@@ -12548,6 +12548,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
     helm.sh/chart: app-template-4.2.0
+    sablier.enable: "true"
+    sablier.group: pingvinshare
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -16567,6 +16569,7 @@ metadata:
     hajimari.io/appName: Pingvin Share
     hajimari.io/enable: "true"
     hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-pingvinshare@kubernetescrd
   labels:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
@@ -16934,6 +16937,23 @@ spec:
         showDetails: "true"
         theme: ghost
       group: bambustudio
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 1m
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier-pingvinshare
+  namespace: traefik
+spec:
+  plugin:
+    sablier:
+      dynamic:
+        displayName: Pingvin Share
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      group: pingvinshare
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 1m
 ---
