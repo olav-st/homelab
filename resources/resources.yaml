@@ -121,6 +121,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: sablier
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: sealed-secrets
 ---
 apiVersion: v1
@@ -510,6 +515,12 @@ metadata:
     helm.sh/chart: open-webui-6.22.0
   name: open-webui
   namespace: openwebui
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sablier-sablier
+  namespace: sablier
 ---
 apiVersion: v1
 automountServiceAccountToken: false
@@ -5216,6 +5227,26 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: sablier-sablier
+rules:
+  - apiGroups:
+      - apps
+      - ""
+    resources:
+      - deployments
+      - deployments/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs:
+      - patch
+      - get
+      - update
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
   labels:
     app.kubernetes.io/instance: sealed-secrets
     app.kubernetes.io/managed-by: Helm
@@ -6139,6 +6170,19 @@ subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: oidc:jiyoung
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sablier-sablier
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sablier-sablier
+subjects:
+  - kind: ServiceAccount
+    name: sablier-sablier
+    namespace: sablier
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -9310,6 +9354,19 @@ spec:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/name: pingvinshare
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sablier-sablier
+  namespace: sablier
+spec:
+  ports:
+    - port: 10000
+      protocol: TCP
+      targetPort: 10000
+  selector:
+    app: sablier-sablier
 ---
 apiVersion: v1
 kind: Service
@@ -12589,6 +12646,59 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: pingvinshare
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sablier-sablier
+  name: sablier-sablier
+  namespace: sablier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sablier-sablier
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sablier-sablier
+    spec:
+      containers:
+        - args:
+            - start
+            - --provider.name=kubernetes
+            - --logging.level=trace
+          image: sablierapp/sablier:1.8.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 10000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: sablier
+          ports:
+            - containerPort: 10000
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 10000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+      serviceAccountName: sablier-sablier
 ---
 apiVersion: apps/v1
 kind: Deployment
