@@ -12858,6 +12858,8 @@ spec:
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
+            - --experimental.plugins.sablier.moduleName=github.com/sablierapp/sablier
+            - --experimental.plugins.sablier.version=v1.10.1
             - --providers.kubernetescrd
             - --providers.kubernetescrd.allowEmptyServices=true
             - --providers.kubernetesingress
@@ -12870,9 +12872,6 @@ spec:
             - --entryPoints.websecure.http.tls=true
             - --entryPoints.websecure.transport.respondingTimeouts.readTimeout=0
             - --log.level=INFO
-            - --providers.kubernetesingress.allowEmptyServices=true
-            - --experimental.plugins.sablier.modulename=github.com/sablierapp/sablier
-            - --experimental.plugins.sablier.version=v1.10.1
           env:
             - name: POD_NAME
               valueFrom:
@@ -12937,6 +12936,8 @@ spec:
               name: data
             - mountPath: /tmp
               name: tmp
+            - mountPath: /plugins-storage
+              name: plugins
       hostNetwork: false
       securityContext:
         runAsGroup: 65532
@@ -12949,6 +12950,8 @@ spec:
           name: data
         - emptyDir: {}
           name: tmp
+        - emptyDir: {}
+          name: plugins
 ---
 apiVersion: apps/v1
 kind: StatefulSet
