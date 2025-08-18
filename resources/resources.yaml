@@ -12865,10 +12865,10 @@ spec:
             - --providers.kubernetesingress
             - --providers.kubernetesingress.allowEmptyServices=true
             - --providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik
-            - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd,traefik-sablier@kubernetescrd
+            - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd
             - --entryPoints.webpublic.http.tls=true
             - --entryPoints.webpublic.transport.respondingTimeouts.readTimeout=0
-            - --entryPoints.websecure.http.middlewares=traefik-securityheaders@kubernetescrd,traefik-sablier@kubernetescrd
+            - --entryPoints.websecure.http.middlewares=traefik-securityheaders@kubernetescrd
             - --entryPoints.websecure.http.tls=true
             - --entryPoints.websecure.transport.respondingTimeouts.readTimeout=0
             - --log.level=INFO
@@ -16116,6 +16116,7 @@ metadata:
     hajimari.io/appName: Bambu Studio
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier@kubernetescrd
   labels:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
