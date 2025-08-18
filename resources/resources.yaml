@@ -16937,7 +16937,7 @@ spec:
         theme: ghost
       group: bambustudio
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 1m
+      sessionDuration: 1h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -16954,7 +16954,7 @@ spec:
         theme: ghost
       group: pingvinshare
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 1m
+      sessionDuration: 1h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
