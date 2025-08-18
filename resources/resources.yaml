@@ -9636,7 +9636,6 @@ metadata:
   name: bambustudio
   namespace: bambustudio
 spec:
-  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -12862,13 +12861,16 @@ spec:
             - --providers.kubernetesingress
             - --providers.kubernetesingress.allowEmptyServices=true
             - --providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik
-            - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd
+            - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd,traefik-sablier@kubernetescrd
             - --entryPoints.webpublic.http.tls=true
             - --entryPoints.webpublic.transport.respondingTimeouts.readTimeout=0
-            - --entryPoints.websecure.http.middlewares=traefik-securityheaders@kubernetescrd
+            - --entryPoints.websecure.http.middlewares=traefik-securityheaders@kubernetescrd,traefik-sablier@kubernetescrd
             - --entryPoints.websecure.http.tls=true
             - --entryPoints.websecure.transport.respondingTimeouts.readTimeout=0
             - --log.level=INFO
+            - --providers.kubernetesingress.allowEmptyServices=true
+            - --experimental.plugins.sablier.modulename=github.com/sablierapp/sablier
+            - --experimental.plugins.sablier.version=v1.10.1
           env:
             - name: POD_NAME
               valueFrom:
@@ -16854,6 +16856,23 @@ metadata:
 spec:
   forProvider:
     realm: homelab
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier
+  namespace: traefik
+spec:
+  plugin:
+    sablier:
+      dynamic:
+        displayName: Homelab
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      group: default
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 1m
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
