@@ -12,3 +12,9 @@ helmCharts:
     repo: https://otwld.github.io/ollama-helm/
     version: 1.20.0
     valuesFile: values.yaml
+
+patches:
+  - path: patches/remove-replicas.yaml
+    target:
+      kind: Deployment
+      name: ollama

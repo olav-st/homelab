@@ -4,10 +4,16 @@ ollama:
     type: 'amd'
     number: 1
 
+deployment:
+  labels:
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
+
 ingress:
   enabled: true
   annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-ollama-openwebui@kubernetescrd
   hosts:
     - host: ollama.homelab.olav.ninja
       paths:

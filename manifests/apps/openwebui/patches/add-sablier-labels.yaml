@@ -1,0 +1,8 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: open-webui
+  namespace: openwebui
+  labels:
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
