@@ -498,8 +498,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
   name: ollama
   namespace: ollama
 ---
@@ -9295,8 +9295,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
   name: ollama
   namespace: ollama
 spec:
@@ -9583,8 +9583,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
   name: ollama
   namespace: ollama
 spec:
@@ -12476,8 +12476,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
     sablier.enable: "true"
     sablier.group: ollama-openwebui
   name: ollama
@@ -12495,8 +12495,8 @@ spec:
         app.kubernetes.io/instance: ollama
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: ollama
-        app.kubernetes.io/version: 0.9.2
-        helm.sh/chart: ollama-1.20.0
+        app.kubernetes.io/version: 0.11.4
+        helm.sh/chart: ollama-1.27.0
     spec:
       containers:
         - args: null
@@ -12504,7 +12504,7 @@ spec:
             - name: OLLAMA_HOST
               value: 0.0.0.0:11434
           envFrom: null
-          image: ollama/ollama:0.9.2-rocm
+          image: ollama/ollama:0.11.4-rocm
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 6
@@ -12539,6 +12539,7 @@ spec:
               name: ollama-data
       securityContext: {}
       serviceAccountName: ollama
+      terminationGracePeriodSeconds: 120
       tolerations: null
       volumes:
         - name: ollama-data
@@ -16515,8 +16516,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
   name: ollama
   namespace: ollama
 spec:
@@ -17111,8 +17112,8 @@ metadata:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.9.2
-    helm.sh/chart: ollama-1.20.0
+    app.kubernetes.io/version: 0.11.4
+    helm.sh/chart: ollama-1.27.0
   name: ollama-test-connection
   namespace: ollama
 spec:
