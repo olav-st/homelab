@@ -12478,10 +12478,11 @@ metadata:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/version: 0.9.2
     helm.sh/chart: ollama-1.20.0
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
   name: ollama
   namespace: ollama
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: ollama
@@ -13658,10 +13659,11 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: 0.6.15
     helm.sh/chart: open-webui-6.22.0
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
   name: open-webui
   namespace: openwebui
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: open-webui
@@ -16508,6 +16510,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-ollama-openwebui@kubernetescrd
   labels:
     app.kubernetes.io/instance: ollama
     app.kubernetes.io/managed-by: Helm
@@ -16540,6 +16543,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-ollama-openwebui@kubernetescrd
   labels:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
@@ -16958,6 +16962,23 @@ spec:
         showDetails: "true"
         theme: ghost
       group: gitea
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 1h
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier-ollama-openwebui
+  namespace: traefik
+spec:
+  plugin:
+    sablier:
+      dynamic:
+        displayName: Ollama / Open WebUI
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      group: ollama-openwebui
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 1h
 ---
