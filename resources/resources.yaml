@@ -12582,33 +12582,24 @@ spec:
               value: "true"
           image: ghcr.io/stonith404/pingvin-share:v1.13.0
           livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 0
-            periodSeconds: 10
-            tcpSocket:
+            httpGet:
+              path: /api/health
               port: 3000
-            timeoutSeconds: 1
+            initialDelaySeconds: 3
+            periodSeconds: 10
           name: app
           readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 0
-            periodSeconds: 10
-            tcpSocket:
+            httpGet:
+              path: /api/health
               port: 3000
-            timeoutSeconds: 1
+            initialDelaySeconds: 3
+            periodSeconds: 10
           resources:
             limits:
               memory: 512Mi
             requests:
               cpu: 5m
               memory: 256Mi
-          startupProbe:
-            failureThreshold: 30
-            initialDelaySeconds: 0
-            periodSeconds: 5
-            tcpSocket:
-              port: 3000
-            timeoutSeconds: 1
           volumeMounts:
             - mountPath: /opt/app/config.yaml
               name: config
