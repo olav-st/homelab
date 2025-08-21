@@ -35,19 +35,31 @@ controllers:
         probes:
           liveness:
             enabled: true
+            custom: true
+            type: HTTP
+            spec:
+              httpGet:
+                path: /api/health
+                port: 3000
+              initialDelaySeconds: 3
+              periodSeconds: 10
           readiness:
             enabled: true
-          startup:
-            enabled: true
+            custom: true
+            type: HTTP
             spec:
-              failureThreshold: 30
-              periodSeconds: 5
+              httpGet:
+                path: /api/health
+                port: 3000
+              initialDelaySeconds: 3
+              periodSeconds: 10
         resources:
           requests:
             cpu: 5m
             memory: 256Mi
           limits:
             memory: 512Mi
+
 
 persistence:
   data:
