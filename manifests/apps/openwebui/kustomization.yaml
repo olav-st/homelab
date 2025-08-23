@@ -13,7 +13,7 @@ helmCharts:
     releaseName: openwebui
     namespace: openwebui
     repo: https://helm.openwebui.com/
-    version: 7.3.0
+    version: 7.6.0
     valuesFile: values.yaml
 
 patches:
