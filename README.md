@@ -2,7 +2,7 @@
 
 This repository contains code and configuration for my homelab<sup>[?](https://www.reddit.com/r/homelab/wiki/introduction/)</sup>. It follows the principles of [Infrastructure as code](https://about.gitlab.com/topics/gitops/infrastructure-as-code/) and [GitOps](https://about.gitlab.com/topics/gitops/).
 
-My homelab is based on a low-power Intel N100 PC running Proxmox VE with virtual machines provisioned by OpenTofu. I run all my applications (except Home Assistant) in a Kubernetes cluster based on Talos Linux.
+My homelab is based on a low-power Intel N100 PC running a single-node Kubernetes cluster based on Talos Linux.
 
 For more details, see [Hardware](#hardware) and [Software](#software) below.
 
@@ -45,43 +45,48 @@ For more details, see [Hardware](#hardware) and [Software](#software) below.
 </tr>
 </table>
 
-Everything in my homelab runs in virtual machines on top of Proxmox VE. I have a dedicated virtual machine for Home Assistant (running Home Assistant OS). The remaining applications run on top of a Kubernetes cluster, based on Talos Linux. 
+Everything in my homelab runs in containers orchestrated by Kuberntes, except for Home Assistant which I run as a virtual machine using KubeVirt.
 
 ```mermaid
 flowchart TD
-    subgraph Hypervisor["Proxmox VE"]
-        HAOS["Home Assistant OS 🏘"]
-        TLOS["Talos Linux ☸"]
-        HA["Home Assistant 🏠︎"]
+    ZB["Zigbee Dongle ᯤ"]
+    BT["Bluetooth Dongle ᛒ"]
+
+    subgraph OS["Talos Linux"]
+        K8SC["Kubernetes ☸"]
         Gitea["Gitea ☕︎"]
         Immich["Immich ❀"]
         Nextcloud["Nextcloud ☁︎"]
         Etc["..."]
+        subgraph KubeVirt["KubeVirt"]
+            HAOS["Home Assistant OS 🏘"]
+            HA["Home Assistant 🏠︎"]
+        end
         HAOS --> HA
-        TLOS --> Gitea
-        TLOS --> Immich
-        TLOS --> Nextcloud
-        TLOS --> Etc
+        K8SC --> KubeVirt
+        K8SC --> Gitea
+        K8SC --> Immich
+        K8SC --> Nextcloud
+        K8SC --> Etc
     end
-    USB["ZBT-1 Zigbee Dongle ᯤ"]
-    USB -.-> |USB Passthrough| HAOS
+    ZB ---> |USB Passthrough| HAOS
+    BT ---> |USB Passthrough| HAOS
 ```
 
 ### Tech stack
 
 My homelab is built on a tech stack that is meant to be modern, maintainable and fun! 
 
-I run Kubernetes on top of Proxmox VE, deployed and managed with OpenTofu. Talos Linux serves as the operating system for my Kubernetes cluster. Networking is handled by Cilium, while Traefik manages ingress traffic. For security, I use cert-manager for TLS certificates, Sealed Secrets for managing sensitive information and Keycloak to provides single sign-on capabilities. I use Flux as a GitOps tool, ensuring that the live state of my cluster is synced to this Git repo.
+I run Kubernetes on top of Talos Linux, running on bare metal, deployed and managed with OpenTofu. Networking is handled by Cilium, while Traefik manages ingress traffic. For security, I use cert-manager for TLS certificates, Sealed Secrets for managing sensitive information and Keycloak to provides single sign-on capabilities. I use Flux as a GitOps tool, ensuring that the live state of my cluster is synced to this Git repo.
 
 | Logo                                                                                                                                         | Name                                                                      | Description                                                                        |
 |:--------------------------------------------------------------------------------------------------------------------------------------------:|---------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| <img width="32" src="https://avatars.githubusercontent.com/u/2678585">                                                                       | [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment/)     | Open-source virtualization platform based on KVM                                   |
-| <img width="32" src="https://avatars.githubusercontent.com/u/142061836">                                                                     | [OpenTofu](https://opentofu.org/)                                         | Tool for declaratively managing infrastructure and cloud resources                 |
 | <img width="32" src="https://avatars.githubusercontent.com/u/13804887">                                                                      | [Talos Linux](https://www.talos.dev/)                                     | Minimal, immutable Linux distribution designed for Kubernetes                      |
 | <img width="32" src="https://avatars.githubusercontent.com/u/13629408">                                                                      | [Kubernetes](https://kubernetes.io/)                                      | Automates deployment, scaling, and management of containerized applications        |
+| <img width="32" src="https://avatars.githubusercontent.com/u/18700703">                                                                      | [KubeVirt](https://kubevirt.io/)                                          | Extends Kubernetes to support running virtual machines                             |
+| <img width="32" src="https://avatars.githubusercontent.com/u/142061836">                                                                     | [OpenTofu](https://opentofu.org/)                                         | Tool for declaratively managing infrastructure and cloud resources                 |
 | <img width="32" src="https://avatars.githubusercontent.com/u/21054566">                                                                      | [Cilium](https://cilium.io/)                                              | Provides networking, security, and observability for container workloads           |
 | <img width="32" src="https://icon.icepanel.io/Technology/svg/Traefik-Proxy.svg">                                                             | [Traefik](https://traefik.io/traefik/)                                    | Modern HTTP reverse proxy and load balancer for microservices                      |
-| <img width="32" src="https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/refs/heads/main/charts/proxmox-csi-plugin/icon.png"> | [Proxmox CSI](https://github.com/sergelogvinov/proxmox-csi-plugin)        | Container Storage Interface (CSI) driver for Proxmox                               |
 | <img width="32" src="https://avatars.githubusercontent.com/u/39950598">                                                                      | [cert-manager](https://cert-manager.io/)                                  | Automates the management and issuance of TLS certificates in Kubernetes            |
 | <img width="32" src="https://avatars.githubusercontent.com/u/100373852">                                                                     | [CloudNativePG](https://cloudnative-pg.io/)                               | Kubernetes operator for managing PostgreSQL databases                              |
 | <img width="32" src="https://avatars.githubusercontent.com/u/52158677">                                                                      | [Flux](https://fluxcd.io/)                                                | GitOps for Kubernetes resources                                                    |
