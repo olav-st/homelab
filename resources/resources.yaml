@@ -16039,6 +16039,14 @@ spec:
           requests:
             memory: 4G
       evictionStrategy: None
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 443
+          scheme: HTTPS
+        initialDelaySeconds: 300
+        periodSeconds: 20
+        timeoutSeconds: 10
       networks:
         - name: podnet
           pod: {}
