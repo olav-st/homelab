@@ -30,24 +30,24 @@ spec:
               disk:
                 bus: virtio
           interfaces:
-          - name: podnet
-            masquerade: {}
-            ports:
-            - name: web-ui-http
-              port: 8123
-              protocol: TCP
-            - name: web-ui-https
-              port: 443
-              protocol: TCP
-            - name: mqtt
-              port: 1883
-              protocol: TCP
-            - name: mqtts
-              port: 8883
-              protocol: TCP
-          - name: hostnet
-            bridge: {}
-            macAddress: EE:88:64:5F:EA:95
+            - name: podnet
+              masquerade: {}
+              ports:
+              - name: web-ui-http
+                port: 8123
+                protocol: TCP
+              - name: web-ui-https
+                port: 443
+                protocol: TCP
+              - name: mqtt
+                port: 1883
+                protocol: TCP
+              - name: mqtts
+                port: 8883
+                protocol: TCP
+            - name: hostnet
+              bridge: {}
+              macAddress: EE:88:64:5F:EA:95
           hostDevices:
           - name: skyconnect
             deviceName: kubevirt.io/nabu-casa-skyconnect
@@ -59,6 +59,14 @@ spec:
         - name: hostnet
           multus:
             networkName: hostnet-bridge
+      livenessProbe:
+        initialDelaySeconds: 300
+        periodSeconds: 20
+        httpGet:
+          path: /
+          port: 443
+          scheme: HTTPS
+        timeoutSeconds: 10
       volumes:
         - name: homeassistant-vm-disk
           persistentVolumeClaim:
