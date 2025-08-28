@@ -15231,10 +15231,10 @@ spec:
                 spec:
                   address: ${CLUSTER_IP}
                   groups:
-                    - homelab
+                    - cluster
                   name: ${SERVICE_NAME}-clusterip
                   networkID: ${NETWORK_ID}
-                  policyName: homelab
+                  policyName: cluster
                   tcpPorts: [${SERVICE_PORTS}]
           image: bitnami/kubectl:latest
           name: apply-nbresource
