@@ -1,0 +1,6 @@
+apiVersion: netbird.io/v1
+kind: NBGroup
+metadata:
+  name: homelab
+spec:
+  name: homelab

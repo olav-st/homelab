@@ -4,6 +4,7 @@ namespace: netbird
 
 resources:
   - jobs.yaml
+  - netbird-groups.yaml
   - secrets.yaml
 
 helmCharts:

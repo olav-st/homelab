@@ -10,8 +10,8 @@ service:
   type: LoadBalancer
   annotations:
     netbird.io/expose: true
-    netbird.io/groups: homelab
-    netbird.io/policy: homelab
+    netbird.io/groups: cluster
+    netbird.io/policy: cluster
     external-dns.alpha.kubernetes.io/internal-hostname: "homelab.olav.ninja,*.homelab.olav.ninja"
   spec:
     externalTrafficPolicy: Local

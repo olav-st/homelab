@@ -10,22 +10,22 @@ ingress:
   kubernetesAPI:
     enabled: true
     groups:
-      - homelab
+      - cluster
     policies:
-      - homelab
+      - cluster
   router:
     enabled: true
     replicas: 1
   policies:
-    homelab:
-      name: Homelab Allow All
-      description: Allow connections between all peers and peers in the homelab group
+    cluster:
+      name: Homelab <-> Cluster Allow All
+      description: Allow connections between peers in the homelab group and cluster routing peers
       sourceGroups:
         - homelab
       ports: [] # Ports are added with a patch because of issues with the helm chart. See patches/fix-nbpolicy-ports.yaml
       bidirectional: true
 
 cluster:
-  name: homelab
+  name: cluster
 
 routingClientImage: netbirdio/netbird:0.55.1-rootless # renovate: docker=netbirdio/netbird

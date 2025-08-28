@@ -1,7 +1,7 @@
 apiVersion: netbird.io/v1
 kind: NBPolicy
 metadata:
-  name: homelab
+  name: cluster
 spec:
   ports:
     - 80
