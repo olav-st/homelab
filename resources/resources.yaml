@@ -12113,7 +12113,7 @@ spec:
             - --health-probe-bind-address=:8081
             - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
             - --netbird-management-url=https://netbird.homelab.olav.ninja
-            - --cluster-name=homelab
+            - --cluster-name=cluster
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
             - --netbird-client-image=netbirdio/netbird:0.55.1-rootless
@@ -15377,10 +15377,10 @@ spec:
                 spec:
                   address: kubernetes.default.svc.cluster.local
                   groups:
-                  - homelab
+                  - cluster
                   name: default-kubernetes-api
                   networkID: ${NETWORK_ID}
-                  policyName: "homelab"
+                  policyName: "cluster"
                   tcpPorts:
                   - 443
           image: bitnami/kubectl:latest
@@ -16075,6 +16075,14 @@ spec:
   task: backup
 ---
 apiVersion: netbird.io/v1
+kind: NBGroup
+metadata:
+  name: homelab
+  namespace: netbird
+spec:
+  name: homelab
+---
+apiVersion: netbird.io/v1
 kind: NBPolicy
 metadata:
   finalizers:
@@ -16086,12 +16094,12 @@ metadata:
     app.kubernetes.io/name: kubernetes-operator
     app.kubernetes.io/version: 0.1.4
     helm.sh/chart: kubernetes-operator-0.1.13
-  name: homelab
+  name: cluster
   namespace: netbird
 spec:
   bidirectional: true
-  description: Allow connections between all peers and peers in the homelab group
-  name: Homelab Allow All
+  description: Allow connections between peers in the homelab group and cluster routing peers
+  name: Homelab <-> Cluster Allow All
   ports:
     - 80
     - 443
