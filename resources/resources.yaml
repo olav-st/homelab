@@ -10982,7 +10982,7 @@ spec:
           envFrom:
             - secretRef:
                 name: immich-postgresql-user
-          image: ghcr.io/immich-app/immich-machine-learning:v1.139.4
+          image: ghcr.io/immich-app/immich-machine-learning:v1.141.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -11084,7 +11084,7 @@ spec:
           envFrom:
             - secretRef:
                 name: immich-postgresql-user
-          image: ghcr.io/immich-app/immich-server:v1.139.4
+          image: ghcr.io/immich-app/immich-server:v1.141.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
