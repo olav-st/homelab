@@ -8097,7 +8097,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
     app.kubernetes.io/service: bambustudio
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
   name: bambustudio
   namespace: bambustudio
 spec:
@@ -9063,7 +9063,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
     app.kubernetes.io/service: pingvinshare
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -9355,7 +9355,7 @@ metadata:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
     sablier.enable: "true"
     sablier.group: bambustudio
   name: bambustudio
@@ -12199,7 +12199,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
     sablier.enable: "true"
     sablier.group: pingvinshare
   name: pingvinshare
@@ -15746,7 +15746,7 @@ metadata:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
   name: bambustudio
   namespace: bambustudio
 spec:
@@ -16200,7 +16200,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.2.0
+    helm.sh/chart: app-template-4.3.0
   name: pingvinshare
   namespace: pingvinshare
 spec:
