@@ -281,7 +281,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-primary
   namespace: gitea
 ---
@@ -6520,7 +6520,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-configuration
   namespace: gitea
 ---
@@ -6627,7 +6627,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-health
   namespace: gitea
 ---
@@ -6657,7 +6657,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-scripts
   namespace: gitea
 ---
@@ -7819,9 +7819,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea
   namespace: gitea
 stringData:
@@ -7991,9 +7991,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea-init
   namespace: gitea
 stringData:
@@ -8024,9 +8024,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea-inline-config
   namespace: gitea
 stringData:
@@ -8071,7 +8071,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey
   namespace: gitea
 type: Opaque
@@ -8323,9 +8323,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea-http
   namespace: gitea
 spec:
@@ -8347,9 +8347,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea-ssh
   namespace: gitea
 spec:
@@ -8373,7 +8373,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-headless
   namespace: gitea
 spec:
@@ -8397,7 +8397,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-primary
   namespace: gitea
 spec:
@@ -10344,11 +10344,11 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
     sablier.enable: "true"
     sablier.group: gitea
-    version: 1.24.5
+    version: 1.24.6
   name: gitea
   namespace: gitea
 spec:
@@ -10363,18 +10363,18 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: fd04f70c10ab2fe2e8a90617c90a7d22976c488ad7da3154044455dd2cd70137
+        checksum/config: 1e98933eecbde0dd0be1cad8e08a31af0eba6e6aee172a54677affc003fc127b
         checksum/oauth_0: 01764dcd9b49e15763176a4daa8f8e10f4902756616d3e834ef1341e80062ad5
       labels:
         app: gitea
         app.kubernetes.io/instance: gitea
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: gitea
-        app.kubernetes.io/version: 1.24.5
-        helm.sh/chart: gitea-12.2.0
+        app.kubernetes.io/version: 1.24.6
+        helm.sh/chart: gitea-12.3.0
         sablier.enable: "true"
         sablier.group: gitea
-        version: 1.24.5
+        version: 1.24.6
     spec:
       containers:
         - env:
@@ -10394,7 +10394,7 @@ spec:
               value: /tmp/gitea
             - name: HOME
               value: /data/gitea/git
-          image: docker.gitea.com/gitea:1.24.5-rootless
+          image: docker.gitea.com/gitea:1.24.6-rootless
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -10437,7 +10437,7 @@ spec:
               value: /data
             - name: GITEA_TEMP
               value: /tmp/gitea
-          image: docker.gitea.com/gitea:1.24.5-rootless
+          image: docker.gitea.com/gitea:1.24.6-rootless
           imagePullPolicy: IfNotPresent
           name: init-directories
           resources:
@@ -10490,7 +10490,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: gitea-postgresql-app
-          image: docker.gitea.com/gitea:1.24.5-rootless
+          image: docker.gitea.com/gitea:1.24.6-rootless
           imagePullPolicy: IfNotPresent
           name: init-app-ini
           resources:
@@ -10543,7 +10543,7 @@ spec:
                   name: gitea-admin-user
             - name: GITEA_ADMIN_PASSWORD_MODE
               value: keepUpdated
-          image: docker.gitea.com/gitea:1.24.5-rootless
+          image: docker.gitea.com/gitea:1.24.6-rootless
           imagePullPolicy: IfNotPresent
           name: configure-gitea
           resources:
@@ -12606,7 +12606,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-primary
   namespace: gitea
 spec:
@@ -12630,7 +12630,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: valkey
         app.kubernetes.io/version: 8.1.3
-        helm.sh/chart: valkey-3.0.30
+        helm.sh/chart: valkey-3.0.31
     spec:
       affinity:
         nodeAffinity: null
@@ -13482,7 +13482,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey-primary
   namespace: gitea
 spec:
@@ -15780,9 +15780,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea
   namespace: gitea
 spec:
@@ -16243,7 +16243,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/part-of: valkey
     app.kubernetes.io/version: 8.1.3
-    helm.sh/chart: valkey-3.0.30
+    helm.sh/chart: valkey-3.0.31
   name: gitea-valkey
   namespace: gitea
 spec:
@@ -16705,9 +16705,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.5
-    helm.sh/chart: gitea-12.2.0
-    version: 1.24.5
+    app.kubernetes.io/version: 1.24.6
+    helm.sh/chart: gitea-12.3.0
+    version: 1.24.6
   name: gitea-test-connection
   namespace: gitea
 spec:
