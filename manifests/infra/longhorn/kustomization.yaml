@@ -11,7 +11,7 @@ helmCharts:
   - name: longhorn
     releaseName: longhorn
     repo: https://charts.longhorn.io
-    version: 1.9.1
+    version: 1.9.2
     includeCRDs: true
     valuesFile: values.yaml
 
