@@ -3,6 +3,10 @@
   "extends": [
     ":semanticCommits"
   ],
+  "schedule": [
+    "after 4pm on thursday"
+  ],
+  "timezone": "Europe/Oslo",
   "customManagers": [
     {
       "customType": "regex",
