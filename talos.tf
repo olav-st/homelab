@@ -9,7 +9,7 @@ data "talos_client_configuration" "this" {
 data "talos_machine_configuration" "this" {
   for_each = local.nodes
 
-  talos_version = "1.10.7" # renovate: github-releases=siderolabs/talos
+  talos_version = "1.11.2" # renovate: github-releases=siderolabs/talos
 
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.cluster_vip}:6443"
