@@ -1,6 +1,6 @@
 defaultSettings:
   backupCompressionMethod: lz4 # tradeoff between bandwidth and cpu usage
-  defaultReplicaCount: 1
+  defaultReplicaCount: '{"v1":"1","v2":"1"}'
   defaultDataLocality: best-effort
   nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
   defaultDataPath: /var/lib/longhorn
