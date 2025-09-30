@@ -15672,7 +15672,7 @@ spec:
         - resourceName: kubevirt.io/ax201-bluetooth-adapter
           selectors:
             - product: "0026"
-              vendor: 8087
+              vendor: "8087"
     smbios:
       family: ccio
       manufacturer: Talos Virtualization
