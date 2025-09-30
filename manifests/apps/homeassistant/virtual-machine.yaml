@@ -52,7 +52,7 @@ spec:
           - name: skyconnect
             deviceName: kubevirt.io/nabu-casa-skyconnect
           - name: bluetooth-adapter
-            deviceName: kubevirt.io/csr8510-bluetooth-adapter
+            deviceName: kubevirt.io/ax201-bluetooth-adapter
       networks:
         - name: podnet
           pod: {}

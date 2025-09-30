@@ -26,6 +26,10 @@ spec:
           selectors:
             - vendor: 0a12
               product: "0001"
+        - resourceName: kubevirt.io/ax201-bluetooth-adapter
+          selectors:
+            - vendor: "8087"
+              product: "0026"
   workloadUpdateStrategy:
     workloadUpdateMethods:
     - LiveMigrate 
