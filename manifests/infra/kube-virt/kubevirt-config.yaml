@@ -30,6 +30,9 @@ spec:
           selectors:
             - vendor: "8087"
               product: "0026"
+      pciHostDevices:
+        - resourceName: kubevirt.io/ax201-wifi-adapter
+          pciVendorSelector: "8086:54f0"
   workloadUpdateStrategy:
     workloadUpdateMethods:
     - LiveMigrate 
