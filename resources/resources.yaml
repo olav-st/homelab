@@ -15660,6 +15660,9 @@ spec:
         - NetworkBindingPlugins
         - HostDevices
     permittedHostDevices:
+      pciHostDevices:
+        - pciVendorSelector: 8086:54f0
+          resourceName: kubevirt.io/ax201-wifi-adapter
       usb:
         - resourceName: kubevirt.io/nabu-casa-skyconnect
           selectors:
@@ -15669,8 +15672,6 @@ spec:
           selectors:
             - product: "0001"
               vendor: 0a12
-        - pciVendorSelector: 8086:54f0
-          resourceName: kubevirt.io/ax201-wifi-adapter
         - resourceName: kubevirt.io/ax201-bluetooth-adapter
           selectors:
             - product: "0026"
