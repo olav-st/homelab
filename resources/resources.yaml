@@ -15669,6 +15669,10 @@ spec:
           selectors:
             - product: "0001"
               vendor: 0a12
+        - resourceName: kubevirt.io/ax201-bluetooth-adapter
+          selectors:
+            - product: "0026"
+              vendor: 8087
     smbios:
       family: ccio
       manufacturer: Talos Virtualization
@@ -15720,7 +15724,7 @@ spec:
           hostDevices:
             - deviceName: kubevirt.io/nabu-casa-skyconnect
               name: skyconnect
-            - deviceName: kubevirt.io/csr8510-bluetooth-adapter
+            - deviceName: kubevirt.io/ax201-bluetooth-adapter
               name: bluetooth-adapter
           interfaces:
             - masquerade: {}
