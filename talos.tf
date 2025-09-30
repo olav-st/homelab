@@ -28,7 +28,8 @@ data "talos_machine_configuration" "this" {
         }
       ]
     }),
-    file("talos/uservolumeconfig.yaml")
+    file("talos/uservolumeconfig.yaml"),
+    file("talos/pcidriverrebindconfig.yaml"),
   ]
 }
 

@@ -12,6 +12,11 @@ machine:
           - bind
           - rshared
           - rw
+  kernel:
+    modules:
+      - name: vfio
+      - name: vfio_iommu_type1
+      - name: vfio_pci
   network:
     hostname: ${hostname}
     interfaces:
