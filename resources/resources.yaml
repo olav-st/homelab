@@ -13507,6 +13507,32 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
+  name: wakeup-deployments
+  namespace: default
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - args:
+                - |
+                  urls="https://gitea.homelab.olav.ninja/ https://pingvin.homelab.olav.ninja/ https://openwebui.homelab.olav.ninja/"
+                  for url in $urls; do
+                    echo "Sending GET to $url"
+                    curl -X GET "$url"
+                  done
+              command:
+                - /bin/sh
+                - -c
+              image: curlimages/curl:latest
+              name: curl-get
+          restartPolicy: OnFailure
+  schedule: 50 2 * * 6
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
   labels:
     app.kubernetes.io/name: hubble-generate-certs
     app.kubernetes.io/part-of: cilium
