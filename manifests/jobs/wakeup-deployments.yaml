@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: wakeup-deployments
+spec:
+  schedule: "50 2 * * 6" # Runs at 02:50 every Saturday (before Longhorn backup job)
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: curl-get
+            image: curlimages/curl:latest
+            command: ["/bin/sh", "-c"]
+            args:
+            - |
+              urls="https://gitea.homelab.olav.ninja/ https://pingvin.homelab.olav.ninja/ https://openwebui.homelab.olav.ninja/"
+              for url in $urls; do
+                echo "Sending GET to $url"
+                curl -X GET "$url"
+              done
+          restartPolicy: OnFailure
