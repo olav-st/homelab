@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: pubip-operator
+
+resources:
+  - namespace.yaml
+
+helmCharts:
+- name: pubip-operator
+  releaseName: pubip-operator
+  namespace: pubip-operator
+  repo: oci://ghcr.io/olav-st/pubip-operator/charts
+  version: v0.0.1
+  includeCRDs: true
