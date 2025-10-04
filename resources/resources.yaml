@@ -116,6 +116,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: pubip-operator
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: sablier
 ---
 apiVersion: v1
@@ -511,6 +516,18 @@ metadata:
     helm.sh/chart: open-webui-8.9.0
   name: open-webui
   namespace: openwebui
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-controller
+  namespace: pubip-operator
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1166,6 +1183,50 @@ metadata:
     helm.sh/chart: kubernetes-operator-0.1.13
   name: netbird-kubernetes-operator
   namespace: netbird
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-leader-election-role
+  namespace: pubip-operator
 rules:
   - apiGroups:
       - ""
@@ -5124,6 +5185,186 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-manager-role
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters/status
+    verbs:
+      - get
+      - patch
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-metrics-auth-role
+rules:
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-metrics-reader
+rules:
+  - nonResourceURLs:
+      - /metrics
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: publicipupdater-admin-role
+rules:
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters
+    verbs:
+      - '*'
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters/status
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: publicipupdater-editor-role
+rules:
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters/status
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: publicipupdater-viewer-role
+rules:
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - pubip.olav.ninja
+    resources:
+      - publicipupdaters/status
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
   name: sablier-sablier
 rules:
   - apiGroups:
@@ -5507,6 +5748,26 @@ subjects:
   - kind: ServiceAccount
     name: netbird-kubernetes-operator
     namespace: netbird
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-leader-election-rolebinding
+  namespace: pubip-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pubip-operator-leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: pubip-operator-controller
+    namespace: pubip-operator
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -6041,6 +6302,44 @@ subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: oidc:jiyoung
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pubip-operator-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: pubip-operator-controller
+    namespace: pubip-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-metrics-auth-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pubip-operator-metrics-auth-role
+subjects:
+  - kind: ServiceAccount
+    name: pubip-operator-controller
+    namespace: pubip-operator
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -9178,6 +9477,27 @@ spec:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/name: pingvinshare
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    control-plane: controller
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-controller-metrics-service
+  namespace: pubip-operator
+spec:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+  selector:
+    control-plane: controller
 ---
 apiVersion: v1
 kind: Service
@@ -12394,6 +12714,78 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: pingvinshare
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: pubip-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pubip-operator
+    app.kubernetes.io/version: v0.0.1
+    control-plane: controller
+    helm.sh/chart: v0.0.1
+  name: pubip-operator-controller
+  namespace: pubip-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: pubip-operator
+      app.kubernetes.io/name: pubip-operator
+      control-plane: controller
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        app.kubernetes.io/instance: pubip-operator
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: pubip-operator
+        app.kubernetes.io/version: v0.0.1
+        control-plane: controller
+        helm.sh/chart: v0.0.1
+    spec:
+      containers:
+        - args:
+            - --leader-elect
+            - --metrics-bind-address=:8443
+            - --health-probe-bind-address=:8081
+          command:
+            - /manager
+          image: ghcr.io/olav-st/pubip-operator-controller:v0.0.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          name: manager
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: pubip-operator-controller
+      terminationGracePeriodSeconds: 10
 ---
 apiVersion: apps/v1
 kind: Deployment
