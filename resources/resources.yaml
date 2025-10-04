@@ -16983,6 +16983,24 @@ spec:
       volumeName: nextcloud-postgresql
     size: 5G
 ---
+apiVersion: pubip.olav.ninja/v1
+kind: PublicIPUpdater
+metadata:
+  name: external-dns
+  namespace: pubip-operator
+spec:
+  sources:
+    - akami
+    - aws_checkip
+    - ipify
+    - ipinfo
+  targets:
+    - apiVersion: externaldns.k8s.io/v1alpha1
+      fieldPath: spec.endpoints[*].targets[0]
+      kind: DNSEndpoint
+      name: public-services
+      namespace: external-dns
+---
 apiVersion: realm.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa
 metadata:
