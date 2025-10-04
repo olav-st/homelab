@@ -4,6 +4,7 @@ namespace: pubip-operator
 
 resources:
   - namespace.yaml
+  - publicipupdaters.yaml
 
 helmCharts:
 - name: pubip-operator
