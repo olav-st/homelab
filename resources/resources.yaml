@@ -7660,8 +7660,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 31.0.8
-    helm.sh/chart: nextcloud-8.0.1
+    app.kubernetes.io/version: 32.0.0
+    helm.sh/chart: nextcloud-8.3.0
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -7678,8 +7678,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 31.0.8
-    helm.sh/chart: nextcloud-8.0.1
+    app.kubernetes.io/version: 32.0.0
+    helm.sh/chart: nextcloud-8.3.0
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -9047,8 +9047,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 31.0.8
-    helm.sh/chart: nextcloud-8.0.1
+    app.kubernetes.io/version: 32.0.0
+    helm.sh/chart: nextcloud-8.3.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -11926,8 +11926,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 31.0.8
-    helm.sh/chart: nextcloud-8.0.1
+    app.kubernetes.io/version: 32.0.0
+    helm.sh/chart: nextcloud-8.3.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -11998,7 +11998,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:31.0.8-apache
+          image: nextcloud:32.0.0-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -12139,7 +12139,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:31.0.8-apache
+          image: nextcloud:32.0.0-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -13290,7 +13290,7 @@ spec:
               value: "no"
             - name: REDIS_PORT
               value: "6379"
-          image: docker.io/bitnami/redis:8.0.1-debian-12-r1
+          image: docker.io/bitnamilegacy/redis:8.0.1-debian-12-r1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -16233,8 +16233,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 31.0.8
-    helm.sh/chart: nextcloud-8.0.1
+    app.kubernetes.io/version: 32.0.0
+    helm.sh/chart: nextcloud-8.3.0
   name: nextcloud
   namespace: nextcloud
 spec:
