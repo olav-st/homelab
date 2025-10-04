@@ -28,4 +28,4 @@ ingress:
 cluster:
   name: cluster
 
-routingClientImage: netbirdio/netbird:0.58.2-rootless # renovate: docker=netbirdio/netbird
+routingClientImage: netbirdio/netbird:0.59.2-rootless # renovate: docker=netbirdio/netbird
