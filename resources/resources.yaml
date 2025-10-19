@@ -16055,7 +16055,7 @@ spec:
   config: '{ "cniVersion": "0.3.1", "name": "hostnet", "plugins": [ { "type": "bridge", "bridge": "br0", "disableContainerInterface": true, "macspoofchk": false } ] }'
 ---
 apiVersion: keycloak.crossplane.io/v1beta1
-kind: ProviderConfig
+kind: ClusterProviderConfig
 metadata:
   name: default
   namespace: crossplane
@@ -16870,7 +16870,7 @@ metadata:
   name: provider-keycloak
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.6.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.8.0
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
