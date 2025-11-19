@@ -4,7 +4,8 @@
     ":semanticCommits"
   ],
   "schedule": [
-    "after 4pm on thursday"
+    "after 4pm on thursday",
+    "after 4pm on friday"
   ],
   "timezone": "Europe/Oslo",
   "customManagers": [
