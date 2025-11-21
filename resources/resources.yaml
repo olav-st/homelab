@@ -7962,8 +7962,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.0
-    helm.sh/chart: nextcloud-8.3.0
+    app.kubernetes.io/version: 32.0.2
+    helm.sh/chart: nextcloud-8.5.6
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -7980,8 +7980,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.0
-    helm.sh/chart: nextcloud-8.3.0
+    app.kubernetes.io/version: 32.0.2
+    helm.sh/chart: nextcloud-8.5.6
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -9349,8 +9349,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.0
-    helm.sh/chart: nextcloud-8.3.0
+    app.kubernetes.io/version: 32.0.2
+    helm.sh/chart: nextcloud-8.5.6
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -12249,8 +12249,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.0
-    helm.sh/chart: nextcloud-8.3.0
+    app.kubernetes.io/version: 32.0.2
+    helm.sh/chart: nextcloud-8.5.6
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -12321,7 +12321,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:32.0.0-apache
+          image: docker.io/library/nextcloud:32.0.2-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -12462,7 +12462,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: nextcloud:32.0.0-apache
+          image: docker.io/library/nextcloud:32.0.2-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -16630,8 +16630,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.0
-    helm.sh/chart: nextcloud-8.3.0
+    app.kubernetes.io/version: 32.0.2
+    helm.sh/chart: nextcloud-8.5.6
   name: nextcloud
   namespace: nextcloud
 spec:
