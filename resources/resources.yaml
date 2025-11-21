@@ -8244,7 +8244,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea
   namespace: gitea
@@ -8416,7 +8416,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea-init
   namespace: gitea
@@ -8449,7 +8449,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea-inline-config
   namespace: gitea
@@ -8748,7 +8748,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea-http
   namespace: gitea
@@ -8772,7 +8772,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea-ssh
   namespace: gitea
@@ -10769,7 +10769,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     sablier.enable: "true"
     sablier.group: gitea
     version: 1.24.6
@@ -10787,7 +10787,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 1e98933eecbde0dd0be1cad8e08a31af0eba6e6aee172a54677affc003fc127b
+        checksum/config: 5b58dee69f094bc86e96ff125193a5b11312b6a2fb25e818bf3791fc24519c2a
         checksum/oauth_0: 01764dcd9b49e15763176a4daa8f8e10f4902756616d3e834ef1341e80062ad5
       labels:
         app: gitea
@@ -10795,7 +10795,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: gitea
         app.kubernetes.io/version: 1.24.6
-        helm.sh/chart: gitea-12.3.0
+        helm.sh/chart: gitea-12.4.0
         sablier.enable: "true"
         sablier.group: gitea
         version: 1.24.6
@@ -13165,7 +13165,7 @@ spec:
               value: "no"
             - name: VALKEY_PORT
               value: "6379"
-          image: docker.io/bitnami/valkey:8.1.3-debian-12-r3
+          image: docker.io/bitnamilegacy/valkey:8.1.3-debian-12-r3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -16310,7 +16310,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea
   namespace: gitea
@@ -17253,7 +17253,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.3.0
+    helm.sh/chart: gitea-12.4.0
     version: 1.24.6
   name: gitea-test-connection
   namespace: gitea
