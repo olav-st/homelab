@@ -13040,7 +13040,7 @@ spec:
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
             - --experimental.plugins.sablier.moduleName=github.com/sablierapp/sablier
-            - --experimental.plugins.sablier.version=v1.10.1
+            - --experimental.plugins.sablier.version=v1.10.5
             - --providers.kubernetescrd
             - --providers.kubernetescrd.allowEmptyServices=true
             - --providers.kubernetesingress
