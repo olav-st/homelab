@@ -7788,10 +7788,12 @@ data:
     );
   autoconfig.php: |-
     <?php
+
     $autoconfig_enabled = false;
+
     if (getenv('SQLITE_DATABASE')) {
-        $AUTOCONFIG["dbtype"] = "sqlite";
-        $AUTOCONFIG["dbname"] = getenv('SQLITE_DATABASE');
+        $AUTOCONFIG['dbtype'] = 'sqlite';
+        $AUTOCONFIG['dbname'] = getenv('SQLITE_DATABASE');
         $autoconfig_enabled = true;
     } elseif (getenv('MYSQL_DATABASE_FILE') && getenv('MYSQL_USER_FILE') && getenv('MYSQL_PASSWORD_FILE') && getenv('MYSQL_HOST')) {
         $AUTOCONFIG['dbtype'] = 'mysql';
@@ -7801,11 +7803,11 @@ data:
         $AUTOCONFIG['dbhost'] = getenv('MYSQL_HOST');
         $autoconfig_enabled = true;
     } elseif (getenv('MYSQL_DATABASE') && getenv('MYSQL_USER') && getenv('MYSQL_PASSWORD') && getenv('MYSQL_HOST')) {
-        $AUTOCONFIG["dbtype"] = "mysql";
-        $AUTOCONFIG["dbname"] = getenv('MYSQL_DATABASE');
-        $AUTOCONFIG["dbuser"] = getenv('MYSQL_USER');
-        $AUTOCONFIG["dbpass"] = getenv('MYSQL_PASSWORD');
-        $AUTOCONFIG["dbhost"] = getenv('MYSQL_HOST');
+        $AUTOCONFIG['dbtype'] = 'mysql';
+        $AUTOCONFIG['dbname'] = getenv('MYSQL_DATABASE');
+        $AUTOCONFIG['dbuser'] = getenv('MYSQL_USER');
+        $AUTOCONFIG['dbpass'] = getenv('MYSQL_PASSWORD');
+        $AUTOCONFIG['dbhost'] = getenv('MYSQL_HOST');
         $autoconfig_enabled = true;
     } elseif (getenv('POSTGRES_DB_FILE') && getenv('POSTGRES_USER_FILE') && getenv('POSTGRES_PASSWORD_FILE') && getenv('POSTGRES_HOST')) {
         $AUTOCONFIG['dbtype'] = 'pgsql';
@@ -7815,15 +7817,16 @@ data:
         $AUTOCONFIG['dbhost'] = getenv('POSTGRES_HOST');
         $autoconfig_enabled = true;
     } elseif (getenv('POSTGRES_DB') && getenv('POSTGRES_USER') && getenv('POSTGRES_PASSWORD') && getenv('POSTGRES_HOST')) {
-        $AUTOCONFIG["dbtype"] = "pgsql";
-        $AUTOCONFIG["dbname"] = getenv('POSTGRES_DB');
-        $AUTOCONFIG["dbuser"] = getenv('POSTGRES_USER');
-        $AUTOCONFIG["dbpass"] = getenv('POSTGRES_PASSWORD');
-        $AUTOCONFIG["dbhost"] = getenv('POSTGRES_HOST');
+        $AUTOCONFIG['dbtype'] = 'pgsql';
+        $AUTOCONFIG['dbname'] = getenv('POSTGRES_DB');
+        $AUTOCONFIG['dbuser'] = getenv('POSTGRES_USER');
+        $AUTOCONFIG['dbpass'] = getenv('POSTGRES_PASSWORD');
+        $AUTOCONFIG['dbhost'] = getenv('POSTGRES_HOST');
         $autoconfig_enabled = true;
     }
+
     if ($autoconfig_enabled) {
-        $AUTOCONFIG["directory"] = getenv('NEXTCLOUD_DATA_DIR') ?: "/var/www/html/data";
+        $AUTOCONFIG['directory'] = getenv('NEXTCLOUD_DATA_DIR') ?: '/var/www/html/data';
     }
   mycustom.config.php: |-
     <?php
@@ -7849,6 +7852,10 @@ data:
         $CONFIG['redis']['port'] = (int) getenv('REDIS_HOST_PORT');
       } elseif (getenv('REDIS_HOST')[0] != '/') {
         $CONFIG['redis']['port'] = 6379;
+      }
+
+      if (getenv('REDIS_HOST_USER') !== false) {
+        $CONFIG['redis']['user'] = (string) getenv('REDIS_HOST_USER');
       }
     }
   reverse-proxy.config.php: |-
@@ -8003,7 +8010,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.2
-    helm.sh/chart: nextcloud-8.5.6
+    helm.sh/chart: nextcloud-8.6.0
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8021,7 +8028,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.2
-    helm.sh/chart: nextcloud-8.5.6
+    helm.sh/chart: nextcloud-8.6.0
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -9390,7 +9397,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.2
-    helm.sh/chart: nextcloud-8.5.6
+    helm.sh/chart: nextcloud-8.6.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -12290,7 +12297,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.2
-    helm.sh/chart: nextcloud-8.5.6
+    helm.sh/chart: nextcloud-8.6.0
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -16673,7 +16680,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.2
-    helm.sh/chart: nextcloud-8.5.6
+    helm.sh/chart: nextcloud-8.6.0
   name: nextcloud
   namespace: nextcloud
 spec:
