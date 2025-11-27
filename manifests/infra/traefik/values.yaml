@@ -65,4 +65,4 @@ experimental:
   plugins:
     sablier:
       moduleName: github.com/sablierapp/sablier
-      version: v1.10.1 # renovate: github-releases=sablierapp/sablier
+      version: v1.10.5 # renovate: github-releases=sablierapp/sablier
