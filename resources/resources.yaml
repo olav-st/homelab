@@ -126,6 +126,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: samba
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: sealed-secrets
 ---
 apiVersion: v1
@@ -8262,6 +8267,57 @@ metadata:
   namespace: pingvinshare
 ---
 apiVersion: v1
+data:
+  config.json: |-
+    {
+      "samba-container-config": "v0",
+      "globals": {
+        "default": {
+          "options": {
+            "server min protocol": "NT1",
+            "ntlm auth": "ntlmv1-permitted",
+            "security": "user",
+            "log level": "1",
+            "map to guest": "Bad User"
+          }
+        }
+      },
+      "shares": {
+        "media": {
+          "options": {
+            "path": "/media",
+            "guest ok": "yes",
+            "read only": "no",
+            "browseable": "yes",
+            "create mask": "0664",
+            "directory mask": "0775",
+            "force user": "nobody",
+            "force group": "nogroup"
+          }
+        }
+      },
+      "users": {
+        "all_entries": []
+      },
+      "configs": {
+        "general": {
+          "instance_name": "SAMBA",
+          "instance_features": [],
+          "shares": [
+            "media"
+          ],
+          "globals": [
+            "default"
+          ]
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: samba-config
+  namespace: samba
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: crossplane-root-ca
@@ -9561,6 +9617,23 @@ spec:
       targetPort: 10000
   selector:
     app: sablier-sablier
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    io.cilium/lb-ipam-ips: 192.168.0.92
+  name: samba
+  namespace: samba
+spec:
+  ports:
+    - name: smb
+      port: 445
+      protocol: TCP
+      targetPort: 445
+  selector:
+    app: samba
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -13923,6 +13996,52 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: open-webui
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: samba
+  namespace: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba
+  serviceName: samba
+  template:
+    metadata:
+      labels:
+        app: samba
+    spec:
+      containers:
+        - env:
+            - name: SAMBACC_CONFIG
+              value: /etc/samba-container/config.json
+            - name: SAMBA_CONTAINER_ID
+              value: SAMBA
+          image: quay.io/samba.org/samba-server:v0.8
+          name: samba
+          ports:
+            - containerPort: 445
+              name: smb
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/samba-container
+              name: samba-config
+              readOnly: true
+            - mountPath: /media
+              name: media-storage
+      volumes:
+        - configMap:
+            items:
+              - key: config.json
+                path: config.json
+            name: samba-config
+          name: samba-config
+        - hostPath:
+            path: /var/mnt/bulk-storage/shares/media
+            type: DirectoryOrCreate
+          name: media-storage
 ---
 apiVersion: batch/v1
 kind: CronJob
