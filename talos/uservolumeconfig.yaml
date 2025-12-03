@@ -1,6 +1,6 @@
 apiVersion: v1alpha1
 kind: UserVolumeConfig
-name: backup
+name: bulk-storage
 provisioning:
   diskSelector:
     match: disk.wwid == 'naa.50014ee21422733e'
