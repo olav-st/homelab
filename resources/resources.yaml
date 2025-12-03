@@ -8304,8 +8304,8 @@ data:
         "all_entries": []
       },
       "configs": {
-        "general": {
-          "instance_name": "SAMBA",
+        "samba": {
+          "instance_name": "samba",
           "instance_features": [],
           "shares": [
             "media"
@@ -14022,7 +14022,7 @@ spec:
             - name: SAMBACC_CONFIG
               value: /etc/samba-container/config.json
             - name: SAMBA_CONTAINER_ID
-              value: SAMBA
+              value: samba
           image: quay.io/samba.org/samba-server:v0.8
           name: samba
           ports:
