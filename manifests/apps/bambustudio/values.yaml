@@ -8,7 +8,7 @@ controllers:
       app:
         image:
           repository: linuxserver/bambustudio
-          tag: 02.04.00 # renovate docker=linuxserver/bambustudio
+          tag: 02.04.00 # renovate: docker=linuxserver/bambustudio
         env:
           PUID: 1000
           GUID: 1000
