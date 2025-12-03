@@ -8272,6 +8272,38 @@ metadata:
 ---
 apiVersion: v1
 data:
+  hosts: |
+    192.168.0.92 homelab-samba-server.local
+kind: ConfigMap
+metadata:
+  name: avahi-hosts
+  namespace: samba
+---
+apiVersion: v1
+data:
+  smb.service: |
+    <?xml version="1.0" standalone='no'?>
+    <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+    <service-group>
+      <name replace-wildcards="yes">Homelab</name>
+      <service>
+        <type>_smb._tcp</type>
+        <port>445</port>
+        <host-name>homelab-samba-server.local</host-name>
+      </service>
+      <service>
+        <type>_device-info._tcp</type>
+        <port>0</port>
+        <txt-record>model=NAS</txt-record>
+      </service>
+    </service-group>
+kind: ConfigMap
+metadata:
+  name: avahi-services
+  namespace: samba
+---
+apiVersion: v1
+data:
   config.json: |-
     {
       "samba-container-config": "v0",
@@ -8282,21 +8314,26 @@ data:
             "ntlm auth": "ntlmv1-permitted",
             "security": "user",
             "log level": "1",
-            "map to guest": "Bad User"
+            "map to guest": "Bad User",
+            "guest account": "nobody",
+            "host msdfs": "no",
+            "idmap config * : backend": "tdb",
+            "idmap config * : range": "3000-7999"
           }
         }
       },
       "shares": {
         "media": {
           "options": {
-            "path": "/media",
+            "path": "/mnt/media",
             "guest ok": "yes",
+            "guest only": "yes",
             "read only": "no",
             "browseable": "yes",
             "create mask": "0664",
             "directory mask": "0775",
             "force user": "nobody",
-            "force group": "nogroup"
+            "force group": "nobody"
           }
         }
       },
@@ -14033,7 +14070,21 @@ spec:
             - mountPath: /etc/samba-container
               name: samba-config
               readOnly: true
-            - mountPath: /media
+            - mountPath: /mnt/media
+              name: media-storage
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              chown -R 65534:65534 /mnt/media
+              chmod -R 775 /mnt/media
+          image: busybox:latest
+          name: fix-permissions
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - mountPath: /mnt/media
               name: media-storage
       volumes:
         - configMap:
@@ -15475,6 +15526,47 @@ spec:
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 100%
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: avahi
+  namespace: samba
+spec:
+  selector:
+    matchLabels:
+      app: avahi
+  template:
+    metadata:
+      labels:
+        app: avahi
+    spec:
+      containers:
+        - env:
+            - name: ALLOW_INTERFACES
+              value: br0
+          image: ydkn/avahi:latest
+          name: avahi
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - mountPath: /etc/avahi/services
+              name: avahi-services
+              readOnly: true
+            - mountPath: /etc/avahi/hosts
+              name: avahi-hosts
+              readOnly: true
+              subPath: hosts
+      hostNetwork: true
+      volumes:
+        - configMap:
+            name: avahi-services
+          name: avahi-services
+        - configMap:
+            name: avahi-hosts
+          name: avahi-hosts
 ---
 apiVersion: batch/v1
 kind: Job
