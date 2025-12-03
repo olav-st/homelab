@@ -8323,7 +8323,7 @@ data:
         }
       },
       "shares": {
-        "media": {
+        "Media": {
           "options": {
             "path": "/mnt/media",
             "guest ok": "yes",
@@ -8345,7 +8345,7 @@ data:
           "instance_name": "samba",
           "instance_features": [],
           "shares": [
-            "media"
+            "Media"
           ],
           "globals": [
             "default"
