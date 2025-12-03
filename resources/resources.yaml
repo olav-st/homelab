@@ -15545,7 +15545,7 @@ spec:
         - env:
             - name: ALLOW_INTERFACES
               value: br0
-          image: ydkn/avahi:latest
+          image: ydkn/avahi:343
           name: avahi
           securityContext:
             capabilities:
