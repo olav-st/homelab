@@ -9956,6 +9956,20 @@ spec:
   storageClassName: longhorn-static
   volumeName: pingvinshare
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unmanic-config
+  namespace: unmanic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn-static
+  volumeName: unmanic-config
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
