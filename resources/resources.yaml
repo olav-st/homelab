@@ -147,6 +147,15 @@ metadata:
   name: traefik
 ---
 apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: unmanic
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
@@ -9751,6 +9760,21 @@ spec:
     app.kubernetes.io/name: traefik
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unmanic-service
+  namespace: unmanic
+spec:
+  ports:
+    - name: unmanic-port
+      nodePort: 30000
+      port: 8888
+      targetPort: 8888
+  selector:
+    app: unmanic
+  type: NodePort
+---
 apiVersion: scheduling.k8s.io/v1
 description: This priority class should be used for core kubevirt components only.
 globalDefault: false
@@ -13256,6 +13280,53 @@ spec:
           name: tmp
         - emptyDir: {}
           name: plugins
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: unmanic
+  name: unmanic
+  namespace: unmanic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unmanic
+  template:
+    metadata:
+      labels:
+        app: unmanic
+    spec:
+      containers:
+        - command:
+            - /usr/local/bin/unmanic-service
+          env:
+            - name: HOME
+              value: /config
+          image: josh5/unmanic:0.3.0
+          name: unmanic
+          ports:
+            - containerPort: 8888
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /config
+              name: unmanic-config
+            - mountPath: /media
+              name: media
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsUser: 65534
+      volumes:
+        - name: unmanic-config
+          persistentVolumeClaim:
+            claimName: unmanic-config
+        - hostPath:
+            path: /var/mnt/bulk-storage/shares/media
+            type: Directory
+          name: media
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -17012,6 +17083,35 @@ spec:
     - hosts:
         - pingvin.homelab.olav.ninja
       secretName: pingvinshare-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/81266068
+  labels:
+    app: unmanic
+  name: unmanic
+  namespace: unmanic
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: unmanic.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: unmanic-service
+                port:
+                  number: 8888
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - unmanic.homelab.olav.ninja
+      secretName: unmanic-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
