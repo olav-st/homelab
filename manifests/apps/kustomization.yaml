@@ -11,3 +11,4 @@ resources:
   - ./openwebui
   - ./pingvinshare
   - ./samba
+  - ./unmanic
