@@ -64,5 +64,5 @@ ports:
 experimental:
   plugins:
     sablier:
-      moduleName: github.com/sablierapp/sablier
-      version: v1.10.5 # renovate: github-releases=sablierapp/sablier
+      moduleName: github.com/sablierapp/sablier-traefik-plugin
+      version: v1.1.0 # renovate: github-releases=sablierapp/sablier-traefik-plugin
