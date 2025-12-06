@@ -13206,8 +13206,8 @@ spec:
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
-            - --experimental.plugins.sablier.moduleName=github.com/sablierapp/sablier
-            - --experimental.plugins.sablier.version=v1.10.5
+            - --experimental.plugins.sablier.moduleName=github.com/sablierapp/sablier-traefik-plugin
+            - --experimental.plugins.sablier.version=v1.1.0
             - --providers.kubernetescrd
             - --providers.kubernetescrd.allowEmptyServices=true
             - --providers.kubernetesingress
