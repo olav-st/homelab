@@ -12904,7 +12904,7 @@ spec:
                 secretKeyRef:
                   key: clientSecret
                   name: pingvinshare-oidc-credentials
-          image: alpine:3.22
+          image: alpine:3.23
           name: config-processor
           volumeMounts:
             - mountPath: /config
@@ -17259,7 +17259,7 @@ metadata:
   name: provider-keycloak
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.11.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.12.0
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
@@ -17267,7 +17267,7 @@ metadata:
   name: function-auto-ready
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.5.2
+  package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.6.0
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
