@@ -9,7 +9,7 @@ controllers:
       config-processor:
         image:
           repository: alpine
-          tag: 3.22 # renovate: docker=alpine
+          tag: 3.23 # renovate: docker=alpine
         command:
           - sh
           - -c
