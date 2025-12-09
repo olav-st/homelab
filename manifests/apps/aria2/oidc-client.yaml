@@ -1,0 +1,19 @@
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: aria2
+spec:
+  displayName: Aria2
+  type: CONFIDENTIAL
+  clientId: aria2
+  clientSecretSecretRef:
+    namespace: aria2
+    name: aria2-oidc-credentials
+    key: clientSecret
+  description: Aria2 Download Manager
+  grantTypes:
+    - code
+  baseUrl: "https://aria2.homelab.olav.ninja"
+  redirectUris:
+    - "https://aria2.homelab.olav.ninja/oauth2/callback"
+  realm: homelab

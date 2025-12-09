@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aria2
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: gluetun
+          image: qmcgaw/gluetun:v3.40.3 # renovate: docker=qmcgaw/gluetun
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            capabilities:
+              add:
+                - NET_ADMIN
+          env:
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
+          envFrom:
+            - secretRef:
+                name: gluetun-secrets
+          # Below restart policy turns an "init" container into a long-running sidecar.
+          restartPolicy: Always
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "ping -c 1 $(echo $WIREGUARD_ADDRESSES | cut -d'/' -f1)"
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "ping -c 1 $(echo $WIREGUARD_ADDRESSES | cut -d'/' -f1)"
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
