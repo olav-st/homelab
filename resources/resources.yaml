@@ -1,6 +1,15 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: aria2
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: bambustudio
 ---
 apiVersion: v1
@@ -8669,6 +8678,34 @@ subsets:
 apiVersion: v1
 kind: Service
 metadata:
+  name: aria2
+  namespace: aria2
+spec:
+  ports:
+    - name: aria2-port
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: aria2
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth2-proxy
+  namespace: aria2
+spec:
+  ports:
+    - name: oauth2-proxy
+      port: 4180
+      targetPort: 4180
+  selector:
+    app: oauth2-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   labels:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
@@ -9800,6 +9837,20 @@ value: 1000000000
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: aria2-config
+  namespace: aria2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn-static
+  volumeName: aria2-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: bambustudio-config
   namespace: bambustudio
 spec:
@@ -9968,6 +10019,149 @@ spec:
       storage: 1Gi
   storageClassName: longhorn-static
   volumeName: unmanic-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aria2
+  name: aria2
+  namespace: aria2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aria2
+  template:
+    metadata:
+      labels:
+        app: aria2
+    spec:
+      containers:
+        - env:
+            - name: PUID
+              value: "65534"
+            - name: PGID
+              value: "65534"
+            - name: RPC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: RPC_SECRET
+                  name: aria2-secrets
+            - name: EMBED_RPC_SECRET
+              value: "true"
+            - name: ARIA2RPCPORT
+              value: "443"
+          image: hurlenko/aria2-ariang:1.3.11
+          name: aria2
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /aria2/conf
+              name: aria2-config
+            - mountPath: /aria2/data
+              name: aria2-data
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      initContainers:
+        - env:
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
+          envFrom:
+            - secretRef:
+                name: gluetun-secrets
+          image: qmcgaw/gluetun:v3.40.3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - ping -c 1 $(echo $WIREGUARD_ADDRESSES | cut -d'/' -f1)
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+          name: gluetun
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - ping -c 1 $(echo $WIREGUARD_ADDRESSES | cut -d'/' -f1)
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 2
+          restartPolicy: Always
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+            runAsGroup: 0
+            runAsUser: 0
+      volumes:
+        - name: aria2-config
+          persistentVolumeClaim:
+            claimName: aria2-config
+        - hostPath:
+            path: /var/mnt/bulk-storage
+            type: Directory
+          name: aria2-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: aria2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app: oauth2-proxy
+    spec:
+      containers:
+        - args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://keycloak.homelab.olav.ninja/realms/homelab
+            - --client-id=aria2
+            - --email-domain=*
+            - --upstream=http://aria2:8080
+            - --http-address=0.0.0.0:4180
+            - --redirect-url=https://aria2.homelab.olav.ninja/oauth2/callback
+            - --cookie-secure=true
+            - --cookie-domain=.homelab.olav.ninja
+            - --whitelist-domain=.homelab.olav.ninja
+            - --pass-access-token=true
+            - --set-xauthrequest=true
+            - --skip-provider-button=true
+            - --insecure-oidc-allow-unverified-email=true
+          env:
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: aria2-oidc-credentials
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: cookieSecret
+                  name: aria2-oidc-credentials
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          name: oauth2-proxy
+          ports:
+            - containerPort: 4180
+              name: oauth2-proxy
+              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -15923,6 +16117,51 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  name: aria2-oidc-credentials
+  namespace: aria2
+spec:
+  encryptedData:
+    clientSecret: AgCVdrbOQvgZh2kzkPl8qkUloVXGK6OAAILGwx7u0GWyVSvCgUvJUacQL0LjDvc8Jkp1+cRtGxI0EhUiGrbEBwZNmxVBRsuKJXrukhI8nZFV67OgHL6oaDEQG9NE1CDEeJBjDdBJ2v/fXxYSSyaZ2fGFYeNiPmESfyfXgy3LQXxl/YeWNj7qAg+HqtOsA7hjl+vSYgXdUeZa47pVb44cnkvsHnf0dYB0c3/j67DxWSYAcbJTSHWgcwky5rWqW+iHc9g7Epfo4uRCS+jeTbVxmnJy5vq0Z+kAHf++HoeYYqMS1QXdiXBzQLMKA7pAkyKqwplLUtYRKAVgeVqveLL9j5GKfQxd6P4HNdf+IQttpk4rJ/TTYvV86T+UqtVowjPIR/xZ9DqRvZtDm1qEkm9aBceWqeoeW5YVsT70edKqyvMF+1yhHdNp8UsUndNOtn+NOTDHM1A7vxdyEG/KGFIW6kI2UM4MXiS6oUrTOMFcd2wys8QCh20I44PyzyN5pKCHfHj7XIaemvUt4MiM0c286GR/+isWxUyS3Vi29OYCjIA55SsuEswnUjirEboWvTQhKlAQSP9OWmlkF9H508074EgfvSQGtB5x30yqFtuI5fLYHzIVAcZt8jBCrbH7Zbce4kkWBCw8noDY2gMlyr4mGNYYUCZorYaFp9s6c6Nbe94IFkAmhs9CsPssx3GsAVcLsIr6vk5GXSdSqQyDsto5NvXuFKdf7SLqrPI=
+    cookieSecret: AgBYhJ8FHJFWvvV/cSYW0Gg6ZiB9NWQcUFV1BRCrCIqXEsJN17/pZTgydGfFUpYfrOP9XhhMzGV5c8G8Sr2L+0SXfmsKXuB9V3F/yOhNud+CektK9AVBD7QL4mkDD8ETQCJyoX+W9draa6ETpjk67F+CV/s34QINe0r8JdlsrpJvSVGRQBef5q83vi+1TSnhzy0nUF/xr7pnpus30pDN5CGP/HsnbRXieTt3Jb2UYGqRaAFtXEemKe2m7tfPrWAr5TKNGuO11YgEN3trEIBZDfbeyzJiWwYqQrqHQlJrOmKNkPYK/KB1Amsa3/BCoSdSoI5gy0TLcYoXJawUnKs0VAu0QZw/6B2GVNVcLbfnVHsW9YSdvScDJy4lung62oPFC1xkobFukz0kjqaSj8sizxOLuIlTpbnuAqBbqvnMM4Thp6FDWz7PD1hr3Ec0QcxV058qIjn6VtR4vExI7z5WZ5R8ODDU+9it5Z/i235n69a5JVlshSIa5u4X3GtIjloVyy38atddRhvkM1Cenlj7j9j3cZPaMOpo5+j0clnT7XoMj5UOtypIroTY1YCm4wBdN5A43QacfwtHPkYXCcqXhIOGXI3E9rpu64HAEf7q8D4IAwb2GfLxPpOe6mOroffhgw+9rEP7xEo125lwGKyjNDUsq237AYjMrPcTK+PnH8i6hv7TvQHQ8ZlUO4IGytVqvBP3aJGBha2Uw9VLeYJQTSeZ5lCjCG+y2cUkPRORoxfjzFRhF/Rtcfj8Wh/PqQ==
+  template:
+    metadata:
+      name: aria2-oidc-credentials
+      namespace: aria2
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: aria2-secrets
+  namespace: aria2
+spec:
+  encryptedData:
+    RPC_SECRET: AgBfKywPn2PfSLFCTiZ8GC7GBh1RdF9tX1C8OHub8x0lGe5RziML2v0vuP0i8p07LTRqwhUWAwJA7gKxNC6Wqs/M1k4MlbPu9TBt0Hmn+tZ8liN7ctLj62tGRCb8swvRQ8cQVk/h+YQzG0QZxg4YLHz9ph9EbOphOpNEAnF7rPf43QuJ+vMaNYHrfKLDfnBtjNDoIcwx/EO/cYKY2Mx3XtuceYcEqICm4o5n6pHxkoO+AsbJGu3xoF52BjaK11+Jn0po5y3XGiY6/+3hL/vVpxWXB3r3Tp03atzpApnySvRZ0Ma0UZ69yc4agXEf7prBbKfpnqeFA8j2cUbYEa0xZ4FL4X56rNT1BBoLVqcyic/EDWk/e8s5uWX10zkLqi8EbByLpffE9Y3+CoZ6+VZgR4kML3WH/13JGutoVMdtBPr2ABNNE6AWl9kq8z2bq5a24GGDpGSKpugEPc0jgoat7Q5IEyLncxSVDtdJIi8QJXo6vd0ojFJAcQtsvXNaLViKGStqvF6Wv7P+UAYlHIVsiEcC9P0ize0JID2iPVtl6AbFoTWc8mGY9wbHg0+I670fF8fHInMYz3R8VH9ytoP9/12n0MB0XM2MoRw4qiojT8J/YurM0V4YzZtz1OfIDk07KbTH2pIIWLhI5Yo4f4lYbgT1tnB1cPWLa/6gUBGPOviPagbMMYQIWi82X5b31oSDWfuRn13cmyW2VfGAAn6ssRLcrU0qzYQQ0GA=
+  template:
+    metadata:
+      name: aria2-secrets
+      namespace: aria2
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: gluetun-secrets
+  namespace: aria2
+spec:
+  encryptedData:
+    SERVER_CITIES: AgAC0vmr2M17TGOqmW6GMDddiWZo9hDJISGx8Mru0s6SKY2ftvs19rrKe9Nh2HjG67Ucw5JDVnTCkB1HfUhpiz+c4Af7g+byG/tv/lvmg5djTAQmXDjcKfl4mNIj1eJqJI7TrnxrXc04Dwgx+oHciDHqvP7YFLVw3B6zSmcAuS2CEm6d1QdIaM9ze5GYlB+xRhqLLrVdw3e9YWoniwTGffYxo/ZT+hG4FA3JD4BuNDuR+ZOV5Yhf8deXKcPMKNLTDKSlxF7V/meRVpfKmx8+7seMip/Q4m4jAAq76SCf/uKuLlpcbZ08bcFQg/RqWdZ0zN+PSGuEDk3hKtZkt4fxVqppKggCwGdXHq8Cb9LblZJ+YAxREKpKEF9nxsGjpBAU6ASuJr9qPwnBxFUpvcxb0Gt7P3uv9uPQQELH9i0Vt728jq+LXUzkytp+dzfWucVtxWWnqIrfdGOSy0//bTgRCgHgG1B+GYLnU+tcPF3P5MAwbqTaUo9Q2t0n5an4c9NMxLJ031dxlbxTUH3d7IbKANYVAqzBltlNw7XiUd/LLp0M0hj7hl9OLIRM6qH84JYplqLZz/z16i+UCX0Q0P9bM/uFpLQWdc3ZuzOzvoL8AoLh+/XXwTo685ogq3iBlEFQ8HTuRUT1J9dRo+ayh/XVOxQkwhX0k/ex95z313whYzT9qN2LXVzSZS6r/f0+hvz77mV/YeNjQWjiBCs=
+    VPN_SERVICE_PROVIDER: AgB2LLoixRMemSze0pO7c/gMOUEiQVjo2pqTXwk/I/KefCY87GV9qYT4t2prqFXyr9uFpjTc3U5BlmEgVt7ZErAyLIP0fK9mktKwDi6o/kAZffxI3wzU1OcwE3gc10GZsMF71jSGc0nvlyVAD8bjXhJIlV/ujjbnKepGJM4lqrJbsHU2XzI85MT507XYiIdh5lv7c8WVR8neMMoRYFH/QsM6DCtTtvgknjGhZTlvibC9+oBkyZBcxyb7SQobd0x+sxIiNdPownz6bIwxoDwxPqg9itW+m5QXIJOTy30WyGrLZikGpvyJXG0/Gx6KLWXPYBZTx/A2EG7qQSEuc5+G0eNiJsKXrcFeYCQIfggLwpPPykvxgjuK9U4JCXdSINJB2Dxh7/DtJAWT7f7Ow7xc9t6GjGz0ircOQHOEgyezT0WylQzc+G/k8KiTZtGSkNwOOsmoDQEeM6apdDr6G34m0rWdhgPdIJlOjEGRvY5/n6MoaOqhBKJfdtjz8IKOHrLLx7ROWjF9Gmu9gBDq9vvHN9mDMLRHIxmusch7tk8RR9mOHLmz1TmeZTV3b2eGNmx0fvIb8Xh1kHkjJAteLMKyNqBcoLgRgKu6Dwic+QyLjdEUKyxX89yJ/mYeCWxJwt8yfLce643oW9kZzD8p4BoMH62aEGXkAN52CSlnvlCZRT0la8xittgEeg/mjwGk5ZkI117eNaix7Mp1
+    VPN_TYPE: AgAW8bukdQw1rq94CoHZ3XSU119N8oG6eQ5ApHY3wE6hRV+CNS7nnAGfpiTPGtCdvy4KGfYXMVjnBzxCpK85glPDEkAQmBTSplZmdo9VOr7DRtz/uU7PK45vr5JdlHwgZFoK8fHxYFKHRFDglM3VT90YfzG8R2ER53SN1KKoi8xlrqUqj9aMEerV5PFnRqOyUZHFOtpWpVCDfK+WwCaKE74OYMEJzVcd3sESLkJJKwBymBpS3gO2jkkUZv403tSdzuo2hRiYzRMCYo4IYONmjYPZNflyrUeVaHN0cKNsrLzlzK+eL+hF/67V6aD2PAexWPUDI4RO+4Fa3VMKvxtpBCfMwHS7EmTDRFril5s1qZTz8WT8HiXs1WzbebfKXgCqYNxFTO1SyCyOKcZumMFzUwdfICDjrhFrgCYyvDOcuGD6aAmM3hPKjg/gYs2r9MiPW/2/oTjqNF4Um+B/bXtRPTdO6WfaRi+mun99MNRmS1MsGHMpz80OuFuGXnPzDi4XqtKY8bSJvqUqP3/8xlEWHsTpLUaYtfb2Fx2ApCucSbw707suDCxhJrOu7nQOUYisT0zP8qQeJUn73h+XzgyDKEq1UdtsRWHn+HjUgoK/5SpiyAwRiDQnCleItBMMOViG0vQbAf/zlYCkI6Jpirx8MiYvVjIagH51hib2Bxt5X6Ij2m5TsTgQpakKMKPZCLAduIzUlTI5ITD32IA=
+    WIREGUARD_ADDRESSES: AgAPNbZIDY7b03yu9pEX9RMONtYqYrA1VwdDa0oT6Gm2eEewii4dKk1Tlwdb00xOLsbMbW3KrOq3FSe/4yhf+mk3LJ0uiG8RChziENo2xie5Mtyf67YOQyufeq65YarBlSrlnG51wSNrz/8Hg5FrFIDCQN6dUCUzAF9+P08JCBZh60CQPj+y6SU/TuLFzyJprfcUghjY6PPQLqJyU/SJFT2VOuolYXQPFo9RcIW387qCBD5/sXB9+JADobnyY2F2RFTpUHlnPZ+hOrXMmbxoqXNKudIg8sfQOilTut0imIJ2eNxi4gSkAn2t1Xx/XoeQMxqmmc+daxnl3UoJFltCPygV8kRfuVfEN6mJPJQIwZpCmiivATyASEo1mcPU9pUYMcqkFDvtvb+7thjmh2U4PHmudjwulFWtnk9Ft1XnuvcjB4H246PHpur7xALEwjFGL5MR24qHTOejTrDsi+RpDNcNAJ+jUpuDeB5LxQv2OL6ikuDIHmINXhmok8lK9q3mDnP20TJI5f8TqRyP7hr0NXWqVl+01n5z9V8ct8n4j2f0QdiMRJcvb7LwM6Wm6s8Rob/EAVP3TT6bw5wgzGlxDHe09pACdA+/KpvcM9zQh6RYwx+EOPRHh4VKeuYkpc9qqwVNvhaRx5XLlYppS0897NX3Ri7dByPYhX5ORBx2WuHcMH9SquHbUJbAUehqxFxKpLPtmqubKv/JhSoeRmfCT+s=
+    WIREGUARD_PRIVATE_KEY: AgBWmbdckLu41XDAY4Y4gX6FtN59t8Z8H3BYFSEw//A1bTo61ppLhEchZqE94qKWcwXfW7fE7Ma7QuYtr+cAjF/wJwMWmm4XCZzRrciLtxslxLXOZ0u9/Is2T8K4zPu2Hf7zhDjfZPdh80208bx4v4pmvH94tYlCVEAqA8DV4pPAHxtQHLPmgtsZ+w+vxelXxhxz6TlKXWrInysofGU3vMiJdjgk0MR8y13zS1rm2P/MzBA0Oji6l6D5m/Qs9eq0I+Ll/3yycpZBjEVPgNkR/4k1L71e4F2znur/iP/JlFvENFELpocIqjqQN4JfrIJtgMRQuu6/JBx9qErmUT1jJsQIopsHf4xzfyIQwGSVzHICuruAwEK6E4IvJwNo/WDAdkq9lEGH1IEQVRs9rjqKCjCXaTHFy1eDK/MenCUiIrvkLdSwuEOz/CjcrZDSUqQjMxRHBYGgf4JAfQBcxtEGUswejHSSRK6nRst34ajS6N8HgF1u0Cy/WcJT1s3TZeQZD2qAd9lMy64c7pfEZyLC04VHu43fLpL4Ggwajk8Z7seEEayo6Px7x3onmVWElDH56sAM9CqZ+hcF3EdWwMquui3JOwz9DizGqLtYKMoA5uoZAJhboVL2+mnU0KU84XuJpkwO+6KKlR9JWWFQM5RvCcOIs7GHB1mLWsYlJhbbJI5Ffh7JLPkjHzYy8tEtqHz5eVmVycQjkwSs93tlxKXzVz8O3m9Vj1kDQ8TQDrWKzSi+TSIj8qqpMRYzGGIV/g==
+  template:
+    metadata:
+      name: gluetun-secrets
+      namespace: aria2
+    type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: cloudflare-api-credentials
   namespace: cert-manager
 spec:
@@ -16618,6 +16857,35 @@ metadata:
   namespace: netbird
 spec:
   replicas: 1
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/13545224
+  labels:
+    app: aria2
+  name: aria2
+  namespace: aria2
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: aria2.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  name: oauth2-proxy
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - aria2.homelab.olav.ninja
+      secretName: aria2-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
