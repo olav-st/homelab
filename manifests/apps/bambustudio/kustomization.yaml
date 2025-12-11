@@ -11,7 +11,7 @@ helmCharts:
     releaseName: bambustudio
     namespace: bambustudio
     repo: https://bjw-s-labs.github.io/helm-charts
-    version: 4.4.0
+    version: 4.5.0
     valuesFile: values.yaml
 
 patches:
