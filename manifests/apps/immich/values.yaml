@@ -8,19 +8,22 @@ immich:
     library:
       existingClaim: immich-library
 
-env:
-  DB_HOSTNAME: 'immich-postgresql-rw'
-  DB_USERNAME: 
-    valueFrom:
-      secretKeyRef:
-        key: username
-        name: immich-postgresql-user
-  DB_PASSWORD: 
-    valueFrom:
-      secretKeyRef:
-        key: password
-        name: immich-postgresql-user
-
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          DB_HOSTNAME: 'immich-postgresql-rw'
+          DB_USERNAME: 
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: immich-postgresql-user
+          DB_PASSWORD: 
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: immich-postgresql-user
 
 envFrom:
   - secretRef:
