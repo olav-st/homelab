@@ -26,12 +26,11 @@ envFrom:
   - secretRef:
       name: immich-postgresql-user
 
-redis:
+valkey:
   enabled: true
-  master:
-    persistence:
+  persistence:
+    data:
       enabled: false
-    podAffinityPreset: soft # prefer running on the same node as the main pod
 
 typesense:
   enabled: true
