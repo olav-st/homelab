@@ -1,6 +1,3 @@
-image:
-  tag:  v1.144.1 # renovate: github-releases=immich-app/immich
-
 immich:
   configuration:
     placeholder: foo # will be replaced by kustomize patch
@@ -12,6 +9,8 @@ controllers:
   main:
     containers:
       main:
+        image:
+          tag: v2.0.0 # renovate: github-releases=immich-app/immich
         env:
           DB_HOSTNAME: 'immich-postgresql-rw'
           DB_USERNAME: 
