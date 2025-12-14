@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - '**.yaml'
+      - '.devcontainer/**'
   pull_request:
     branches:
       - main
     paths:
       - '**.yaml'
+      - '.devcontainer/**'
 
 permissions:
   contents: write
