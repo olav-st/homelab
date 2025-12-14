@@ -330,19 +330,6 @@ metadata:
   namespace: hajimari
 ---
 apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-master
-  namespace: immich
----
-apiVersion: v1
 automountServiceAccountToken: true
 imagePullSecrets: []
 kind: ServiceAccount
@@ -7212,180 +7199,9 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: immich
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-immich-config
-  namespace: immich
----
-apiVersion: v1
-data:
-  master.conf: |-
-    dir /data
-    # User-supplied master configuration:
-    rename-command FLUSHDB ""
-    rename-command FLUSHALL ""
-    # End of master configuration
-  redis.conf: |-
-    # User-supplied common configuration:
-    # Enable AOF https://redis.io/topics/persistence#append-only-file
-    appendonly yes
-    # Disable RDB persistence, AOF persistence already enabled.
-    save ""
-    # End of common configuration
-  replica.conf: |-
-    dir /data
-    # User-supplied replica configuration:
-    rename-command FLUSHDB ""
-    rename-command FLUSHALL ""
-    # End of replica configuration
-  users.acl: ""
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-configuration
-  namespace: immich
----
-apiVersion: v1
-data:
-  ping_liveness_local.sh: |-
-    #!/bin/bash
-
-    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
-    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
-    response=$(
-      timeout -s 15 $1 \
-      redis-cli \
-        -h localhost \
-        -p $REDIS_PORT \
-        ping
-    )
-    if [ "$?" -eq "124" ]; then
-      echo "Timed out"
-      exit 1
-    fi
-    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
-    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ] && [ "$responseFirstWord" != "MASTERDOWN" ]; then
-      echo "$response"
-      exit 1
-    fi
-  ping_liveness_local_and_master.sh: |-
-    script_dir="$(dirname "$0")"
-    exit_status=0
-    "$script_dir/ping_liveness_local.sh" $1 || exit_status=$?
-    "$script_dir/ping_liveness_master.sh" $1 || exit_status=$?
-    exit $exit_status
-  ping_liveness_master.sh: |-
-    #!/bin/bash
-
-    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
-    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
-    response=$(
-      timeout -s 15 $1 \
-      redis-cli \
-        -h $REDIS_MASTER_HOST \
-        -p $REDIS_MASTER_PORT_NUMBER \
-        ping
-    )
-    if [ "$?" -eq "124" ]; then
-      echo "Timed out"
-      exit 1
-    fi
-    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
-    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ]; then
-      echo "$response"
-      exit 1
-    fi
-  ping_readiness_local.sh: |-
-    #!/bin/bash
-
-    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
-    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
-    response=$(
-      timeout -s 15 $1 \
-      redis-cli \
-        -h localhost \
-        -p $REDIS_PORT \
-        ping
-    )
-    if [ "$?" -eq "124" ]; then
-      echo "Timed out"
-      exit 1
-    fi
-    if [ "$response" != "PONG" ]; then
-      echo "$response"
-      exit 1
-    fi
-  ping_readiness_local_and_master.sh: |-
-    script_dir="$(dirname "$0")"
-    exit_status=0
-    "$script_dir/ping_readiness_local.sh" $1 || exit_status=$?
-    "$script_dir/ping_readiness_master.sh" $1 || exit_status=$?
-    exit $exit_status
-  ping_readiness_master.sh: |-
-    #!/bin/bash
-
-    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
-    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
-    response=$(
-      timeout -s 15 $1 \
-      redis-cli \
-        -h $REDIS_MASTER_HOST \
-        -p $REDIS_MASTER_PORT_NUMBER \
-        ping
-    )
-    if [ "$?" -eq "124" ]; then
-      echo "Timed out"
-      exit 1
-    fi
-    if [ "$response" != "PONG" ]; then
-      echo "$response"
-      exit 1
-    fi
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-health
-  namespace: immich
----
-apiVersion: v1
-data:
-  start-master.sh: |
-    #!/bin/bash
-
-    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
-    if [[ -f /opt/bitnami/redis/mounted-etc/master.conf ]];then
-        cp /opt/bitnami/redis/mounted-etc/master.conf /opt/bitnami/redis/etc/master.conf
-    fi
-    if [[ -f /opt/bitnami/redis/mounted-etc/redis.conf ]];then
-        cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
-    fi
-    if [[ -f /opt/bitnami/redis/mounted-etc/users.acl ]];then
-        cp /opt/bitnami/redis/mounted-etc/users.acl /opt/bitnami/redis/etc/users.acl
-    fi
-    ARGS=("--port" "${REDIS_PORT}")
-    ARGS+=("--protected-mode" "no")
-    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
-    ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
-    exec redis-server "${ARGS[@]}"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-scripts
   namespace: immich
 ---
 apiVersion: v1
@@ -9090,8 +8906,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/service: immich-machine-learning
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -9101,6 +8917,7 @@ spec:
       protocol: TCP
       targetPort: http
   selector:
+    app.kubernetes.io/controller: main
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: machine-learning
   type: ClusterIP
@@ -9111,58 +8928,10 @@ metadata:
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-headless
-  namespace: immich
-spec:
-  clusterIP: None
-  ports:
-    - name: tcp-redis
-      port: 6379
-      targetPort: redis
-  selector:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/name: redis
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: master
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-master
-  namespace: immich
-spec:
-  internalTrafficPolicy: Cluster
-  ports:
-    - name: tcp-redis
-      nodePort: null
-      port: 6379
-      targetPort: redis
-  selector:
-    app.kubernetes.io/component: master
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/name: redis
-  sessionAffinity: None
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/service: immich-server
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-server
   namespace: immich
 spec:
@@ -9172,8 +8941,33 @@ spec:
       protocol: TCP
       targetPort: http
   selector:
+    app.kubernetes.io/controller: main
     app.kubernetes.io/instance: immich
     app.kubernetes.io/name: server
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/service: immich-valkey
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
+  name: immich-valkey
+  namespace: immich
+spec:
+  ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: redis
+  selector:
+    app.kubernetes.io/controller: main
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: valkey
   type: ClusterIP
 ---
 apiVersion: v1
@@ -11481,11 +11275,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/controller: main
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -11493,6 +11288,7 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
+      app.kubernetes.io/controller: main
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: machine-learning
   strategy:
@@ -11500,46 +11296,34 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/controller: main
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: machine-learning
     spec:
       automountServiceAccountToken: true
       containers:
         - env:
-            - name: DB_DATABASE_NAME
-              value: immich
-            - name: DB_HOSTNAME
-              value: immich-postgresql-rw
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: immich-postgresql-user
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: immich-postgresql-user
+            - name: HF_XET_CACHE
+              value: /cache/huggingface-xet
             - name: IMMICH_MACHINE_LEARNING_URL
               value: http://immich-machine-learning:3003
+            - name: MPLCONFIGDIR
+              value: /cache/matplotlib-config
             - name: REDIS_HOSTNAME
-              value: immich-redis-master
+              value: immich-valkey
             - name: TRANSFORMERS_CACHE
               value: /cache
-          envFrom:
-            - secretRef:
-                name: immich-postgresql-user
-          image: ghcr.io/immich-app/immich-machine-learning:v1.144.1
+          image: ghcr.io/immich-app/immich-machine-learning:v2.0.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
             httpGet:
               path: /ping
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 0
             periodSeconds: 10
             timeoutSeconds: 1
-          name: immich-machine-learning
+          name: main
           ports:
             - containerPort: 3003
               name: http
@@ -11552,13 +11336,6 @@ spec:
             initialDelaySeconds: 0
             periodSeconds: 10
             timeoutSeconds: 1
-          resources:
-            limits:
-              cpu: 1
-              ephemeral-storage: 10Gi
-            requests:
-              cpu: 10m
-              memory: 2Gi
           startupProbe:
             failureThreshold: 60
             httpGet:
@@ -11571,7 +11348,10 @@ spec:
             - mountPath: /cache
               name: cache
       dnsPolicy: ClusterFirst
-      enableServiceLinks: true
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
       serviceAccountName: default
       volumes:
         - emptyDir: {}
@@ -11581,11 +11361,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/controller: main
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-server
   namespace: immich
 spec:
@@ -11593,6 +11374,7 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
+      app.kubernetes.io/controller: main
       app.kubernetes.io/instance: immich
       app.kubernetes.io/name: server
   strategy:
@@ -11602,36 +11384,20 @@ spec:
       annotations:
         checksum/config: 88c813a390a4e10d83e7da3a7df99e9aa98f2f6ce28cc391662822301a54b78e
       labels:
+        app.kubernetes.io/controller: main
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: server
     spec:
       automountServiceAccountToken: true
       containers:
         - env:
-            - name: DB_DATABASE_NAME
-              value: immich
-            - name: DB_HOSTNAME
-              value: immich-postgresql-rw
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: immich-postgresql-user
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: immich-postgresql-user
             - name: IMMICH_CONFIG_FILE
               value: /config/immich-config.yaml
             - name: IMMICH_MACHINE_LEARNING_URL
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
-              value: immich-redis-master
-          envFrom:
-            - secretRef:
-                name: immich-postgresql-user
-          image: ghcr.io/immich-app/immich-server:v1.144.1
+              value: immich-valkey
+          image: ghcr.io/immich-app/immich-server:v2.0.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -11641,7 +11407,7 @@ spec:
             initialDelaySeconds: 0
             periodSeconds: 10
             timeoutSeconds: 1
-          name: immich-server
+          name: main
           ports:
             - containerPort: 2283
               name: http
@@ -11665,18 +11431,101 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
-            - mountPath: /usr/src/app/upload
-              name: library
+            - mountPath: /data
+              name: data
       dnsPolicy: ClusterFirst
-      enableServiceLinks: true
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
       serviceAccountName: default
       volumes:
         - name: config
           secret:
             secretName: immich-config
-        - name: library
+        - name: data
           persistentVolumeClaim:
             claimName: immich-library
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/controller: main
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
+  name: immich-valkey
+  namespace: immich
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: valkey
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/controller: main
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: valkey
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - env:
+            - name: IMMICH_MACHINE_LEARNING_URL
+              value: http://immich-machine-learning:3003
+            - name: REDIS_HOSTNAME
+              value: immich-valkey
+          image: docker.io/valkey/valkey:9.0-alpine@sha256:b4ee67d73e00393e712accc72cfd7003b87d0fcd63f0eba798b23251bfc9c394
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - valkey-cli ping | grep PONG
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: main
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - valkey-cli ping | grep PONG
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - valkey-cli ping | grep PONG
+            failureThreshold: 30
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 5
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      serviceAccountName: default
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -13716,173 +13565,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app.kubernetes.io/component: master
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-master
-  namespace: immich
-spec:
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: master
-      app.kubernetes.io/instance: immich
-      app.kubernetes.io/name: redis
-  serviceName: immich-redis-headless
-  template:
-    metadata:
-      annotations:
-        checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
-        checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
-        checksum/scripts: bdec350b84a1ace7cc118db113a21c9f160bde3425b07714e1c0c1da722621cf
-        checksum/secret: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
-      labels:
-        app.kubernetes.io/component: master
-        app.kubernetes.io/instance: immich
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: redis
-        app.kubernetes.io/version: 7.4.3
-        helm.sh/chart: redis-20.13.2
-    spec:
-      affinity:
-        nodeAffinity: null
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: master
-                    app.kubernetes.io/instance: immich
-                    app.kubernetes.io/name: redis
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/component: master
-                    app.kubernetes.io/instance: immich
-                    app.kubernetes.io/name: redis
-                topologyKey: kubernetes.io/hostname
-              weight: 1
-      automountServiceAccountToken: false
-      containers:
-        - args:
-            - -c
-            - /opt/bitnami/scripts/start-scripts/start-master.sh
-          command:
-            - /bin/bash
-          env:
-            - name: BITNAMI_DEBUG
-              value: "false"
-            - name: REDIS_REPLICATION_MODE
-              value: master
-            - name: ALLOW_EMPTY_PASSWORD
-              value: "yes"
-            - name: REDIS_TLS_ENABLED
-              value: "no"
-            - name: REDIS_PORT
-              value: "6379"
-          image: docker.io/bitnami/redis:7.4.3-debian-12-r0
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - /health/ping_liveness_local.sh 5
-            failureThreshold: 5
-            initialDelaySeconds: 20
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 6
-          name: redis
-          ports:
-            - containerPort: 6379
-              name: redis
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - /health/ping_readiness_local.sh 1
-            failureThreshold: 5
-            initialDelaySeconds: 20
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 2
-          resources:
-            limits:
-              cpu: 150m
-              ephemeral-storage: 2Gi
-              memory: 192Mi
-            requests:
-              cpu: 100m
-              ephemeral-storage: 50Mi
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            runAsGroup: 1001
-            runAsNonRoot: true
-            runAsUser: 1001
-            seLinuxOptions: {}
-            seccompProfile:
-              type: RuntimeDefault
-          volumeMounts:
-            - mountPath: /opt/bitnami/scripts/start-scripts
-              name: start-scripts
-            - mountPath: /health
-              name: health
-            - mountPath: /data
-              name: redis-data
-            - mountPath: /opt/bitnami/redis/mounted-etc
-              name: config
-            - mountPath: /opt/bitnami/redis/etc/
-              name: empty-dir
-              subPath: app-conf-dir
-            - mountPath: /tmp
-              name: empty-dir
-              subPath: tmp-dir
-      enableServiceLinks: true
-      securityContext:
-        fsGroup: 1001
-        fsGroupChangePolicy: Always
-        supplementalGroups: []
-        sysctls: []
-      serviceAccountName: immich-redis-master
-      terminationGracePeriodSeconds: 30
-      volumes:
-        - configMap:
-            defaultMode: 493
-            name: immich-redis-scripts
-          name: start-scripts
-        - configMap:
-            defaultMode: 493
-            name: immich-redis-health
-          name: health
-        - configMap:
-            name: immich-redis-configuration
-          name: config
-        - emptyDir: {}
-          name: empty-dir
-        - emptyDir: {}
-          name: redis-data
-  updateStrategy:
-    type: RollingUpdate
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  labels:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
@@ -14528,26 +14210,6 @@ spec:
       app.kubernetes.io/component: primary
       app.kubernetes.io/instance: gitea
       app.kubernetes.io/name: valkey
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app.kubernetes.io/component: master
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis-master
-  namespace: immich
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: master
-      app.kubernetes.io/instance: immich
-      app.kubernetes.io/name: redis
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -17001,8 +16663,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
-    app.kubernetes.io/version: v1.119.0
-    helm.sh/chart: immich-0.9.3
+    app.kubernetes.io/version: v2.0.0
+    helm.sh/chart: immich-0.10.3
   name: immich-server
   namespace: immich
 spec:
@@ -17439,31 +17101,6 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: gitea
       app.kubernetes.io/name: valkey
-  policyTypes:
-    - Ingress
-    - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.4.3
-    helm.sh/chart: redis-20.13.2
-  name: immich-redis
-  namespace: immich
-spec:
-  egress:
-    - {}
-  ingress:
-    - ports:
-        - port: 6379
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/instance: immich
-      app.kubernetes.io/name: redis
   policyTypes:
     - Ingress
     - Egress
