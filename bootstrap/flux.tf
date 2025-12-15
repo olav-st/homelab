@@ -12,7 +12,7 @@ resource "github_repository_deploy_key" "this" {
 }
 
 # Install Flux
-resource "kubernetes_namespace" "flux_system" {
+resource "kubernetes_namespace_v1" "flux_system" {
   metadata {
     name = "flux-system"
   }
@@ -26,11 +26,11 @@ resource "helm_release" "flux2" {
   name      = "flux2"
   namespace = "flux-system"
 
-  depends_on = [kubernetes_namespace.flux_system]
+  depends_on = [kubernetes_namespace_v1.flux_system]
 }
 
 # Bootstrap Flux
-resource "kubernetes_secret" "ssh_keypair" {
+resource "kubernetes_secret_v1" "ssh_keypair" {
   metadata {
     name      = "flux-system"
     namespace = "flux-system"
@@ -44,7 +44,7 @@ resource "kubernetes_secret" "ssh_keypair" {
     "known_hosts"  = "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
   }
 
-  depends_on = [kubernetes_namespace.flux_system]
+  depends_on = [kubernetes_namespace_v1.flux_system]
 }
 
 resource "helm_release" "flux2_sync" {
@@ -64,7 +64,7 @@ resource "helm_release" "flux2_sync" {
           branch = "rendered_manifests"
         }
         secretRef = {
-          name = kubernetes_secret.ssh_keypair.metadata[0].name
+          name = kubernetes_secret_v1.ssh_keypair.metadata[0].name
         }
       }
     }
