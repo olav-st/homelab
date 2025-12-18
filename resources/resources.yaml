@@ -14653,6 +14653,7 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       priorityClassName: system-node-critical
+      restartPolicy: Always
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
@@ -17219,7 +17220,7 @@ metadata:
   name: function-go-templating
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.11.2
+  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.11.3
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
