@@ -66,3 +66,6 @@ experimental:
     sablier:
       moduleName: github.com/sablierapp/sablier-traefik-plugin
       version: v1.1.0 # renovate: github-releases=sablierapp/sablier-traefik-plugin
+    traefik-oidc-auth:
+      moduleName: github.com/sevensolutions/traefik-oidc-auth
+      version: v0.17.0 # renovate: github-releases=sevensolutions/traefik-oidc-auth
