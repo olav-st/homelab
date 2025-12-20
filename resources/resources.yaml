@@ -85,6 +85,15 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: jellyfin
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: keycloak
 ---
 apiVersion: v1
@@ -346,6 +355,16 @@ metadata:
     helm.sh/chart: hajimari-2.0.2
   name: hajimari
   namespace: hajimari
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -9610,6 +9629,25 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  ports:
+    - name: http
+      port: 8096
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app.kubernetes.io/component: headless
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
@@ -10357,6 +10395,20 @@ spec:
       storage: 120Gi
   storageClassName: longhorn-static
   volumeName: immich-library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config
+  namespace: jellyfin
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: longhorn-static
+  volumeName: jellyfin-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -12529,6 +12581,76 @@ spec:
           secret:
             defaultMode: 420
             secretName: webhook-server-cert
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: jellyfin
+      app.kubernetes.io/name: jellyfin
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: jellyfin
+        app.kubernetes.io/name: jellyfin
+    spec:
+      containers:
+        - image: docker.io/jellyfin/jellyfin:10.11.5
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: http
+          name: jellyfin
+          ports:
+            - containerPort: 8096
+              name: http
+              protocol: TCP
+          readinessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: http
+          resources:
+            limits:
+              gpu.intel.com/i915: 1
+            requests:
+              cpu: 100m
+              gpu.intel.com/i915: 1
+              memory: 512Mi
+          securityContext: {}
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /media
+              name: media
+            - mountPath: /cache/transcodes
+              name: transcode-temp
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      serviceAccountName: jellyfin
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - hostPath:
+            path: /var/mnt/bulk-storage/media-library
+            type: Directory
+          name: media
+        - emptyDir:
+            medium: Memory
+          name: transcode-temp
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -17324,6 +17446,19 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  name: jellyfin-oidc-credentials
+  namespace: jellyfin
+spec:
+  encryptedData:
+    clientSecret: AgAcHPYxBlVrQLIPis4i4iPpxgwPm1gyHSGGg50dDHaXKNKXZZxCHEpohlVZYzRjgqLjy+5464ztWasaAevy9NDAgAo1toJNtKVU4EfQNLoVoiCmW43Wz1ReOqgIJZVO9tAlPGdtZaovcURxvG3NOp/WvXsnFlpD6p3OMpdRICCoe34OiwI39eZRd1YZ2IHXsGtJWVA5mMIpTQj6Eoe6CZSQneVgjybnWpFOa6NgYD9T65K/NYQmG/o4/XpPyGQ5JtIzJoJwuqOE0W5NoKB99XyRVQ+2Tq6yuZTOCMgri+t1fsKAkYaUE4ROTPOsXIJA/fR/SOiz+RHkrMs+Hpb3xRofTYIrYbejYWGVrWHLimrJXcegiB3ntehdP5xbrmSf7Btb5pqZm/QPCxGkqS3a9LNjvZmJeUmGQUXngnxvg1GtsAnfXIzUm/aXYlkf9m5NKaYHqsfYDrTFzBRoYHBqo9LgBZrgmVytZMGGaOpZh6kWMNoko/ScG1zipClYtKj40LJrSbJywEYQzjB8O6JfgfCdvp9yCr+ICelsdoa/fTwS9tThlnBUchU/tA8AjMsreL7NowdqbmYqvx2F0jckXTfhQeOB9+8m3kVcVPx+E5FqyejWOu7wka7o5ywP48TiJJclTePYIJkauFYVq1gTp5seAxFf5R3mKwhUg3nXllsJ7ZkQ9RqxiCiwdTjw46q36wYJKcHJeTnnUuO9f293tDfNpdYPuOPhP3A=
+  template:
+    metadata:
+      name: jellyfin-oidc-credentials
+      namespace: jellyfin
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: crossplane-keycloak-credentials
   namespace: keycloak
 spec:
@@ -18115,6 +18250,37 @@ spec:
     - hosts:
         - immich.homelab.olav.ninja
       secretName: immich-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: Jellyfin
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:jellyfin
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: jellyfin.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: jellyfin
+                port:
+                  number: 8096
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - jellyfin.homelab.olav.ninja
+      secretName: jellyfin-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

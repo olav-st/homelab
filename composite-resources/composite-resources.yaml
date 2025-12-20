@@ -87,6 +87,30 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  baseUrl: https://jellyfin.homelab.olav.ninja
+  clientId: jellyfin
+  clientSecretSecretRef:
+    key: clientSecret
+    name: jellyfin-oidc-credentials
+    namespace: jellyfin
+  description: Jellyfin Media Server
+  displayName: Jellyfin
+  grantTypes:
+    - code
+  postLogoutRedirectUris:
+    - https://jellyfin.homelab.olav.ninja/*
+  realm: homelab
+  redirectUris:
+    - https://jellyfin.homelab.olav.ninja/sso/OID/redirect/Keycloak
+    - https://jellyfin.homelab.olav.ninja/sso/OID/r/Keycloak
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: netbird
   namespace: netbird
 spec:
