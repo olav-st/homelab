@@ -14064,12 +14064,12 @@ spec:
         helm.sh/chart: ollama-1.36.0
     spec:
       containers:
-        - args: null
-          env:
+        - env:
+            - name: OLLAMA_VULKAN
+              value: "1"
             - name: OLLAMA_HOST
               value: 0.0.0.0:11434
-          envFrom: null
-          image: ollama/ollama:0.13.3-rocm
+          image: ollama/ollama:0.13.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 6
@@ -14096,8 +14096,9 @@ spec:
             timeoutSeconds: 3
           resources:
             limits:
-              amd.com/gpu: 1
-            requests: {}
+              gpu.intel.com/i915: 1
+            requests:
+              gpu.intel.com/i915: 1
           securityContext: {}
           volumeMounts:
             - mountPath: /root/.ollama
@@ -14105,7 +14106,6 @@ spec:
       securityContext: {}
       serviceAccountName: ollama
       terminationGracePeriodSeconds: 120
-      tolerations: null
       volumes:
         - name: ollama-data
           persistentVolumeClaim:
