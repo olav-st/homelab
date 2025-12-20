@@ -61,6 +61,17 @@ ports:
     containerPort: 2222
     exposedPort: 22
 
+ingressRoute:
+  dashboard:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    entryPoints: ["websecure"]
+    middlewares:
+      - name: oidc
+    tls:
+        secretName: traefik-dashboard-tls-certificate
+
 experimental:
   plugins:
     sablier:

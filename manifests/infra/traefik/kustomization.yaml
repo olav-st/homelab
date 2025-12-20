@@ -6,7 +6,9 @@ resources:
   - namespace.yaml
   - middleware.yaml
   - proxy-external-cluster.yaml
+  - oidc-client.yaml
   - secrets.yaml
+  - certificates.yaml
 
 helmCharts:
 - name: traefik
@@ -16,3 +18,15 @@ helmCharts:
   version: 37.4.0
   includeCRDs: true
   valuesFile: values.yaml
+
+patches:
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: IngressRoute
+      name: traefik-dashboard
+      namespace: traefik
+    patch: |-
+      - op: replace
+        path: /spec/routes/0/match
+        value: "Host(`traefik.homelab.olav.ninja`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
