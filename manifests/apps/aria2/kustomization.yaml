@@ -4,8 +4,9 @@ namespace: aria2
 
 resources:
   - namespace.yaml
-  - deployments.yaml
+  - deployment.yaml
   - services.yaml
+  - middleware.yaml
   - oidc-client.yaml
   - ingress.yaml
   - pvc.yaml

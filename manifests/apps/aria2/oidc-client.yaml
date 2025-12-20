@@ -15,5 +15,5 @@ spec:
     - code
   baseUrl: "https://aria2.homelab.olav.ninja"
   redirectUris:
-    - "https://aria2.homelab.olav.ninja/oauth2/callback"
+    - "https://aria2.homelab.olav.ninja/oidc/callback"
   realm: homelab
