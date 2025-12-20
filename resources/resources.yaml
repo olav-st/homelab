@@ -9102,25 +9102,11 @@ metadata:
   namespace: aria2
 spec:
   ports:
-    - name: aria2-port
+    - name: aria2
       port: 8080
       targetPort: 8080
   selector:
     app: aria2
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: oauth2-proxy
-  namespace: aria2
-spec:
-  ports:
-    - name: oauth2-proxy
-      port: 4180
-      targetPort: 4180
-  selector:
-    app: oauth2-proxy
   type: ClusterIP
 ---
 apiVersion: v1
@@ -10607,57 +10593,6 @@ spec:
             path: /var/mnt/bulk-storage
             type: Directory
           name: aria2-data
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: oauth2-proxy
-  name: oauth2-proxy
-  namespace: aria2
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: oauth2-proxy
-  template:
-    metadata:
-      labels:
-        app: oauth2-proxy
-    spec:
-      containers:
-        - args:
-            - --provider=oidc
-            - --oidc-issuer-url=https://keycloak.homelab.olav.ninja/realms/homelab
-            - --client-id=aria2
-            - --email-domain=*
-            - --upstream=http://aria2:8080
-            - --http-address=0.0.0.0:4180
-            - --redirect-url=https://aria2.homelab.olav.ninja/oauth2/callback
-            - --cookie-secure=true
-            - --cookie-domain=.homelab.olav.ninja
-            - --whitelist-domain=.homelab.olav.ninja
-            - --pass-access-token=true
-            - --set-xauthrequest=true
-            - --skip-provider-button=true
-            - --insecure-oidc-allow-unverified-email=true
-          env:
-            - name: OAUTH2_PROXY_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: clientSecret
-                  name: aria2-oidc-credentials
-            - name: OAUTH2_PROXY_COOKIE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: cookieSecret
-                  name: aria2-oidc-credentials
-          image: quay.io/oauth2-proxy/oauth2-proxy:v7.13.0
-          name: oauth2-proxy
-          ports:
-            - containerPort: 4180
-              name: oauth2-proxy
-              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -17249,8 +17184,8 @@ metadata:
   namespace: aria2
 spec:
   encryptedData:
-    clientSecret: AgCVdrbOQvgZh2kzkPl8qkUloVXGK6OAAILGwx7u0GWyVSvCgUvJUacQL0LjDvc8Jkp1+cRtGxI0EhUiGrbEBwZNmxVBRsuKJXrukhI8nZFV67OgHL6oaDEQG9NE1CDEeJBjDdBJ2v/fXxYSSyaZ2fGFYeNiPmESfyfXgy3LQXxl/YeWNj7qAg+HqtOsA7hjl+vSYgXdUeZa47pVb44cnkvsHnf0dYB0c3/j67DxWSYAcbJTSHWgcwky5rWqW+iHc9g7Epfo4uRCS+jeTbVxmnJy5vq0Z+kAHf++HoeYYqMS1QXdiXBzQLMKA7pAkyKqwplLUtYRKAVgeVqveLL9j5GKfQxd6P4HNdf+IQttpk4rJ/TTYvV86T+UqtVowjPIR/xZ9DqRvZtDm1qEkm9aBceWqeoeW5YVsT70edKqyvMF+1yhHdNp8UsUndNOtn+NOTDHM1A7vxdyEG/KGFIW6kI2UM4MXiS6oUrTOMFcd2wys8QCh20I44PyzyN5pKCHfHj7XIaemvUt4MiM0c286GR/+isWxUyS3Vi29OYCjIA55SsuEswnUjirEboWvTQhKlAQSP9OWmlkF9H508074EgfvSQGtB5x30yqFtuI5fLYHzIVAcZt8jBCrbH7Zbce4kkWBCw8noDY2gMlyr4mGNYYUCZorYaFp9s6c6Nbe94IFkAmhs9CsPssx3GsAVcLsIr6vk5GXSdSqQyDsto5NvXuFKdf7SLqrPI=
-    cookieSecret: AgBYhJ8FHJFWvvV/cSYW0Gg6ZiB9NWQcUFV1BRCrCIqXEsJN17/pZTgydGfFUpYfrOP9XhhMzGV5c8G8Sr2L+0SXfmsKXuB9V3F/yOhNud+CektK9AVBD7QL4mkDD8ETQCJyoX+W9draa6ETpjk67F+CV/s34QINe0r8JdlsrpJvSVGRQBef5q83vi+1TSnhzy0nUF/xr7pnpus30pDN5CGP/HsnbRXieTt3Jb2UYGqRaAFtXEemKe2m7tfPrWAr5TKNGuO11YgEN3trEIBZDfbeyzJiWwYqQrqHQlJrOmKNkPYK/KB1Amsa3/BCoSdSoI5gy0TLcYoXJawUnKs0VAu0QZw/6B2GVNVcLbfnVHsW9YSdvScDJy4lung62oPFC1xkobFukz0kjqaSj8sizxOLuIlTpbnuAqBbqvnMM4Thp6FDWz7PD1hr3Ec0QcxV058qIjn6VtR4vExI7z5WZ5R8ODDU+9it5Z/i235n69a5JVlshSIa5u4X3GtIjloVyy38atddRhvkM1Cenlj7j9j3cZPaMOpo5+j0clnT7XoMj5UOtypIroTY1YCm4wBdN5A43QacfwtHPkYXCcqXhIOGXI3E9rpu64HAEf7q8D4IAwb2GfLxPpOe6mOroffhgw+9rEP7xEo125lwGKyjNDUsq237AYjMrPcTK+PnH8i6hv7TvQHQ8ZlUO4IGytVqvBP3aJGBha2Uw9VLeYJQTSeZ5lCjCG+y2cUkPRORoxfjzFRhF/Rtcfj8Wh/PqQ==
+    clientSecret: AgAVgZ/fR/6eIzlCPmfkCXIHfXT4aL0oSDienYP45io7SLGJJW+kEhhgJbA2Vrg8OLKAYJZQjjfReUp4gw10A9ODDxsoSxuVw5ofnk0dciLZKr2TEuW45aavbwU15X4AJlXacZXwzpbikuBYgueVWwoqtE05W/pOFdMIF/YXa3RA5nvUfxPAdJwEN4KEtMMT65qL9LxOyFcSNTT/oAQaxyO4qG/tnrCV7ajThDwTbtXvLNbbbyM0fZDkY4ziPTn2fuPYqNwGYY0JLEnzcO0KovAtEw0rRVlIQy3vJdJyH3WlNau1FPeYnGVL8naKf79TWbCZvA/ZYhEPcMG6D9FbgxQ16NIOwHsffvHvjwVxuwMvPNkdrrpLQP2sIxQK7zDzODUZrnsmoirhuPo2Nd+gLpag3BBxQqJP26MXLxRbk9ov4Lp2PxkbqNibn/S0JMS3QyBWW3Ig1hT/JHQpzykTYUd8eZaf9sN+1ts2JpwfKhR9Xx0XceH49dw7fDODZGz585mAyMkGZi3jmHLaSdaMoAIraatMzB4qFwVcG7qQLQXZdKPBZUEJX8hItprhOWWEyMgOOObNnDh0ibqpxbDnGubWs1LQnDE4UOFg62D+CMxrNnV3u9SHceUlnzixZhNIohbMz8LvLKeBgXBoiH+utGySZQLVSfw3bmkJIBNHhBS0ZzSJ8I5+rWu20CTscGNliFk3USzzbdVmI2BSoyDflwdc3fTeQbFM8s8=
+    pluginSecret: AgAmENbC3w7MfIhubO75r7tXIl20u2bNEq0tqFc269fd+DjXChO77/VpW+XIC8KCEl6+cu3ZuRsHwpa/6fZfRfHtJ5/690ZbI4uAOH7+1AFMsepCAlY5i6OcQ6koEQLKZrfOpwVg2yJ2ZHqZeGmG3yLJs9nIaq6UWJ/Xl4LKPdOX6JJdgkA1xI+t45hKt02ivI/SjovnYo0jVTl9Fy5w/ppoJin912vZBQ9z6Orw6MM1nJohftsxEDs4AL1m6BH3uPUVRTyuHa3jv7ciOkPnn0urCdQh0KE2+GK7M+2lO7UA/goi25n4qWsOSn/Xa23F+vJeMavLWmuLpjeWIQei0IKqP2GuI5eOJT8/BkZLQwWRFVe5bsIEp0p1WViSaeqtOy16NTjRQpezkXeuRgVnDHVcu2Z3Wz66R4m28FPsqlqfEHupU0/zmWRdSeZXvcBqGSWltu+18AOIUGAeEKozRRy6Q/qcfYGDMSnq1gCgtk3Dw3vqoZGUCCqVucmYuECks3dChS1Rhd/qUDXI+9SiIpaO0MVL7iHTtNNM6//WtaVWSkowgpiWkp6ZnW/NH6Tc00nT8OHtzdEh56UiefjX7bCE1tcVS1vMUrzpJNXdPaWmIpQI35y3EBAu5gACJaAQ119WXnFrbVwY9Kt5xudM/tCfLwmWK+MlEyucLqrPLOzukwyx0XrnJ7zM2aZfCSZVibI1EnNVhDkUH83Qt3It8NqNbKTUu4Fpymsj88f2/uSqGw==
   template:
     metadata:
       name: aria2-oidc-credentials
@@ -18074,6 +18009,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/13545224
+    traefik.ingress.kubernetes.io/router.middlewares: aria2-oidc@kubernetescrd
   labels:
     app: aria2
   name: aria2
@@ -18086,9 +18022,9 @@ spec:
         paths:
           - backend:
               service:
-                name: oauth2-proxy
+                name: aria2
                 port:
-                  name: oauth2-proxy
+                  name: aria2
             path: /
             pathType: Prefix
   tls:
@@ -19221,6 +19157,20 @@ spec:
           port: ingress-port
   tls:
     passthrough: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oidc
+  namespace: aria2
+spec:
+  plugin:
+    traefik-oidc-auth:
+      Provider:
+        ClientId: aria2
+        ClientSecret: urn:k8s:secret:aria2-oidc-credentials:clientSecret
+        Url: https://keycloak.homelab.olav.ninja/realms/homelab
+      Secret: urn:k8s:secret:aria2-oidc-credentials:pluginSecret
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware

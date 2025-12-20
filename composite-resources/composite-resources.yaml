@@ -16,7 +16,7 @@ spec:
     - code
   realm: homelab
   redirectUris:
-    - https://aria2.homelab.olav.ninja/oauth2/callback
+    - https://aria2.homelab.olav.ninja/oidc/callback
   type: CONFIDENTIAL
 ---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
