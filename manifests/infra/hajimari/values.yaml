@@ -6,26 +6,30 @@ hajimari:
   namespaceSelector:
     any: true
   globalBookmarks: 
-    - group: Utilities
+    - group: Infrastructure
       bookmarks:
-      - name: Hubble
-        url: 'https://hubble.homelab.olav.ninja'
       - name: Keycloak
         url: 'https://keycloak.homelab.olav.ninja'
       - name: Longhorn
         url: 'https://longhorn.homelab.olav.ninja'
-      - name: Netbird
-        url: 'https://netbird.homelab.olav.ninja'
-    - group: Infrastructure
+      - name: Traefik
+        url: 'https://traefik.homelab.olav.ninja'
+    - group: Networking
       bookmarks:
       - name: OpenWrt
         url: 'http://192.168.0.1'
+      - name: Netbird
+        url: 'https://netbird.homelab.olav.ninja'
     - group: External
       bookmarks:
       - name: Cloudflare Dashboard
         url: 'https://dash.cloudflare.com'
       - name: Github Repo
         url: 'https://github.com/olav-st/homelab'
+    - group: Utilities
+      bookmarks:
+      - name: Hubble
+        url: 'https://hubble.homelab.olav.ninja'
   customApps:
     - group: Applications
       apps:
