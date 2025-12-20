@@ -10640,9 +10640,10 @@ spec:
           name: app
           resources:
             limits:
-              amd.com/gpu: 1
+              gpu.intel.com/i915: 1
               memory: 8096M
             requests:
+              gpu.intel.com/i915: 1
               memory: 128M
           volumeMounts:
             - mountPath: /config
