@@ -7723,25 +7723,29 @@ data:
     defaultEnable: false
     globalBookmarks:
     - bookmarks:
-      - name: Hubble
-        url: https://hubble.homelab.olav.ninja
       - name: Keycloak
         url: https://keycloak.homelab.olav.ninja
       - name: Longhorn
         url: https://longhorn.homelab.olav.ninja
-      - name: Netbird
-        url: https://netbird.homelab.olav.ninja
-      group: Utilities
+      - name: Traefik
+        url: https://traefik.homelab.olav.ninja
+      group: Infrastructure
     - bookmarks:
       - name: OpenWrt
         url: http://192.168.0.1
-      group: Infrastructure
+      - name: Netbird
+        url: https://netbird.homelab.olav.ninja
+      group: Networking
     - bookmarks:
       - name: Cloudflare Dashboard
         url: https://dash.cloudflare.com
       - name: Github Repo
         url: https://github.com/olav-st/homelab
       group: External
+    - bookmarks:
+      - name: Hubble
+        url: https://hubble.homelab.olav.ninja
+      group: Utilities
     instanceName: null
     lightTheme: gazette
     name: Olav
@@ -19163,7 +19167,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`traefik.homelab.olav.ninja`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      match: Host(`traefik.homelab.olav.ninja`)
       middlewares:
         - name: oidc
       services:
