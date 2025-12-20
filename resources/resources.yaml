@@ -17443,6 +17443,20 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  name: longhorn-oidc-credentials
+  namespace: longhorn-system
+spec:
+  encryptedData:
+    clientSecret: AgBhV5qgXbmPeoMcqjY/Pr7CFF5lgQ1lUndUrqs/5rDHR52L/q9R/m0hffiY3hAyGjU+uDbDtwTLfl0EVjmSVbLHTZaEpAIEyN5LLStjBrjgArL7y3WjjYvgEvB3dhJEt5ROlL01yyWoOHbEilCBYluxO293D6DzUIdqTAlwkd0nIEcPVRXNWk/Rs+e15BSvVW4i1Lnt7cKjc+nhjkHkDM+wldIPTaGeZT5XMU+pNAa8q72qyvDS09T/+E+KaZw2kvmGd5MpwmeEWugP/ZeV3YbNyl1cSyFfnLVOhK4Vsk36R5k3RyqPhfCtiu1u7te2lI6+MiWotBawE2i1DFAIusQHIX3vrHbz86mPWC/aIPS9SWOQmI5cQLuCV07QerKlDmdKMcCCNZPk8rS0E5Yt4Y/V413BtJIBGZ3d5mbOMWc/SBl/SXonWN4u1OqyrLmuVQMX5hx4gRlvtbjtZR6XJGCHSp1f+smkHzj21vBA2ceQ02yBBvwMLxiLP97ytzQASgmkA45klcs/ThJIaZlbkC+o64jRQoadVYSMBEwctucQkJlYxz7jWCSBbMRpBmy/ALJVFmOfGaCQhFqN3ddb78kG5Fp70yHAKriuPFuHgB3QBe+2nfu3+VQQGn37UQHr0lycm5z8vLWTrcRiy/92Zxx4CBkJk3OCEh+fARk/xErluy4H9RAHlLcIgHym3L0bbm0eg4ChD4NswnolTsovizq70HZY31Ib2zzTkBxJS33Ifg==
+    pluginSecret: AgAKTzPHUYK890p4bye2yVUnOmCyrpP8php2urjalnkTvtPf+nqrgeCIzIm0erP9glWwe5PAZlcljK8wzp6C2HAYBeMkI02C8hKLvUs9aeCE/QedJq1sd8eVF01tYFwB1ILdqq75UrrnuPrnOTQs+0nxSIzcQ+x5pkUZ8zySJw5edtsn9Bx1b5qmLIbTZClypiIpSG05hABVOUjO8twNsyxEou2vL2oEYNc+MrNH9FbFoQQGyVAenBLRu+sT2HKCXaULtTLz433ift5MSgGkwQy8ffYHSwaOJebXWNSc6drElDRiJBWZZbGSVOECIw3I/qtXiu0/Kr6HIDr9yYFPF2NrNnVSF0uBnGX//7Wb2M1/5g9vLKhsr1nCosV7UgiCdUQi3JKC5UOLjqCRi7BsEu1AlAJ7Ue/zBQMoIQAYX+47EDbG6LEveTCgi/BYWzZjGEwgoDmz69rSxLCAbPFZ8cpMzUmD098Qc0qTcQouybbgiK9B41ntjO9oCc6HkeT+TE4EDecav6jl14BYC7twyKyanEKl5TilWDcpplokf1g21c4mPQ7NGvHayMg8ZP/U2Ms8FdThKA8CJEcgpNZ5CPQjS5+846Qlkdhk4vciNB73j4P8ZC4Jh6xk47p9fYrNEMFwYWZ9pwBwTJ1XqiGP3qPuKuSpQwx4q57EyZ8ig93wNzjrnQa8Qj3k0+w52PgmDfwwYB290Hiu0HWVqSVQguLOjtrswUhghfL5JXzPqtJSnA==
+  template:
+    metadata:
+      name: longhorn-oidc-credentials
+      namespace: longhorn
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: longhorn-truenas-cifs-credentials
   namespace: longhorn-system
 spec:
@@ -18302,6 +18316,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: longhorn-oidc@kubernetescrd
   labels:
     app: longhorn-ingress
     app.kubernetes.io/instance: longhorn
@@ -19196,6 +19211,20 @@ spec:
     permanent: false
     regex: ^(https?://[^/]+)/user/login(\?.*)?$
     replacement: ${1}/user/oauth2/keycloak${2}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oidc
+  namespace: longhorn-system
+spec:
+  plugin:
+    traefik-oidc-auth:
+      Provider:
+        ClientId: longhorn
+        ClientSecret: urn:k8s:secret:longhorn-oidc-credentials:clientSecret
+        Url: https://keycloak.homelab.olav.ninja/realms/homelab
+      Secret: urn:k8s:secret:longhorn-oidc-credentials:pluginSecret
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware

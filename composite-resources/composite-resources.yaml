@@ -111,6 +111,27 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: longhorn
+  namespace: longhorn-system
+spec:
+  baseUrl: https://longhorn.homelab.olav.ninja
+  clientId: longhorn
+  clientSecretSecretRef:
+    key: clientSecret
+    name: longhorn-oidc-credentials
+    namespace: longhorn
+  description: Longhorn Proxy Client
+  displayName: longhorn
+  grantTypes:
+    - code
+  realm: homelab
+  redirectUris:
+    - https://longhorn.homelab.olav.ninja/oidc/callback
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: netbird
   namespace: netbird
 spec:
