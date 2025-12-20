@@ -19584,6 +19584,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-dlbdeviceplugin
     failurePolicy: Fail
     name: mdlbdeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19604,6 +19611,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-dsadeviceplugin
     failurePolicy: Fail
     name: mdsadeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19624,6 +19638,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-fpgadeviceplugin
     failurePolicy: Fail
     name: mfpgadeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19644,6 +19665,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-gpudeviceplugin
     failurePolicy: Fail
     name: mgpudeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19664,6 +19692,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-iaadeviceplugin
     failurePolicy: Fail
     name: miaadeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19684,6 +19719,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-npudeviceplugin
     failurePolicy: Fail
     name: mnpudeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19704,6 +19746,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-qatdeviceplugin
     failurePolicy: Fail
     name: mqatdeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19724,6 +19773,13 @@ webhooks:
         path: /mutate-deviceplugin-intel-com-v1-sgxdeviceplugin
     failurePolicy: Fail
     name: msgxdeviceplugin.kb.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - deviceplugin.intel.com
@@ -19744,6 +19800,13 @@ webhooks:
         path: /pods
     failurePolicy: Ignore
     name: fpga.mutator.webhooks.intel.com
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     rules:
       - apiGroups:
           - ""
@@ -19763,6 +19826,13 @@ webhooks:
         path: /mutate--v1-pod
     failurePolicy: Ignore
     name: sgx.mutator.webhooks.intel.com
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
     reinvocationPolicy: IfNeeded
     rules:
       - apiGroups:
@@ -19797,6 +19867,12 @@ webhooks:
         path: /mutate--v1-pod
     failurePolicy: Fail
     name: mpod-v1.netbird.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
     objectSelector:
       matchExpressions:
         - key: app.kubernetes.io/name
@@ -20166,6 +20242,12 @@ webhooks:
         path: /validate-netbird-io-v1-nbgroup
     failurePolicy: Fail
     name: vnbgroup-v1.netbird.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
     rules:
       - apiGroups:
           - netbird.io
@@ -20199,6 +20281,12 @@ webhooks:
         path: /validate-netbird-io-v1-nbresource
     failurePolicy: Fail
     name: vnbresource-v1.netbird.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
     rules:
       - apiGroups:
           - netbird.io
@@ -20232,6 +20320,12 @@ webhooks:
         path: /validate-netbird-io-v1-nbroutingpeer
     failurePolicy: Fail
     name: vnbroutingpeer-v1.netbird.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
     rules:
       - apiGroups:
           - netbird.io
@@ -20265,6 +20359,12 @@ webhooks:
         path: /validate-netbird-io-v1-nbsetupkey
     failurePolicy: Fail
     name: vnbsetupkey-v1.netbird.io
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
     rules:
       - apiGroups:
           - netbird.io
