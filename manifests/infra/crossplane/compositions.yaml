@@ -113,6 +113,7 @@ spec:
                   id.token.claim: "true"
                   access.token.claim: "true"
                   claim.name: sub
+                  introspection.token.claim: "true"
                   userinfo.token.claim: "true"
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
@@ -145,8 +146,8 @@ spec:
                   id.token.claim: 'true'
                   access.token.claim: 'true'
                   lightweight.claim: 'false'
-                  userinfo.token.claim: 'true'
                   introspection.token.claim: 'true'
+                  userinfo.token.claim: 'true'
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
