@@ -76,6 +76,10 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
   name: intel-device-plugins
 ---
 apiVersion: v1
@@ -120,6 +124,15 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: nextcloud
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: node-feature-discovery
 ---
 apiVersion: v1
 kind: Namespace
@@ -508,6 +521,57 @@ metadata:
     helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-master
   namespace: nextcloud
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery
+  namespace: node-feature-discovery
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-gc
+  namespace: node-feature-discovery
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-prune
+  namespace: node-feature-discovery
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-worker
+  namespace: node-feature-discovery
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -1271,6 +1335,34 @@ rules:
     verbs:
       - create
       - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-worker
+  namespace: node-feature-discovery
+rules:
+  - apiGroups:
+      - nfd.k8s-sigs.io
+    resources:
+      - nodefeatures
+    verbs:
+      - create
+      - get
+      - update
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -3849,6 +3941,7 @@ rules:
       - fpgadeviceplugins
       - gpudeviceplugins
       - iaadeviceplugins
+      - npudeviceplugins
       - qatdeviceplugins
       - sgxdeviceplugins
     verbs:
@@ -3869,6 +3962,7 @@ rules:
       - iaadeviceplugins/finalizers
       - qatdeviceplugins/finalizers
       - sgxdeviceplugins/finalizers
+      - npudeviceplugins/finalizers
     verbs:
       - update
   - apiGroups:
@@ -3881,6 +3975,7 @@ rules:
       - iaadeviceplugins/status
       - qatdeviceplugins/status
       - sgxdeviceplugins/status
+      - npudeviceplugins/status
     verbs:
       - get
       - patch
@@ -5455,6 +5550,131 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - watch
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/status
+    verbs:
+      - get
+      - patch
+      - update
+      - list
+  - apiGroups:
+      - nfd.k8s-sigs.io
+    resources:
+      - nodefeatures
+      - nodefeaturerules
+      - nodefeaturegroups
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - nfd.k8s-sigs.io
+    resources:
+      - nodefeaturegroups/status
+    verbs:
+      - patch
+      - update
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+  - apiGroups:
+      - coordination.k8s.io
+    resourceNames:
+      - nfd-master.nfd.kubernetes.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-gc
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+    verbs:
+      - get
+  - apiGroups:
+      - topology.node.k8s.io
+    resources:
+      - noderesourcetopologies
+    verbs:
+      - delete
+      - list
+  - apiGroups:
+      - nfd.k8s-sigs.io
+    resources:
+      - nodefeatures
+    verbs:
+      - delete
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-prune
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/status
+    verbs:
+      - get
+      - patch
+      - update
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
     app.kubernetes.io/instance: pubip-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pubip-operator
@@ -6036,6 +6256,26 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-worker
+  namespace: node-feature-discovery
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: nfd-node-feature-discovery-worker
+subjects:
+  - kind: ServiceAccount
+    name: nfd-node-feature-discovery-worker
+    namespace: node-feature-discovery
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
     app.kubernetes.io/instance: pubip-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pubip-operator
@@ -6595,6 +6835,66 @@ subjects:
   - kind: ServiceAccount
     name: netbird-kubernetes-operator
     namespace: netbird
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nfd-node-feature-discovery
+subjects:
+  - kind: ServiceAccount
+    name: nfd-node-feature-discovery
+    namespace: node-feature-discovery
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-gc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nfd-node-feature-discovery-gc
+subjects:
+  - kind: ServiceAccount
+    name: nfd-node-feature-discovery-gc
+    namespace: node-feature-discovery
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-prune
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nfd-node-feature-discovery-prune
+subjects:
+  - kind: ServiceAccount
+    name: nfd-node-feature-discovery-prune
+    namespace: node-feature-discovery
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -8299,6 +8599,34 @@ metadata:
     helm.sh/chart: redis-21.1.3
   name: nextcloud-redis-scripts
   namespace: nextcloud
+---
+apiVersion: v1
+data:
+  nfd-master.conf: "null"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-master-conf
+  namespace: node-feature-discovery
+---
+apiVersion: v1
+data:
+  nfd-worker.conf: "null"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-worker-conf
+  namespace: node-feature-discovery
 ---
 apiVersion: v1
 data:
@@ -12150,7 +12478,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          image: intel/intel-deviceplugin-operator:0.32.1
+          image: intel/intel-deviceplugin-operator:0.34.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -13464,6 +13792,185 @@ spec:
         - configMap:
             name: nextcloud-phpconfig
           name: nextcloud-phpconfig
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+    role: gc
+  name: nfd-node-feature-discovery-gc
+  namespace: node-feature-discovery
+spec:
+  replicas: 1
+  revisionHistoryLimit: null
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: nfd
+      app.kubernetes.io/name: node-feature-discovery
+      role: gc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: nfd
+        app.kubernetes.io/name: node-feature-discovery
+        role: gc
+    spec:
+      containers:
+        - args:
+            - -gc-interval=1h
+          command:
+            - nfd-gc
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.18.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+          name: gc
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: false
+      imagePullSecrets: null
+      securityContext: {}
+      serviceAccountName: nfd-node-feature-discovery-gc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+    role: master
+  name: nfd-node-feature-discovery-master
+  namespace: node-feature-discovery
+spec:
+  replicas: 1
+  revisionHistoryLimit: null
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: nfd
+      app.kubernetes.io/name: node-feature-discovery
+      role: master
+  template:
+    metadata:
+      annotations:
+        checksum/config: 7ac2fe1f70813d543c2e7ca7eea8fb7bc63a515c18464ce7108d835222530c7e
+      labels:
+        app.kubernetes.io/instance: nfd
+        app.kubernetes.io/name: node-feature-discovery
+        role: master
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: In
+                    values:
+                      - ""
+              weight: 1
+      containers:
+        - args:
+            - -enable-leader-election
+            - -feature-gates=NodeFeatureGroupAPI=false
+            - -port=8080
+          command:
+            - nfd-master
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.18.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          name: master
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz
+              port: http
+          volumeMounts:
+            - mountPath: /etc/kubernetes/node-feature-discovery
+              name: nfd-master-conf
+              readOnly: true
+      dnsPolicy: ClusterFirstWithHostNet
+      enableServiceLinks: false
+      hostNetwork: false
+      imagePullSecrets: null
+      securityContext: {}
+      serviceAccountName: nfd-node-feature-discovery
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Equal
+          value: ""
+      volumes:
+        - configMap:
+            items:
+              - key: nfd-master.conf
+                path: nfd-master.conf
+            name: nfd-node-feature-discovery-master-conf
+          name: nfd-master-conf
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -16110,6 +16617,142 @@ spec:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+    role: worker
+  name: nfd-node-feature-discovery-worker
+  namespace: node-feature-discovery
+spec:
+  revisionHistoryLimit: null
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: nfd
+      app.kubernetes.io/name: node-feature-discovery
+      role: worker
+  template:
+    metadata:
+      annotations:
+        checksum/config: b041babd3bf698dd153c111fb8eece2aa8a737ec0ccce930bd4995a542311510
+      labels:
+        app.kubernetes.io/instance: nfd
+        app.kubernetes.io/name: node-feature-discovery
+        role: worker
+    spec:
+      containers:
+        - args:
+            - -feature-gates=NodeFeatureGroupAPI=false
+            - -port=8080
+          command:
+            - nfd-worker
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.18.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+          name: worker
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 5m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /host-boot
+              name: host-boot
+              readOnly: true
+            - mountPath: /host-etc/os-release
+              name: host-os-release
+              readOnly: true
+            - mountPath: /host-sys
+              name: host-sys
+              readOnly: true
+            - mountPath: /host-usr/lib
+              name: host-usr-lib
+              readOnly: true
+            - mountPath: /host-lib
+              name: host-lib
+              readOnly: true
+            - mountPath: /host-proc/swaps
+              name: host-proc-swaps
+              readOnly: true
+            - mountPath: /etc/kubernetes/node-feature-discovery/features.d/
+              name: features-d
+              readOnly: true
+            - mountPath: /etc/kubernetes/node-feature-discovery
+              name: nfd-worker-conf
+              readOnly: true
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: false
+      imagePullSecrets: null
+      securityContext: {}
+      serviceAccountName: nfd-node-feature-discovery-worker
+      volumes:
+        - hostPath:
+            path: /boot
+          name: host-boot
+        - hostPath:
+            path: /etc/os-release
+          name: host-os-release
+        - hostPath:
+            path: /sys
+          name: host-sys
+        - hostPath:
+            path: /usr/lib
+          name: host-usr-lib
+        - hostPath:
+            path: /lib
+          name: host-lib
+        - hostPath:
+            path: /proc/swaps
+          name: host-proc-swaps
+        - hostPath:
+            path: /etc/kubernetes/node-feature-discovery/features.d/
+          name: features-d
+        - configMap:
+            items:
+              - key: nfd-worker.conf
+                path: nfd-worker.conf
+            name: nfd-node-feature-discovery-worker-conf
+          name: nfd-worker-conf
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
   name: avahi
   namespace: samba
 spec:
@@ -16406,6 +17049,71 @@ spec:
           name: wait-network-ready
       restartPolicy: Never
       serviceAccountName: netbird-kubernetes-operator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    app.kubernetes.io/instance: nfd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-feature-discovery
+    app.kubernetes.io/version: v0.18.3
+    helm.sh/chart: node-feature-discovery-0.18.3
+  name: nfd-node-feature-discovery-prune
+  namespace: node-feature-discovery
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: nfd
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: node-feature-discovery
+        app.kubernetes.io/version: v0.18.3
+        helm.sh/chart: node-feature-discovery-0.18.3
+        role: prune
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: In
+                    values:
+                      - ""
+              weight: 1
+      containers:
+        - args:
+            - -prune
+          command:
+            - nfd-master
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.18.3
+          imagePullPolicy: IfNotPresent
+          name: nfd-master
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+      imagePullSecrets: null
+      resources:
+        limits:
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      restartPolicy: Never
+      serviceAccountName: nfd-node-feature-discovery-prune
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Equal
+          value: ""
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
@@ -16968,13 +17676,15 @@ kind: GpuDevicePlugin
 metadata:
   name: igpu
 spec:
-  enableMonitoring: true
-  image: intel/intel-gpu-plugin:0.32.1
+  allowIDs: ""
+  bypathMode: single
+  denyIDs: ""
+  enableMonitoring: false
+  image: intel/intel-gpu-plugin:0.34.1
   logLevel: 2
   nodeSelector:
     intel.feature.node.kubernetes.io/gpu: "true"
   preferredAllocationPolicy: none
-  resourceManager: false
   sharedDevNum: 5
   tolerations: []
 ---
@@ -17823,6 +18533,237 @@ spec:
     - Ingress
     - Egress
 ---
+apiVersion: nfd.k8s-sigs.io/v1alpha1
+kind: NodeFeatureRule
+metadata:
+  name: intel-dp-devices
+spec:
+  rules:
+    - labels:
+        intel.feature.node.kubernetes.io/dlb: "true"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - 0b40
+            device:
+              op: In
+              value:
+                - "2710"
+            vendor:
+              op: In
+              value:
+                - "8086"
+        - feature: kernel.loadedmodule
+          matchExpressions:
+            dlb2:
+              op: Exists
+      name: intel.dlb
+    - labels:
+        intel.feature.node.kubernetes.io/dsa: "true"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - "0880"
+            device:
+              op: In
+              value:
+                - 0b25
+                - 11fb
+                - "1212"
+            vendor:
+              op: In
+              value:
+                - "8086"
+        - feature: kernel.loadedmodule
+          matchExpressions:
+            idxd:
+              op: Exists
+      name: intel.dsa
+    - labels:
+        intel.feature.node.kubernetes.io/fpga-arria10: "true"
+      matchAny:
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                dfl_pci:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                intel_fpga_pci:
+                  op: Exists
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - "1200"
+            device:
+              op: In
+              value:
+                - 09c4
+            vendor:
+              op: In
+              value:
+                - "8086"
+      name: intel.fpga-arria10
+    - labels:
+        intel.feature.node.kubernetes.io/gpu: "true"
+      matchAny:
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                i915:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.enabledmodule
+              matchExpressions:
+                i915:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                xe:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.enabledmodule
+              matchExpressions:
+                xe:
+                  op: Exists
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - "0300"
+                - "0380"
+            vendor:
+              op: In
+              value:
+                - "8086"
+      name: intel.gpu
+    - labels:
+        intel.feature.node.kubernetes.io/iaa: "true"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - "0880"
+            device:
+              op: In
+              value:
+                - 0cfe
+                - "1216"
+            vendor:
+              op: In
+              value:
+                - "8086"
+        - feature: kernel.loadedmodule
+          matchExpressions:
+            idxd:
+              op: Exists
+      name: intel.iaa
+    - labels:
+        intel.feature.node.kubernetes.io/qat: "true"
+      matchAny:
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                vfio_pci:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.enabledmodule
+              matchExpressions:
+                vfio-pci:
+                  op: Exists
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - 0b40
+            device:
+              op: In
+              value:
+                - 37c8
+                - "4940"
+                - "4942"
+                - "4944"
+                - "4946"
+                - "4948"
+            vendor:
+              op: In
+              value:
+                - "8086"
+        - feature: kernel.loadedmodule
+          matchExpressions:
+            intel_qat:
+              op: Exists
+      name: intel.qat
+    - extendedResources:
+        sgx.intel.com/epc: '@cpu.security.sgx.epc'
+      labels:
+        intel.feature.node.kubernetes.io/sgx: "true"
+      matchFeatures:
+        - feature: cpu.cpuid
+          matchExpressions:
+            SGX:
+              op: Exists
+            SGXLC:
+              op: Exists
+        - feature: cpu.security
+          matchExpressions:
+            sgx.enabled:
+              op: IsTrue
+        - feature: kernel.config
+          matchExpressions:
+            X86_SGX:
+              op: Exists
+      name: intel.sgx
+    - labels:
+        intel.feature.node.kubernetes.io/npu: "true"
+      matchAny:
+        - matchFeatures:
+            - feature: kernel.loadedmodule
+              matchExpressions:
+                intel_vpu:
+                  op: Exists
+        - matchFeatures:
+            - feature: kernel.enabledmodule
+              matchExpressions:
+                intel_vpu:
+                  op: Exists
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class:
+              op: In
+              value:
+                - "1200"
+            device:
+              op: In
+              value:
+                - 7e4c
+                - 643e
+                - ad1d
+                - 7d1d
+            vendor:
+              op: In
+              value:
+                - "8086"
+      name: intel.npu
+---
 apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
 kind: Client
 metadata:
@@ -18534,6 +19475,26 @@ webhooks:
       service:
         name: inteldeviceplugins-webhook-service
         namespace: intel-device-plugins
+        path: /mutate-deviceplugin-intel-com-v1-npudeviceplugin
+    failurePolicy: Fail
+    name: mnpudeviceplugin.kb.io
+    rules:
+      - apiGroups:
+          - deviceplugin.intel.com
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - npudeviceplugins
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: inteldeviceplugins-webhook-service
+        namespace: intel-device-plugins
         path: /mutate-deviceplugin-intel-com-v1-qatdeviceplugin
     failurePolicy: Fail
     name: mqatdeviceplugin.kb.io
@@ -18915,6 +19876,26 @@ webhooks:
           - UPDATE
         resources:
           - iaadeviceplugins
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: inteldeviceplugins-webhook-service
+        namespace: intel-device-plugins
+        path: /validate-deviceplugin-intel-com-v1-npudeviceplugin
+    failurePolicy: Fail
+    name: vnpudeviceplugin.kb.io
+    rules:
+      - apiGroups:
+          - deviceplugin.intel.com
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - npudeviceplugins
     sideEffects: None
   - admissionReviewVersions:
       - v1
