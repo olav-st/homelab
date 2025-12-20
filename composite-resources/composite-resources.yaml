@@ -211,6 +211,27 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  baseUrl: https://traefik.homelab.olav.ninja
+  clientId: traefik
+  clientSecretSecretRef:
+    key: clientSecret
+    name: traefik-oidc-credentials
+    namespace: traefik
+  description: Traefik Proxy Client
+  displayName: traefik
+  grantTypes:
+    - code
+  realm: homelab
+  redirectUris:
+    - https://traefik.homelab.olav.ninja/oidc/callback
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: kubectl
 spec:
   clientId: kubectl
