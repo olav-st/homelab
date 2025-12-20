@@ -1,0 +1,6 @@
+name: igpu
+sharedDevNum: 4
+enableMonitoring: false
+nodeFeatureRule: false
+nodeSelector:
+  intel.feature.node.kubernetes.io/gpu: 'true'

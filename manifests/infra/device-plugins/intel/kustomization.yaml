@@ -18,10 +18,4 @@ helmCharts:
     namespace: intel-device-plugins
     releaseName: intel-device-plugins-gpu
     includeCRDs: true
-    valuesInline:
-      name: igpu
-      sharedDevNum: 5
-      enableMonitoring: false
-      nodeFeatureRule: false
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: 'true'
+    valuesFile: values.yaml
