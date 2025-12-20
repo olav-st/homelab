@@ -8,7 +8,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/13545224
+    hajimari.io/icon: streamline-plump-color:download-box-2-flat
     traefik.ingress.kubernetes.io/router.middlewares: aria2-oidc@kubernetescrd
 spec:
   ingressClassName: traefik
