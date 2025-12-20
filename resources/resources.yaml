@@ -17790,7 +17790,7 @@ spec:
   nodeSelector:
     intel.feature.node.kubernetes.io/gpu: "true"
   preferredAllocationPolicy: none
-  sharedDevNum: 5
+  sharedDevNum: 4
   tolerations: []
 ---
 apiVersion: group.keycloak.crossplane.io/v1alpha1
