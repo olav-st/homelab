@@ -17738,6 +17738,20 @@ spec:
   secretName: netbird-kubernetes-operator-tls
 ---
 apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: traefik-dashboard-tls-certificate
+  namespace: traefik
+spec:
+  dnsNames:
+    - traefik.homelab.olav.ninja
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt
+  secretName: traefik-dashboard-tls-certificate
+---
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
