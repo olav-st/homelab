@@ -19,3 +19,6 @@ helmCharts:
     releaseName: intel-device-plugins-gpu
     includeCRDs: true
     valuesFile: values.yaml
+
+patches:
+  - path: patches/fix-webhooks.yaml

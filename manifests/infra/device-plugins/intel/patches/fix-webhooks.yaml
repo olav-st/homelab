@@ -1,0 +1,34 @@
+# Fixes a chicken-and-egg problem where the cluster cannot start any pods because the webhook is blocking it
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: inteldeviceplugins-mutating-webhook-configuration
+webhooks:
+  - name: mdlbdeviceplugin.kb.io
+    namespaceSelector: &selector
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - intel-device-plugins
+
+  # 2. Apply the anchor (*selector) to all other CRD webhooks
+  - name: mdsadeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: mfpgadeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: mgpudeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: miaadeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: mnpudeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: mqatdeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: msgxdeviceplugin.kb.io
+    namespaceSelector: *selector
+  - name: fpga.mutator.webhooks.intel.com
+    namespaceSelector: *selector
+  - name: sgx.mutator.webhooks.intel.com
+    namespaceSelector: *selector
