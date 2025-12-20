@@ -17,6 +17,7 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-oidc@kubernetescrd
   host: longhorn.homelab.olav.ninja
   tls: true
   tlsSecret: longhorn-tls-certificate

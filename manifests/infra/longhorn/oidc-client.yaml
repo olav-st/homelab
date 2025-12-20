@@ -1,0 +1,19 @@
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: longhorn
+spec:
+  displayName: longhorn
+  type: CONFIDENTIAL
+  clientId: longhorn
+  clientSecretSecretRef:
+    key: clientSecret
+    name: longhorn-oidc-credentials
+    namespace: longhorn
+  description: Longhorn Proxy Client
+  grantTypes:
+    - code
+  baseUrl: "https://longhorn.homelab.olav.ninja"
+  redirectUris:
+    - "https://longhorn.homelab.olav.ninja/oidc/callback"
+  realm: homelab

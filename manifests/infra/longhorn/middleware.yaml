@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oidc
+spec:
+  plugin:
+    traefik-oidc-auth:
+      Secret: "urn:k8s:secret:longhorn-oidc-credentials:pluginSecret"
+      Provider:
+        Url: https://keycloak.homelab.olav.ninja/realms/homelab
+        ClientId: longhorn
+        ClientSecret: "urn:k8s:secret:longhorn-oidc-credentials:clientSecret"

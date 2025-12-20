@@ -5,6 +5,8 @@ namespace: longhorn-system
 resources:
   - namespace.yaml
   - recurring-jobs.yaml
+  - oidc-client.yaml
+  - middleware.yaml
   - secrets.yaml
 
 helmCharts:
