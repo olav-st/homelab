@@ -67,6 +67,7 @@ ingressRoute:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
     entryPoints: ["websecure"]
+    matchRule: Host(`traefik.homelab.olav.ninja`)
     middlewares:
       - name: oidc
     tls:
