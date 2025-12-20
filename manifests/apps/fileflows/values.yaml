@@ -1,0 +1,51 @@
+image:
+  tag: "25.12" # renovate: docker=docker.io/revenz/fileflows
+
+service:
+  main:
+    ports:
+      main:
+        port: 5000
+        targetPort: 5000
+        # Target the OAuth2 Proxy port (4180) to enforce authentication
+        #targetPort: 4180
+
+ingress:
+  main:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      hajimari.io/enable: 'true'
+      hajimari.io/appName: 'FileFlows'
+      hajimari.io/icon: https://fileflows.com/favicon.svg
+      traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
+    hosts:
+      - host: &hostName fileflows.homelab.olav.ninja
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+          - *hostName
+        secretName: fileflows-tls-certificate
+
+persistence:
+  logs:
+    enabled: true
+    size: 1Gi
+  data:
+    enabled: true
+    existingClaim: fileflows-data
+    mountPath: /app/Data
+    size: 10Gi
+  temp:
+    enabled: true
+    type: hostPath
+    hostPath: /var/mnt/bulk-storage/apps/fileflows/temp
+    readOnly: false
+  media:
+    enabled: true
+    type: hostPath
+    hostPath: /var/mnt/bulk-storage
+    mountPath: /media
+    readOnly: false

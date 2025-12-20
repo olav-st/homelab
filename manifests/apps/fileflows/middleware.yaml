@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oidc
+spec:
+  plugin:
+    traefik-oidc-auth:
+      Secret: "urn:k8s:secret:fileflows-oidc-credentials:pluginSecret"
+      Provider:
+        Url: https://keycloak.homelab.olav.ninja/realms/homelab
+        ClientId: fileflows
+        ClientSecret: "urn:k8s:secret:fileflows-oidc-credentials:clientSecret"
