@@ -8,9 +8,9 @@ resources:
   - ./gitea
   - ./homeassistant
   - ./immich
+  - ./jellyfin
   - ./nextcloud
   - ./ollama
   - ./openwebui
   - ./pingvinshare
   - ./samba
-

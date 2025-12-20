@@ -1,0 +1,23 @@
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: jellyfin
+spec:
+  displayName: Jellyfin
+  type: CONFIDENTIAL
+  clientId: jellyfin
+  clientSecretSecretRef:
+    key: clientSecret
+    name: jellyfin-oidc-credentials
+    namespace: jellyfin
+  description: Jellyfin Media Server
+  grantTypes:
+    - code
+  baseUrl: "https://jellyfin.homelab.olav.ninja"
+  postLogoutRedirectUris:
+    - "https://jellyfin.homelab.olav.ninja/*"
+  redirectUris:
+    - "https://jellyfin.homelab.olav.ninja/sso/OID/redirect/Keycloak"
+    - "https://jellyfin.homelab.olav.ninja/sso/OID/r/Keycloak"
+  realm: homelab

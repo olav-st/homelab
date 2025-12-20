@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: jellyfin
+      app.kubernetes.io/name: jellyfin
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: jellyfin
+        app.kubernetes.io/name: jellyfin
+    spec:
+      containers:
+      - image: docker.io/jellyfin/jellyfin:10.11.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: http
+        name: jellyfin
+        ports:
+        - containerPort: 8096
+          name: http
+          protocol: TCP
+        readinessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: http
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+            gpu.intel.com/i915: 1
+          limits:
+            gpu.intel.com/i915: 1
+        securityContext: {}
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /media
+          name: media
+        - mountPath: /cache/transcodes
+          name: transcode-temp
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      serviceAccountName: jellyfin
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jellyfin-config
+      - name: media
+        hostPath:
+          path: /var/mnt/bulk-storage/media-library
+          type: Directory
+      - name: transcode-temp
+        emptyDir:
+          medium: Memory # Map transcode cache to memory for speed/less SSD wear

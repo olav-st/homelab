@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: Jellyfin
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:jellyfin
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: jellyfin.homelab.olav.ninja
+    http:
+      paths:
+      - backend:
+          service:
+            name: jellyfin
+            port:
+              number: 8096
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - jellyfin.homelab.olav.ninja
+    secretName: jellyfin-tls-certificate
