@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./amd
   - ./intel
+  - ./node-feature-discovery
