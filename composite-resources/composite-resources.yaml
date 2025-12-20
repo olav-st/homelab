@@ -22,6 +22,27 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: fileflows
+  namespace: fileflows
+spec:
+  baseUrl: https://fileflows.homelab.olav.ninja
+  clientId: fileflows
+  clientSecretSecretRef:
+    key: clientSecret
+    name: fileflows-oidc-credentials
+    namespace: fileflows
+  description: FileFlows Proxy Client
+  displayName: FileFlows
+  grantTypes:
+    - code
+  realm: homelab
+  redirectUris:
+    - https://fileflows.homelab.olav.ninja/oidc/callback
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: gitea
   namespace: gitea
 spec:

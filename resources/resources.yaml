@@ -47,6 +47,15 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: fileflows
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: gitea
 ---
 apiVersion: v1
@@ -154,15 +163,6 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline
   name: traefik
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    pod-security.kubernetes.io/audit: privileged
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/warn: privileged
-  name: unmanic
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -8749,6 +8749,34 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app: fileflows-14.18.1
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fileflows
+    app.kubernetes.io/version: 25.12.0
+    helm-revision: "1"
+    helm.sh/chart: fileflows-14.18.1
+    release: fileflows
+    service.name: main
+  name: fileflows
+  namespace: fileflows
+spec:
+  ports:
+    - name: main
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  publishNotReadyAddresses: false
+  selector:
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/name: fileflows
+    pod.name: main
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app: gitea
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
@@ -9594,20 +9622,6 @@ spec:
     app.kubernetes.io/name: traefik
   type: LoadBalancer
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: unmanic-service
-  namespace: unmanic
-spec:
-  ports:
-    - name: unmanic-port
-      port: 8888
-      targetPort: 8888
-  selector:
-    app: unmanic
-  type: ClusterIP
----
 apiVersion: scheduling.k8s.io/v1
 description: This priority class should be used for core kubevirt components only.
 globalDefault: false
@@ -9669,9 +9683,44 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 25Gi
+      storage: 10Gi
   storageClassName: longhorn-static
   volumeName: bambustudio-library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fileflows-data
+  namespace: fileflows
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: longhorn-static
+  volumeName: fileflows-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: fileflows-14.18.1
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fileflows
+    app.kubernetes.io/version: 25.12.0
+    helm-revision: "1"
+    helm.sh/chart: fileflows-14.18.1
+    release: fileflows
+  name: fileflows-logs
+  namespace: fileflows
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -9802,20 +9851,6 @@ spec:
       storage: 50Gi
   storageClassName: longhorn-static
   volumeName: pingvinshare
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: unmanic-config
-  namespace: unmanic
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: longhorn-static
-  volumeName: unmanic-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -10957,6 +10992,247 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: external-dns
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fileflows-14.18.1
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fileflows
+    app.kubernetes.io/version: 25.12.0
+    helm-revision: "1"
+    helm.sh/chart: fileflows-14.18.1
+    release: fileflows
+  name: fileflows
+  namespace: fileflows
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: fileflows
+      app.kubernetes.io/name: fileflows
+      pod.name: main
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        checksum/cnpg: fc940fff4269c53072f7039f0811133e9b83400670af014010bf50d3f13740f4
+        checksum/configmaps: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+        checksum/mariadb: 09c85576cb45b1eecd1467732b11ea8fa3363b0105c465f02a6ad64991521d52
+        checksum/mongodb: 09c85576cb45b1eecd1467732b11ea8fa3363b0105c465f02a6ad64991521d52
+        checksum/persistence: 5b7e2997f5115aa9dc45eb6fe2e99e0af23477a80946023487724641a28bc2df
+        checksum/redis: 013343a028cbb3f7e08f4ba7522702dd98e52632c688641074b0b1db3df29894
+        checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+        checksum/services: 7a621b3d13b2222ce184ed3ef381a35786f30f3dd9a51898ba79b8e04a1ff64f
+        checksum/solr: 29c14feeaddbf7762052db593898d274941f539cee681ddc613957587686f347
+      labels:
+        app: fileflows-14.18.1
+        app.kubernetes.io/instance: fileflows
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: fileflows
+        app.kubernetes.io/version: 25.12.0
+        helm-revision: "1"
+        helm.sh/chart: fileflows-14.18.1
+        pod.lifecycle: permanent
+        pod.name: main
+        release: fileflows
+        truecharts.org/pvc: data_logs
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: truecharts.org/pvc
+                    operator: In
+                    values:
+                      - data_logs
+              topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: TZ
+              value: UTC
+            - name: UMASK
+              value: "0022"
+            - name: UMASK_SET
+              value: "0022"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: void
+            - name: PUID
+              value: "568"
+            - name: USER_ID
+              value: "568"
+            - name: UID
+              value: "568"
+            - name: PGID
+              value: "568"
+            - name: GROUP_ID
+              value: "568"
+            - name: GID
+              value: "568"
+          image: docker.io/revenz/fileflows:25.12
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 12
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: fileflows
+          ports:
+            - containerPort: 5000
+              hostPort: null
+              name: main
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 4
+            httpGet:
+              path: /
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 12
+            successThreshold: 2
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 2400Mi
+            requests:
+              cpu: 75m
+              memory: 200Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - CHOWN
+                - SETUID
+                - SETGID
+                - FOWNER
+                - DAC_OVERRIDE
+              drop:
+                - ALL
+            privileged: true
+            readOnlyRootFilesystem: false
+            runAsGroup: 0
+            runAsNonRoot: false
+            runAsUser: 0
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /app/Data
+              name: data
+              readOnly: false
+            - mountPath: /dev/shm
+              name: devshm
+              readOnly: false
+            - mountPath: /app/Logs
+              name: logs
+              readOnly: false
+            - mountPath: /media
+              name: media
+              readOnly: false
+            - mountPath: /shared
+              name: shared
+              readOnly: false
+            - mountPath: /temp
+              name: temp
+              readOnly: false
+            - mountPath: /tmp
+              name: tmp
+              readOnly: false
+            - mountPath: /var/logs
+              name: varlogs
+              readOnly: false
+            - mountPath: /var/run
+              name: varrun
+              readOnly: false
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      hostUsers: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      restartPolicy: Always
+      runtimeClassName: null
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls: []
+      serviceAccountName: default
+      shareProcessNamespace: false
+      terminationGracePeriodSeconds: 60
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: fileflows
+              app.kubernetes.io/name: fileflows
+              pod.name: main
+          maxSkew: 1
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 2400Mi
+          name: devshm
+        - emptyDir: {}
+          name: shared
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 2400Mi
+          name: tmp
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 2400Mi
+          name: varlogs
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 2400Mi
+          name: varrun
+        - hostPath:
+            path: /var/mnt/bulk-storage
+          name: media
+        - hostPath:
+            path: /var/mnt/bulk-storage/apps/fileflows/temp
+          name: temp
+        - name: data
+          persistentVolumeClaim:
+            claimName: fileflows-data
+        - name: logs
+          persistentVolumeClaim:
+            claimName: fileflows-logs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -13386,53 +13662,6 @@ spec:
           name: tmp
         - emptyDir: {}
           name: plugins
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: unmanic
-  name: unmanic
-  namespace: unmanic
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: unmanic
-  template:
-    metadata:
-      labels:
-        app: unmanic
-    spec:
-      containers:
-        - command:
-            - /usr/local/bin/unmanic-service
-          env:
-            - name: HOME
-              value: /config
-          image: josh5/unmanic:0.3.0
-          name: unmanic
-          ports:
-            - containerPort: 8888
-              name: http
-              protocol: TCP
-          volumeMounts:
-            - mountPath: /config
-              name: unmanic-config
-            - mountPath: /media
-              name: media
-      securityContext:
-        fsGroup: 65534
-        runAsGroup: 65534
-        runAsUser: 65534
-      volumes:
-        - name: unmanic-config
-          persistentVolumeClaim:
-            claimName: unmanic-config
-        - hostPath:
-            path: /var/mnt/bulk-storage/shares/media
-            type: Directory
-          name: media
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -15908,6 +16137,20 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  name: fileflows-oidc-credentials
+  namespace: fileflows
+spec:
+  encryptedData:
+    clientSecret: AgB06BIJWKFVqycqKyZM4nFU3dQ67ksilHrsocZdqvmtaxs+ln+W0iRw4fPL4x4kQuzuWbKdBRYS5j+lsPWd0nxs04QkXREU0URxbaKEdn8LPbBylEB0EhH9Cd+HHeFC5ewHnS5qat2/b8NcJ0nTT4pzFpKERdW+JhUxc17V6pAkQVSZfoJXn78tARSji4rDuhAxlkS0wCx5QRizVhsNOSawn+gwyEn7d2Cbu3a9kO7wg8cSk6bx+Uy6Jiq3+k0mwurFGvPQuGWFVcmQec0i0CE5BLe1slzQdUb1Vi7O8nT1fOZQlYGYfEPqZkAofrezbW6WJQLe2bopoAENzS2+PNSr9XVmp+hSeGiut/0FXQtSOcf5UcAbS+hMxAasVz1tYq6ZZWwBpDE26p+kCH/TFEDNfeFfmUI05rW/9imIJPedFM1hwnfSFZ01ycW1OOZJx7H8Vx/A8SueKNyLue7GcZt4Atj7uExmRpZrDBxcPpU8vhVTdWZ37GKp+s/SgTn2oFbqgZt1KTyGTzbVRosgkjGuSdMTBQ6cT2YktpsaQ8lOd/A4czYkVBJDvOeTVVNfsxFa3BjKcCX+daIbBAbkFu7dCgmafaNwjJY2YLV8VC4Y1Yj98125kcyizS9ZVqrodKm6zRZFqHieFocuA2BooVHNYYJoYn5BDT4TyXVtchkAPSPm+9Y/MP7LveeWMYbqzX9zUigBc5p076LEo29CdrV6wZQDWiiD/2k=
+    pluginSecret: AgCMT7vbgINiLldJoR5XwHMOvWdD6E3BHrmA0y3i2Ppj/7FAwcoA+uMkoUXB+MV5gi0e3mxzpO/8IR47lsukNqAy63vt/K6vqzS50WoAoVvxCXEbDbeHVREJ2sr4Z60l7njxRSh+c0xMKU7HUOiD4wUpLz2br4o/YUyppbeQ9i3SwMq2TI8J4yHmZIu9kw/KlR63VLcwIwmPnsAT1D7bf7s2SKtxZx813psLidvRjMmXTAz7Z0pqEiiZ2SHDKPVgLJdITk+7gG6upc5Uoll4j1zrIbD+sKTHp1bmmCUGEbYnVZ7lO2GBgoHN2OW79TDRqNG+bdJ/6bZbuHrPXYTikZWcHbvL72yFse2jemQ3ZT5EByjOqWIAFYgVQ98TygPmPhio1qQyOoP/o8Fhy5nEPEoT+ImUVbqZSnBI+V9DIxzLHwOlWFJqJiaRkdi+mqc98WpNAdbJgidqNQMkLzWB2OTVbmpzlfoLpvuWuTdkJHGQkdU2OnKJiSo9hQpFq9nJRACw4BknBUeR5ol/63hVdBauzBQBYnjyxwpNVDsyGSQ+FZkdcasLV/jPYNEqXi8e/G0+ECguO47EYnd5mlejb1hksFMBYZZwoiE6l4i7Lw4yGOrwWrpole6tAfrdSr6gWS1/0U6xLuRSpn1gqfqd/covXRdokEx2ppcEgw6HlQBTgW3RUrgx8mreRU6etdSPfBkd7ZC31oa8sl53nxnQbUEVCF2JplOK52MG04yNi9Jd/A==
+  template:
+    metadata:
+      name: fileflows-oidc-credentials
+      namespace: fileflows
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: gitea-admin-user
   namespace: gitea
 spec:
@@ -16629,6 +16872,46 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+    checksum/services: d7142975254d86e7952c9a1dcc2aef8d56fc97f2bd2bae51b68ee07e82f5686b
+    hajimari.io/appName: FileFlows
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://fileflows.com/favicon.svg
+    traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
+  labels:
+    app: fileflows-14.18.1
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fileflows
+    app.kubernetes.io/version: 25.12.0
+    helm-revision: "1"
+    helm.sh/chart: fileflows-14.18.1
+    release: fileflows
+  name: fileflows
+  namespace: fileflows
+spec:
+  ingressClassName: null
+  rules:
+    - host: fileflows.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: fileflows
+                port:
+                  number: 5000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - fileflows.homelab.olav.ninja
+      secretName: fileflows-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
     ingress.kubernetes.io/proxy-body-size: 10000m
@@ -17079,35 +17362,6 @@ spec:
       secretName: pingvinshare-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/81266068
-  labels:
-    app: unmanic
-  name: unmanic
-  namespace: unmanic
-spec:
-  ingressClassName: traefik
-  rules:
-    - host: unmanic.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: unmanic-service
-                port:
-                  number: 8888
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - unmanic.homelab.olav.ninja
-      secretName: unmanic-tls-certificate
----
-apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
   annotations:
@@ -17417,6 +17671,20 @@ spec:
           port: ingress-port
   tls:
     passthrough: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oidc
+  namespace: fileflows
+spec:
+  plugin:
+    traefik-oidc-auth:
+      Provider:
+        ClientId: fileflows
+        ClientSecret: urn:k8s:secret:fileflows-oidc-credentials:clientSecret
+        Url: https://keycloak.homelab.olav.ninja/realms/homelab
+      Secret: urn:k8s:secret:fileflows-oidc-credentials:pluginSecret
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
