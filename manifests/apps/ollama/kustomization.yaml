@@ -14,6 +14,7 @@ helmCharts:
     valuesFile: values.yaml
 
 patches:
+  - path: patches/use-intel-gpu.yaml
   - path: patches/remove-replicas.yaml
     target:
       kind: Deployment

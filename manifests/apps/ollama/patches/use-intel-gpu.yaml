@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: ollama
+spec:
+  template:
+    spec:
+      containers:
+      - name: ollama
+        env:
+        - name: OLLAMA_VULKAN
+          value: "1"
+        resources:
+          requests:
+            gpu.intel.com/i915: 1
+          limits:
+            gpu.intel.com/i915: 1

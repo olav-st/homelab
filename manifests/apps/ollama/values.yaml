@@ -1,8 +1,6 @@
 ollama:
   gpu:
-    enabled: true
-    type: 'amd'
-    number: 1
+    enabled: false # The helm chart does not support Intel GPUs so we use a kustomize patch instead
 
 deployment:
   labels:
