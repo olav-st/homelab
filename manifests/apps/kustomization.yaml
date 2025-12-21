@@ -13,4 +13,3 @@ resources:
   - ./ollama
   - ./openwebui
   - ./pingvinshare
-  - ./samba
