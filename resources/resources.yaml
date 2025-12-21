@@ -171,15 +171,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    pod-security.kubernetes.io/audit: privileged
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/warn: privileged
-  name: samba
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: sealed-secrets
 ---
 apiVersion: v1
@@ -8709,94 +8700,6 @@ metadata:
   namespace: pingvinshare
 ---
 apiVersion: v1
-data:
-  hosts: |
-    192.168.0.92 homelab-samba-server.local
-kind: ConfigMap
-metadata:
-  name: avahi-hosts
-  namespace: samba
----
-apiVersion: v1
-data:
-  smb.service: |
-    <?xml version="1.0" standalone='no'?>
-    <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-    <service-group>
-      <name replace-wildcards="yes">Homelab</name>
-      <service>
-        <type>_smb._tcp</type>
-        <port>445</port>
-        <host-name>homelab-samba-server.local</host-name>
-      </service>
-      <service>
-        <type>_device-info._tcp</type>
-        <port>0</port>
-        <txt-record>model=NAS</txt-record>
-      </service>
-    </service-group>
-kind: ConfigMap
-metadata:
-  name: avahi-services
-  namespace: samba
----
-apiVersion: v1
-data:
-  config.json: |-
-    {
-      "samba-container-config": "v0",
-      "globals": {
-        "default": {
-          "options": {
-            "server min protocol": "NT1",
-            "ntlm auth": "ntlmv1-permitted",
-            "security": "user",
-            "log level": "1",
-            "map to guest": "Bad User",
-            "guest account": "nobody",
-            "host msdfs": "no",
-            "idmap config * : backend": "tdb",
-            "idmap config * : range": "3000-7999"
-          }
-        }
-      },
-      "shares": {
-        "Media": {
-          "options": {
-            "path": "/mnt/media",
-            "guest ok": "yes",
-            "guest only": "yes",
-            "read only": "no",
-            "browseable": "yes",
-            "create mask": "0664",
-            "directory mask": "0775",
-            "force user": "nobody",
-            "force group": "nobody"
-          }
-        }
-      },
-      "users": {
-        "all_entries": []
-      },
-      "configs": {
-        "samba": {
-          "instance_name": "samba",
-          "instance_features": [],
-          "shares": [
-            "Media"
-          ],
-          "globals": [
-            "default"
-          ]
-        }
-      }
-    }
-kind: ConfigMap
-metadata:
-  name: samba-config
-  namespace: samba
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: crossplane-root-ca
@@ -10166,26 +10069,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    io.cilium/lb-ipam-ips: 192.168.0.92
-    netbird.io/expose: "true"
-    netbird.io/groups: cluster
-    netbird.io/policy: cluster
-  name: samba
-  namespace: samba
-spec:
-  ports:
-    - name: smb
-      port: 445
-      protocol: TCP
-      targetPort: 445
-  selector:
-    app: samba
-  type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
   labels:
     app.kubernetes.io/instance: sealed-secrets
     app.kubernetes.io/managed-by: Helm
@@ -10522,9 +10405,9 @@ spec:
       containers:
         - env:
             - name: PUID
-              value: "65534"
+              value: "568"
             - name: PGID
-              value: "65534"
+              value: "568"
             - name: RPC_SECRET
               valueFrom:
                 secretKeyRef:
@@ -15206,66 +15089,6 @@ spec:
           persistentVolumeClaim:
             claimName: open-webui
 ---
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: samba
-  namespace: samba
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: samba
-  serviceName: samba
-  template:
-    metadata:
-      labels:
-        app: samba
-    spec:
-      containers:
-        - env:
-            - name: SAMBACC_CONFIG
-              value: /etc/samba-container/config.json
-            - name: SAMBA_CONTAINER_ID
-              value: samba
-          image: quay.io/samba.org/samba-server:v0.8
-          name: samba
-          ports:
-            - containerPort: 445
-              name: smb
-              protocol: TCP
-          volumeMounts:
-            - mountPath: /etc/samba-container
-              name: samba-config
-              readOnly: true
-            - mountPath: /mnt/media
-              name: media-storage
-      initContainers:
-        - command:
-            - sh
-            - -c
-            - |
-              chown -R 65534:65534 /mnt/media
-              chmod -R 775 /mnt/media
-          image: busybox:latest
-          name: fix-permissions
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - mountPath: /mnt/media
-              name: media-storage
-      volumes:
-        - configMap:
-            items:
-              - key: config.json
-                path: config.json
-            name: samba-config
-          name: samba-config
-        - hostPath:
-            path: /var/mnt/bulk-storage/shares/media
-            type: DirectoryOrCreate
-          name: media-storage
----
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -16812,47 +16635,6 @@ spec:
                 path: nfd-worker.conf
             name: nfd-node-feature-discovery-worker-conf
           name: nfd-worker-conf
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: avahi
-  namespace: samba
-spec:
-  selector:
-    matchLabels:
-      app: avahi
-  template:
-    metadata:
-      labels:
-        app: avahi
-    spec:
-      containers:
-        - env:
-            - name: ALLOW_INTERFACES
-              value: br0
-          image: ydkn/avahi:343
-          name: avahi
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
-          volumeMounts:
-            - mountPath: /etc/avahi/services
-              name: avahi-services
-              readOnly: true
-            - mountPath: /etc/avahi/hosts
-              name: avahi-hosts
-              readOnly: true
-              subPath: hosts
-      hostNetwork: true
-      volumes:
-        - configMap:
-            name: avahi-services
-          name: avahi-services
-        - configMap:
-            name: avahi-hosts
-          name: avahi-hosts
 ---
 apiVersion: batch/v1
 kind: Job
