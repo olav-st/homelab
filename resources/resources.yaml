@@ -14785,7 +14785,7 @@ spec:
             limits:
               memory: 4096Mi
             requests:
-              cpu: 500m
+              cpu: 200m
               memory: 1024Mi
           securityContext:
             runAsNonRoot: true
