@@ -22,7 +22,7 @@ extraEnv: |
 
 resources:
   requests:
-    cpu: 500m
+    cpu: 200m
     memory: 1024Mi
   limits:
     memory: 4096Mi
