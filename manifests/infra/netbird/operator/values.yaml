@@ -1,7 +1,7 @@
 # https://github.com/netbirdio/kubernetes-operator/blob/main/helm/kubernetes-operator/values.yaml
 managementURL: https://netbird.homelab.olav.ninja
 
-routingClientImage: netbirdio/netbird:0.60.8-rootless # renovate: docker=netbirdio/netbird
+routingClientImage: netbirdio/netbird:0.60.9-rootless # renovate: docker=netbirdio/netbird
 
 netbirdAPI:
   keyFromSecret:
