@@ -5,3 +5,11 @@ provisioning:
   diskSelector:
     match: disk.wwid == 'naa.50014ee21422733e'
   minSize: 500GB
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: longhorn-extra
+provisioning:
+  diskSelector:
+    match: disk.wwid == 'nvme.1c5c-435330424e393738353131333042553637-48464d3030315444334a583031334e-00000001'
+  minSize: 500GB

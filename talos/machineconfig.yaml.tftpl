@@ -23,7 +23,7 @@ machine:
       - interface: br0
         bridge:
           interfaces:
-            - enp1s0
+            - enp2s0
           stp:
             enabled: true
         dhcp: true
@@ -42,6 +42,21 @@ machine:
             device_ownership_from_security_context = true
       path: /etc/cri/conf.d/20-customization.part
       op: create
+  nodeLabels:
+    node.longhorn.io/create-default-disk: config
+  nodeAnnotations:
+    node.longhorn.io/default-disks-config: |
+      [
+          {
+              "path":"/var/lib/longhorn",
+              "allowScheduling":true
+          },
+          {
+              "name": "longhorn-extra",
+              "path":"/var/mnt/longhorn-extra",
+              "allowScheduling":true
+          }
+      ]
 
 cluster:
   allowSchedulingOnControlPlanes: true
