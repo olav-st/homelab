@@ -8028,7 +8028,7 @@ metadata:
 apiVersion: v1
 data:
   default-setting.yaml: |-
-    default-data-path: "/var/lib/longhorn"
+    create-default-disk-labeled-nodes: true
     default-replica-count: "{\"v1\":\"1\",\"v2\":\"1\"}"
     default-data-locality: "best-effort"
     priority-class: "longhorn-critical"
