@@ -17984,7 +17984,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/appName: Immich
     hajimari.io/enable: "true"
-    hajimari.io/icon: https://user-images.githubusercontent.com/27055614/182044984-2ee6d1ed-c4a7-4331-8a4b-64fcde77fe1f.png
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   labels:
     app.kubernetes.io/instance: immich
