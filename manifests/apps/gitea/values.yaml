@@ -64,7 +64,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     ingress.kubernetes.io/proxy-body-size: 10000m
-    traefik.ingress.kubernetes.io/router.middlewares: gitea-login-redirect-keycloak@kubernetescrd,traefik-sablier-gitea@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: gitea-login-redirect-keycloak@kubernetescrd,gitea-sablier@kubernetescrd
     hajimari.io/enable: 'true'
     hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
   hosts:

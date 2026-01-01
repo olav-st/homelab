@@ -8,7 +8,7 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-ollama-openwebui@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: openwebui-sablier@kubernetescrd
     hajimari.io/enable: 'true'
     hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
   host: openwebui.homelab.olav.ninja

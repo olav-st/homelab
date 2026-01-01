@@ -43,7 +43,7 @@ ingress:
   app:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
-      traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-bambustudio@kubernetescrd
+      traefik.ingress.kubernetes.io/router.middlewares: bambustudio-sablier@kubernetescrd
       hajimari.io/enable: 'true'
       hajimari.io/appName: 'Bambu Studio'
       hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528

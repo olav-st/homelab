@@ -1,23 +1,13 @@
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: login-redirect-keycloak
-spec:
-  redirectRegex:
-    regex: ^(https?://[^/]+)/user/login(\?.*)?$
-    replacement: ${1}/user/oauth2/keycloak${2}
-    permanent: false
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
   name: sablier
 spec:
   plugin:
     sablier:
-      group: gitea
+      group: pingvinshare
       dynamic:
-        displayName: Gitea
+        displayName: Pingvin Share
         refreshFrequency: 5s
         showDetails: "true"
         theme: ghost

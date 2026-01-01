@@ -4,6 +4,7 @@ namespace: ollama
 
 resources:
   - namespace.yaml
+  - middleware.yaml
 
 helmCharts:
   - name: ollama

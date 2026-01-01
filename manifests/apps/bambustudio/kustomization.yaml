@@ -5,6 +5,7 @@ namespace: bambustudio
 resources:
   - namespace.yaml
   - pvcs.yaml
+  - middleware.yaml
 
 helmCharts:
   - name: app-template

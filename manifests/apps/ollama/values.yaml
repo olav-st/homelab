@@ -11,7 +11,7 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.middlewares: traefik-sablier-ollama-openwebui@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: ollama-sablier@kubernetescrd
   hosts:
     - host: ollama.homelab.olav.ninja
       paths:
