@@ -17873,7 +17873,7 @@ metadata:
     checksum/services: d7142975254d86e7952c9a1dcc2aef8d56fc97f2bd2bae51b68ee07e82f5686b
     hajimari.io/appName: FileFlows
     hajimari.io/enable: "true"
-    hajimari.io/icon: https://fileflows.com/favicon.svg
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
     traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
   labels:
     app: fileflows-14.18.6
