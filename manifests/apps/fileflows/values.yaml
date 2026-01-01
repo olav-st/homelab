@@ -17,7 +17,7 @@ ingress:
       cert-manager.io/cluster-issuer: letsencrypt
       hajimari.io/enable: 'true'
       hajimari.io/appName: 'FileFlows'
-      hajimari.io/icon: https://fileflows.com/favicon.svg
+      hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
       traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
     hosts:
       - host: &hostName fileflows.homelab.olav.ninja
