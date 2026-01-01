@@ -11734,18 +11734,15 @@ metadata:
     app.kubernetes.io/name: gitea
     app.kubernetes.io/version: 1.24.6
     helm.sh/chart: gitea-12.4.0
-    sablier.enable: "true"
-    sablier.group: gitea
     version: 1.24.6
   name: gitea
   namespace: gitea
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: gitea
       app.kubernetes.io/name: gitea
-      sablier.enable: "true"
-      sablier.group: gitea
   strategy:
     type: Recreate
   template:
@@ -11760,8 +11757,6 @@ spec:
         app.kubernetes.io/name: gitea
         app.kubernetes.io/version: 1.24.6
         helm.sh/chart: gitea-12.4.0
-        sablier.enable: "true"
-        sablier.group: gitea
         version: 1.24.6
     spec:
       containers:
@@ -17917,7 +17912,6 @@ metadata:
     hajimari.io/enable: "true"
     hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
     ingress.kubernetes.io/proxy-body-size: 10000m
-    traefik.ingress.kubernetes.io/router.middlewares: gitea-login-redirect-keycloak@kubernetescrd,gitea-sablier@kubernetescrd
   labels:
     app: gitea
     app.kubernetes.io/instance: gitea
@@ -19018,23 +19012,6 @@ spec:
     permanent: false
     regex: ^(https?://[^/]+)/user/login(\?.*)?$
     replacement: ${1}/user/oauth2/keycloak${2}
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: sablier
-  namespace: gitea
-spec:
-  plugin:
-    sablier:
-      dynamic:
-        displayName: Gitea
-        refreshFrequency: 5s
-        showDetails: "true"
-        theme: ghost
-      group: gitea
-      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 1h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
