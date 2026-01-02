@@ -606,7 +606,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-8.22.0
+    helm.sh/chart: open-webui-8.22.1
   name: existing-sa
   namespace: openwebui
 ---
@@ -10002,7 +10002,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-8.22.0
+    helm.sh/chart: open-webui-8.22.1
   name: open-webui
   namespace: openwebui
 spec:
@@ -15009,7 +15009,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-8.22.0
+    helm.sh/chart: open-webui-8.22.1
     sablier.enable: "true"
     sablier.group: ollama-openwebui
   name: open-webui
@@ -15028,7 +15028,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: open-webui
         app.kubernetes.io/version: 0.6.43
-        helm.sh/chart: open-webui-8.22.0
+        helm.sh/chart: open-webui-8.22.1
     spec:
       automountServiceAccountToken: false
       containers:
@@ -18336,7 +18336,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-8.22.0
+    helm.sh/chart: open-webui-8.22.1
   name: open-webui
   namespace: openwebui
 spec:
