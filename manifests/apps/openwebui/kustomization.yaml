@@ -14,7 +14,7 @@ helmCharts:
     releaseName: openwebui
     namespace: openwebui
     repo: https://helm.openwebui.com/
-    version: 8.22.1
+    version: 9.0.0
     valuesFile: values.yaml
 
 patches:
