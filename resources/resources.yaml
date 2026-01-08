@@ -649,7 +649,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik
   namespace: traefik
 ---
@@ -5932,7 +5932,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik-traefik
 rules:
   - apiGroups:
@@ -7006,7 +7006,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik-traefik
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10145,7 +10145,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik
   namespace: traefik
 spec:
@@ -14396,7 +14396,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik
   namespace: traefik
 spec:
@@ -14421,7 +14421,7 @@ spec:
         app.kubernetes.io/instance: traefik-traefik
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-38.0.1
+        helm.sh/chart: traefik-38.0.2
     spec:
       automountServiceAccountToken: true
       containers:
@@ -14464,7 +14464,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: USER
               value: traefik
-          image: docker.io/traefik:v3.6.5
+          image: docker.io/traefik:v3.6.6
           imagePullPolicy: IfNotPresent
           lifecycle: null
           livenessProbe:
@@ -14526,6 +14526,8 @@ spec:
         runAsGroup: 65532
         runAsNonRoot: true
         runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: traefik
       terminationGracePeriodSeconds: 60
       volumes:
@@ -18463,7 +18465,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik
 spec:
   controller: traefik.io/ingress-controller
@@ -18744,6 +18746,9 @@ spec:
                 - 643e
                 - ad1d
                 - 7d1d
+                - b03e
+                - fd3e
+                - d71d
             vendor:
               op: In
               value:
@@ -18959,7 +18964,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-38.0.1
+    helm.sh/chart: traefik-38.0.2
   name: traefik-dashboard
   namespace: traefik
 spec:
