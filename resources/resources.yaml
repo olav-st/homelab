@@ -13104,7 +13104,7 @@ spec:
             - console
             - --dns-domain
             - netbird
-          image: netbirdio/management:0.61.0
+          image: netbirdio/management:0.62.3
           imagePullPolicy: IfNotPresent
           name: netbird-management
           ports:
@@ -13226,7 +13226,7 @@ spec:
           envFrom:
             - secretRef:
                 name: netbird-relay-secret
-          image: netbirdio/relay:0.61.0
+          image: netbirdio/relay:0.62.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
@@ -13277,7 +13277,7 @@ spec:
             - info
             - --log-file
             - console
-          image: netbirdio/signal:0.61.0
+          image: netbirdio/signal:0.62.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
@@ -13407,7 +13407,7 @@ spec:
             - --cluster-name=cluster
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
-            - --netbird-client-image=netbirdio/netbird:0.61.0-rootless
+            - --netbird-client-image=netbirdio/netbird:0.62.3-rootless
           command:
             - /manager
           env:
