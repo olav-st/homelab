@@ -10362,7 +10362,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 320Gi
+      storage: 400Gi
   storageClassName: longhorn-static
   volumeName: nextcloud-data
 ---
