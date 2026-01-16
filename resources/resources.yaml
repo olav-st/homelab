@@ -8426,7 +8426,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.3
-    helm.sh/chart: nextcloud-8.7.0
+    helm.sh/chart: nextcloud-8.8.1
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8444,7 +8444,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.3
-    helm.sh/chart: nextcloud-8.7.0
+    helm.sh/chart: nextcloud-8.8.1
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -9907,7 +9907,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.3
-    helm.sh/chart: nextcloud-8.7.0
+    helm.sh/chart: nextcloud-8.8.1
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13472,7 +13472,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.3
-    helm.sh/chart: nextcloud-8.7.0
+    helm.sh/chart: nextcloud-8.8.1
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -18337,7 +18337,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 32.0.3
-    helm.sh/chart: nextcloud-8.7.0
+    helm.sh/chart: nextcloud-8.8.1
   name: nextcloud
   namespace: nextcloud
 spec:
