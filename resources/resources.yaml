@@ -8734,9 +8734,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea
   namespace: gitea
 stringData:
@@ -8906,9 +8906,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea-init
   namespace: gitea
 stringData:
@@ -8939,9 +8939,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea-inline-config
   namespace: gitea
 stringData:
@@ -9280,9 +9280,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea-http
   namespace: gitea
 spec:
@@ -9304,9 +9304,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea-ssh
   namespace: gitea
 spec:
@@ -11587,7 +11587,7 @@ spec:
               value: "568"
             - name: GID
               value: "568"
-          image: docker.io/revenz/fileflows:25.12
+          image: docker.io/revenz/fileflows:26.01
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 5
@@ -11754,9 +11754,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea
   namespace: gitea
 spec:
@@ -11770,16 +11770,16 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 5b58dee69f094bc86e96ff125193a5b11312b6a2fb25e818bf3791fc24519c2a
+        checksum/config: ca4ea439197cff52b0697ce5ef50ca29b40bd2c6efba11da7dd61daf47c72eac
         checksum/oauth_0: 01764dcd9b49e15763176a4daa8f8e10f4902756616d3e834ef1341e80062ad5
       labels:
         app: gitea
         app.kubernetes.io/instance: gitea
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: gitea
-        app.kubernetes.io/version: 1.24.6
-        helm.sh/chart: gitea-12.4.0
-        version: 1.24.6
+        app.kubernetes.io/version: 1.25.4
+        helm.sh/chart: gitea-12.5.0
+        version: 1.25.4
     spec:
       containers:
         - env:
@@ -11799,7 +11799,7 @@ spec:
               value: /tmp/gitea
             - name: HOME
               value: /data/gitea/git
-          image: docker.gitea.com/gitea:1.24.6-rootless
+          image: docker.gitea.com/gitea:1.25.4-rootless
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -11842,7 +11842,7 @@ spec:
               value: /data
             - name: GITEA_TEMP
               value: /tmp/gitea
-          image: docker.gitea.com/gitea:1.24.6-rootless
+          image: docker.gitea.com/gitea:1.25.4-rootless
           imagePullPolicy: IfNotPresent
           name: init-directories
           resources:
@@ -11895,7 +11895,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: gitea-postgresql-app
-          image: docker.gitea.com/gitea:1.24.6-rootless
+          image: docker.gitea.com/gitea:1.25.4-rootless
           imagePullPolicy: IfNotPresent
           name: init-app-ini
           resources:
@@ -11948,7 +11948,7 @@ spec:
                   name: gitea-admin-user
             - name: GITEA_ADMIN_PASSWORD_MODE
               value: keepUpdated
-          image: docker.gitea.com/gitea:1.24.6-rootless
+          image: docker.gitea.com/gitea:1.25.4-rootless
           imagePullPolicy: IfNotPresent
           name: configure-gitea
           resources:
@@ -17985,9 +17985,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea
   namespace: gitea
 spec:
@@ -19251,9 +19251,9 @@ metadata:
     app.kubernetes.io/instance: gitea
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.24.6
-    helm.sh/chart: gitea-12.4.0
-    version: 1.24.6
+    app.kubernetes.io/version: 1.25.4
+    helm.sh/chart: gitea-12.5.0
+    version: 1.25.4
   name: gitea-test-connection
   namespace: gitea
 spec:
