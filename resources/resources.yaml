@@ -10446,7 +10446,7 @@ spec:
               value: "true"
             - name: ARIA2RPCPORT
               value: "443"
-          image: hurlenko/aria2-ariang:1.3.12
+          image: hurlenko/aria2-ariang:1.3.13
           name: aria2
           ports:
             - containerPort: 8080
