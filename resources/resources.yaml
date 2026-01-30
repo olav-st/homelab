@@ -10548,7 +10548,7 @@ spec:
               value: "1000"
             - name: TZ
               value: Europe/Oslo
-          image: linuxserver/bambustudio:02.04.00
+          image: linuxserver/bambustudio:02.05.00
           name: app
           resources:
             limits:
