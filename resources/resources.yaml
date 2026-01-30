@@ -604,8 +604,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
   name: existing-sa
   namespace: openwebui
 ---
@@ -10000,8 +10000,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
   name: open-webui
   namespace: openwebui
 spec:
@@ -10023,8 +10023,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
   name: open-webui-redis
   namespace: openwebui
 spec:
@@ -14026,8 +14026,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
   name: open-webui-redis
   namespace: openwebui
 spec:
@@ -14043,8 +14043,8 @@ spec:
         app.kubernetes.io/instance: openwebui
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: open-webui
-        app.kubernetes.io/version: 0.6.43
-        helm.sh/chart: open-webui-9.0.0
+        app.kubernetes.io/version: 0.7.2
+        helm.sh/chart: open-webui-10.2.1
     spec:
       containers:
         - image: redis:7.4.2-alpine3.21
@@ -15068,8 +15068,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
     sablier.enable: "true"
     sablier.group: ollama-openwebui
   name: open-webui
@@ -15087,8 +15087,8 @@ spec:
         app.kubernetes.io/instance: openwebui
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: open-webui
-        app.kubernetes.io/version: 0.6.43
-        helm.sh/chart: open-webui-9.0.0
+        app.kubernetes.io/version: 0.7.2
+        helm.sh/chart: open-webui-10.2.1
     spec:
       automountServiceAccountToken: false
       containers:
@@ -15105,6 +15105,8 @@ spec:
               value: "True"
             - name: WEBSOCKET_MANAGER
               value: redis
+            - name: REDIS_URL
+              value: redis://open-webui-redis:6379/0
             - name: WEBSOCKET_REDIS_URL
               value: redis://open-webui-redis:6379/0
             - name: ENABLE_OPENAI_API
@@ -15129,7 +15131,7 @@ spec:
               value: Keycloak
             - name: OAUTH_SCOPES
               value: openid email profile
-          image: ghcr.io/open-webui/open-webui:0.6.43
+          image: ghcr.io/open-webui/open-webui:0.7.2
           imagePullPolicy: IfNotPresent
           name: open-webui
           ports:
@@ -15145,7 +15147,7 @@ spec:
             - sh
             - -c
             - cp -R -n /app/backend/data/* /tmp/app-data/
-          image: ghcr.io/open-webui/open-webui:0.6.43
+          image: ghcr.io/open-webui/open-webui:0.7.2
           imagePullPolicy: IfNotPresent
           name: copy-app-data
           volumeMounts:
@@ -18401,8 +18403,8 @@ metadata:
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.6.43
-    helm.sh/chart: open-webui-9.0.0
+    app.kubernetes.io/version: 0.7.2
+    helm.sh/chart: open-webui-10.2.1
   name: open-webui
   namespace: openwebui
 spec:
