@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: aria2
-          image: hurlenko/aria2-ariang:1.3.12 # renovate: docker=hurlenko/aria2-ariang
+          image: hurlenko/aria2-ariang:1.3.13 # renovate: docker=hurlenko/aria2-ariang
           env:
             - name: PUID
               value: "568" # user in fileflows container
