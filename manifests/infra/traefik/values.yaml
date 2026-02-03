@@ -34,10 +34,11 @@ ports:
     expose:
       default: true
     exposedPort: 443
-    tls:
-      enabled: true
-    middlewares:
-      - traefik-securityheaders@kubernetescrd
+    http:
+      middlewares:
+        - traefik-securityheaders@kubernetescrd
+      tls:
+        enabled: true
     transport:
       respondingTimeouts:
         readTimeout: 0 # Required for Netbird signal GRPC
@@ -47,10 +48,11 @@ ports:
     port: 9443
     containerPort: 9443
     exposedPort: 9443
-    tls:
-      enabled: true
-    middlewares:
-      - traefik-securityheaders@kubernetescrd
+    http:
+      middlewares:
+        - traefik-securityheaders@kubernetescrd
+      tls:
+        enabled: true
     transport:
       respondingTimeouts:
         readTimeout: 0 # Required for Netbird signal GRPC
