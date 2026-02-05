@@ -1,5 +1,5 @@
 # Use the official docker-in-docker alpine image as a base
-FROM docker:29.2.0-dind-alpine3.23
+FROM docker:29.2.1-dind-alpine3.23
 
 # Install required packages
 RUN apk -U add \
