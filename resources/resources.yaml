@@ -9248,13 +9248,13 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: fileflows-15.0.12
+    app: fileflows-15.0.14
     app.kubernetes.io/instance: fileflows
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: fileflows
     app.kubernetes.io/version: 26.01.0
     helm-revision: "1"
-    helm.sh/chart: fileflows-15.0.12
+    helm.sh/chart: fileflows-15.0.14
     release: fileflows
     service.name: main
   name: fileflows
@@ -10253,13 +10253,13 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: fileflows-15.0.12
+    app: fileflows-15.0.14
     app.kubernetes.io/instance: fileflows
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: fileflows
     app.kubernetes.io/version: 26.01.0
     helm-revision: "1"
-    helm.sh/chart: fileflows-15.0.12
+    helm.sh/chart: fileflows-15.0.14
     release: fileflows
   name: fileflows-logs
   namespace: fileflows
@@ -11509,13 +11509,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: fileflows-15.0.12
+    app: fileflows-15.0.14
     app.kubernetes.io/instance: fileflows
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: fileflows
     app.kubernetes.io/version: 26.01.0
     helm-revision: "1"
-    helm.sh/chart: fileflows-15.0.12
+    helm.sh/chart: fileflows-15.0.14
     release: fileflows
   name: fileflows
   namespace: fileflows
@@ -11542,13 +11542,13 @@ spec:
         checksum/services: 7a621b3d13b2222ce184ed3ef381a35786f30f3dd9a51898ba79b8e04a1ff64f
         checksum/solr: 29c14feeaddbf7762052db593898d274941f539cee681ddc613957587686f347
       labels:
-        app: fileflows-15.0.12
+        app: fileflows-15.0.14
         app.kubernetes.io/instance: fileflows
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: fileflows
         app.kubernetes.io/version: 26.01.0
         helm-revision: "1"
-        helm.sh/chart: fileflows-15.0.12
+        helm.sh/chart: fileflows-15.0.14
         pod.lifecycle: permanent
         pod.name: main
         release: fileflows
@@ -17944,13 +17944,13 @@ metadata:
     hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
     traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
   labels:
-    app: fileflows-15.0.12
+    app: fileflows-15.0.14
     app.kubernetes.io/instance: fileflows
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: fileflows
     app.kubernetes.io/version: 26.01.0
     helm-revision: "1"
-    helm.sh/chart: fileflows-15.0.12
+    helm.sh/chart: fileflows-15.0.14
     release: fileflows
   name: fileflows
   namespace: fileflows
