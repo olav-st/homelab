@@ -10,7 +10,7 @@ controllers:
     containers:
       main:
         image:
-          tag: v2.5.3 # renovate: github-releases=immich-app/immich
+          tag: v2.5.5 # renovate: github-releases=immich-app/immich
         env:
           DB_HOSTNAME: 'immich-postgresql-rw'
           DB_USERNAME: 
