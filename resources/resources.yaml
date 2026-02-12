@@ -12115,7 +12115,7 @@ spec:
               value: immich-valkey
             - name: TRANSFORMERS_CACHE
               value: /cache
-          image: ghcr.io/immich-app/immich-machine-learning:v2.5.5
+          image: ghcr.io/immich-app/immich-machine-learning:v2.5.6
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -12211,7 +12211,7 @@ spec:
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
               value: immich-valkey
-          image: ghcr.io/immich-app/immich-server:v2.5.5
+          image: ghcr.io/immich-app/immich-server:v2.5.6
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
