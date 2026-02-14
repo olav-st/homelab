@@ -10472,7 +10472,7 @@ spec:
           envFrom:
             - secretRef:
                 name: gluetun-secrets
-          image: qmcgaw/gluetun:v3.41.0
+          image: qmcgaw/gluetun:v3.41.1
           livenessProbe:
             exec:
               command:
