@@ -8429,8 +8429,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.5
-    helm.sh/chart: nextcloud-8.9.0
+    app.kubernetes.io/version: 32.0.6
+    helm.sh/chart: nextcloud-8.9.1
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8447,8 +8447,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.5
-    helm.sh/chart: nextcloud-8.9.0
+    app.kubernetes.io/version: 32.0.6
+    helm.sh/chart: nextcloud-8.9.1
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -9910,8 +9910,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.5
-    helm.sh/chart: nextcloud-8.9.0
+    app.kubernetes.io/version: 32.0.6
+    helm.sh/chart: nextcloud-8.9.1
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13475,8 +13475,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.5
-    helm.sh/chart: nextcloud-8.9.0
+    app.kubernetes.io/version: 32.0.6
+    helm.sh/chart: nextcloud-8.9.1
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13547,7 +13547,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: docker.io/library/nextcloud:32.0.5-apache
+          image: docker.io/library/nextcloud:32.0.6-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -13688,7 +13688,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: docker.io/library/nextcloud:32.0.5-apache
+          image: docker.io/library/nextcloud:32.0.6-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -18342,8 +18342,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.5
-    helm.sh/chart: nextcloud-8.9.0
+    app.kubernetes.io/version: 32.0.6
+    helm.sh/chart: nextcloud-8.9.1
   name: nextcloud
   namespace: nextcloud
 spec:
