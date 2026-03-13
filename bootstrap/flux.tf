@@ -50,7 +50,7 @@ resource "kubernetes_secret_v1" "ssh_keypair" {
 resource "helm_release" "flux2_sync" {
   repository = "https://fluxcd-community.github.io/helm-charts"
   chart      = "flux2-sync"
-  version    = "1.14.1"
+  version    = "1.14.3"
 
   name      = "flux-system"
   namespace = "flux-system"
