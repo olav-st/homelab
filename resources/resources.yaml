@@ -7793,8 +7793,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: immich
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-immich-config
   namespace: immich
 ---
@@ -9454,8 +9454,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/service: immich-machine-learning
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -9478,13 +9478,14 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/service: immich-server
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-server
   namespace: immich
 spec:
   ports:
-    - name: http
+    - appProtocol: kubernetes.io/ws
+      name: http
       port: 2283
       protocol: TCP
       targetPort: http
@@ -9502,8 +9503,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/service: immich-valkey
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-valkey
   namespace: immich
 spec:
@@ -12110,8 +12111,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -12208,8 +12209,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-server
   namespace: immich
 spec:
@@ -12310,8 +12311,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-valkey
   namespace: immich
 spec:
@@ -12350,7 +12351,7 @@ spec:
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
               value: immich-valkey
-          image: docker.io/valkey/valkey:9.0-alpine@sha256:b4ee67d73e00393e712accc72cfd7003b87d0fcd63f0eba798b23251bfc9c394
+          image: docker.io/valkey/valkey:9.1-alpine@sha256:355ae2c6c965769a0d9b9810711e6befd5b79fe676d1faa848247733ad6a4408
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -18053,8 +18054,8 @@ metadata:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
-    app.kubernetes.io/version: v2.0.0
-    helm.sh/chart: immich-0.10.3
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.11.0
   name: immich-server
   namespace: immich
 spec:
