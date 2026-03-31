@@ -1,8 +1,0 @@
-# This job runs when we first install Cilium (during Talos bootstrap)
-# So we don't need to apply it later
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: hubble-generate-certs
-  namespace: kube-system
-$patch: delete
