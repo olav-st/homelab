@@ -650,7 +650,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik
   namespace: traefik
 ---
@@ -5951,7 +5951,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik-traefik
 rules:
   - apiGroups:
@@ -7046,7 +7046,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik-traefik
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10223,7 +10223,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik
   namespace: traefik
 spec:
@@ -14451,7 +14451,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik
   namespace: traefik
 spec:
@@ -14476,7 +14476,7 @@ spec:
         app.kubernetes.io/instance: traefik-traefik
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-39.0.6
+        helm.sh/chart: traefik-39.0.7
     spec:
       automountServiceAccountToken: true
       containers:
@@ -14519,7 +14519,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: USER
               value: traefik
-          image: docker.io/traefik:v3.6.11
+          image: docker.io/traefik:v3.6.12
           imagePullPolicy: IfNotPresent
           lifecycle: null
           livenessProbe:
@@ -18509,7 +18509,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik
 spec:
   controller: traefik.io/ingress-controller
@@ -19008,7 +19008,7 @@ metadata:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-39.0.6
+    helm.sh/chart: traefik-39.0.7
   name: traefik-dashboard
   namespace: traefik
 spec:
