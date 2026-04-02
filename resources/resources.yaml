@@ -7818,7 +7818,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: immich
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-immich-config
   namespace: immich
 ---
@@ -9488,7 +9488,7 @@ metadata:
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/service: immich-machine-learning
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -9512,7 +9512,7 @@ metadata:
     app.kubernetes.io/name: server
     app.kubernetes.io/service: immich-server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-server
   namespace: immich
 spec:
@@ -9537,7 +9537,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/service: immich-valkey
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-valkey
   namespace: immich
 spec:
@@ -12145,7 +12145,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -12243,7 +12243,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-server
   namespace: immich
 spec:
@@ -12345,7 +12345,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-valkey
   namespace: immich
 spec:
@@ -18096,7 +18096,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.0
+    helm.sh/chart: immich-0.11.1
   name: immich-server
   namespace: immich
 spec:
