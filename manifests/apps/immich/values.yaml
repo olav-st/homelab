@@ -1,3 +1,4 @@
+# https://github.com/immich-app/immich-charts/blob/main/charts/immich/values.yaml
 immich:
   configuration:
     placeholder: foo # will be replaced by kustomize patch
@@ -23,6 +24,11 @@ controllers:
               secretKeyRef:
                 key: password
                 name: immich-postgresql-user
+        resources:
+          requests:
+            gpu.intel.com/i915: 1
+          limits:
+            gpu.intel.com/i915: 1
 
 envFrom:
   - secretRef:
