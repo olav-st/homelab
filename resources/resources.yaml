@@ -17015,7 +17015,7 @@ spec:
                   policyName: "cluster"
                   tcpPorts:
                   - 443
-          image: netbirdio/kubectl:latest
+          image: netbirdio/kubectl:0.3.0-rc.2
           name: apply-nbresource
       initContainers:
         - args:
@@ -17023,7 +17023,7 @@ spec:
           command:
             - sh
             - -c
-          image: netbirdio/kubectl:latest
+          image: netbirdio/kubectl:0.3.0-rc.2
           name: wait-network-ready
       restartPolicy: Never
       serviceAccountName: netbird-kubernetes-operator
