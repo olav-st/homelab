@@ -18,3 +18,4 @@ helmCharts:
 
 patches:
   - path: patches/fix-nbpolicy-ports.yaml
+  - path: patches/fix-missing-envsubst.yaml # Temporary patch until latest tag is updated

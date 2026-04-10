@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: netbird-kubernetes-operator-kubernetes-service-expose
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: wait-network-ready
+          image: netbirdio/kubectl:0.3.0-rc.2 # latest is outdated... manually switch to a newer image tag that has envsubst
+      containers:
+        - name: apply-nbresource
+          image: netbirdio/kubectl:0.3.0-rc.2
