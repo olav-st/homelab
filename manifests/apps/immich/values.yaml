@@ -8,6 +8,7 @@ immich:
 
 controllers:
   main:
+    strategy: Recreate # Needed for RWO storage 
     containers:
       main:
         image:
