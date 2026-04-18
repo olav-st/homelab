@@ -13509,7 +13509,7 @@ spec:
             - --cluster-name=cluster
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
-            - --netbird-client-image=netbirdio/netbird:0.68.2-rootless
+            - --netbird-client-image=netbirdio/netbird:0.68.3-rootless
           command:
             - /manager
           env:
