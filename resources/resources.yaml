@@ -11707,9 +11707,11 @@ spec:
           resources:
             limits:
               cpu: 1500m
+              gpu.intel.com/i915: 1
               memory: 2400Mi
             requests:
               cpu: 75m
+              gpu.intel.com/i915: 1
               memory: 200Mi
           securityContext:
             allowPrivilegeEscalation: true
@@ -11787,6 +11789,8 @@ spec:
         fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups:
+          - 44
+          - 107
           - 568
         sysctls: []
       serviceAccountName: default
