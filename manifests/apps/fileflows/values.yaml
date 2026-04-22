@@ -49,3 +49,9 @@ persistence:
     hostPath: /var/mnt/bulk-storage
     mountPath: /media
     readOnly: false
+
+resources:
+  limits:
+    gpu.intel.com/i915: "1"
+  requests:
+    gpu.intel.com/i915: "1"
