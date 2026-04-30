@@ -11,5 +11,5 @@ helmCharts:
   releaseName: coturn
   namespace: coturn
   repo: https://charts.jaconi.io
-  version: 1.0.4
+  version: 1.0.5
   valuesFile: values.yaml
