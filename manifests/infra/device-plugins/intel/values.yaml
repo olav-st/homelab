@@ -1,5 +1,5 @@
 name: igpu
-sharedDevNum: 4
+sharedDevNum: 8
 enableMonitoring: false
 nodeFeatureRule: false
 nodeSelector:
