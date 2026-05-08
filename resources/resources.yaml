@@ -10508,10 +10508,11 @@ kind: Deployment
 metadata:
   labels:
     app: aria2
+    sablier.enable: "true"
+    sablier.group: aria2
   name: aria2
   namespace: aria2
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: aria2
@@ -17945,7 +17946,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: streamline-plump-color:download-box-2-flat
-    traefik.ingress.kubernetes.io/router.middlewares: aria2-oidc@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: aria2-oidc@kubernetescrd,aria2-sablier@kubernetescrd
   labels:
     app: aria2
   name: aria2
@@ -19110,6 +19111,23 @@ spec:
         ClientSecret: urn:k8s:secret:aria2-oidc-credentials:clientSecret
         Url: https://keycloak.homelab.olav.ninja/realms/homelab
       Secret: urn:k8s:secret:aria2-oidc-credentials:pluginSecret
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier
+  namespace: aria2
+spec:
+  plugin:
+    sablier:
+      dynamic:
+        displayName: aria2
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      group: aria2
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 24h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
