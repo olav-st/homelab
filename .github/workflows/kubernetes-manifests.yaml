@@ -39,18 +39,25 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build Devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          push: always
+
       - name: Render manifests
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/olav-st/homelab-devcontainer
-          cacheFrom: ghcr.io/olav-st/homelab-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          push: never
           runCmd: make render-manifests
 
       - name: Validate manifests
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/olav-st/homelab-devcontainer
-          cacheFrom: ghcr.io/olav-st/homelab-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          push: never
           runCmd: |
             make validate
 
@@ -131,9 +138,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build Devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          push: always
+
       - name: Check remote manifest URLs
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/olav-st/homelab-devcontainer
-          cacheFrom: ghcr.io/olav-st/homelab-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/homelab-devcontainer
+          push: never
           runCmd: make check-remote-manifests
