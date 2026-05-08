@@ -10,3 +10,19 @@ spec:
         Url: https://keycloak.homelab.olav.ninja/realms/homelab
         ClientId: aria2
         ClientSecret: "urn:k8s:secret:aria2-oidc-credentials:clientSecret"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sablier
+spec:
+  plugin:
+    sablier:
+      group: aria2
+      dynamic:
+        displayName: aria2
+        refreshFrequency: 5s
+        showDetails: "true"
+        theme: ghost
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 24h

@@ -4,6 +4,8 @@ metadata:
   name: aria2
   labels:
     app: aria2
+    sablier.enable: "true"
+    sablier.group: aria2
 spec:
   replicas: 1
   selector:

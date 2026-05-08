@@ -14,3 +14,7 @@ resources:
 
 patches:
   - path: patches/add-gluetun-sidecar.yaml
+  - path: patches/remove-replicas.yaml
+    target:
+      kind: Deployment
+      name: aria2
