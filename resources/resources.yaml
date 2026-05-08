@@ -15744,48 +15744,6 @@ spec:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: amdgpu-device-plugin-daemonset
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      name: amdgpu-dp-ds
-  template:
-    metadata:
-      labels:
-        name: amdgpu-dp-ds
-    spec:
-      containers:
-        - image: rocm/k8s-device-plugin
-          name: amdgpu-dp-cntr
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-            privileged: true
-          volumeMounts:
-            - mountPath: /var/lib/kubelet/device-plugins
-              name: dp
-            - mountPath: /sys
-              name: sys
-      nodeSelector:
-        kubernetes.io/arch: amd64
-      priorityClassName: system-node-critical
-      restartPolicy: Always
-      tolerations:
-        - key: CriticalAddonsOnly
-          operator: Exists
-      volumes:
-        - hostPath:
-            path: /var/lib/kubelet/device-plugins
-          name: dp
-        - hostPath:
-            path: /sys
-          name: sys
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
   labels:
     app.kubernetes.io/name: cilium-agent
     app.kubernetes.io/part-of: cilium
