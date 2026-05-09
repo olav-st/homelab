@@ -19,3 +19,7 @@ service:
     io.cilium/lb-ipam-ips: 192.168.0.91
     lbipam.cilium.io/sharing-key: coturn
   type: LoadBalancer
+
+resources:
+  requests:
+    cpu: 50m
