@@ -11610,7 +11610,7 @@ metadata:
   name: fileflows
   namespace: fileflows
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -11854,7 +11854,7 @@ metadata:
   name: gitea
   namespace: gitea
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: gitea
@@ -12264,7 +12264,7 @@ metadata:
   name: immich-server
   namespace: immich
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -12371,7 +12371,7 @@ metadata:
   name: immich-valkey
   namespace: immich
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -12544,7 +12544,7 @@ metadata:
   name: jellyfin
   namespace: jellyfin
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: jellyfin
@@ -13585,7 +13585,7 @@ metadata:
   name: nextcloud
   namespace: nextcloud
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: app
@@ -14634,7 +14634,7 @@ metadata:
   name: gitea-valkey-primary
   namespace: gitea
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: primary
@@ -14988,7 +14988,7 @@ metadata:
   name: nextcloud-redis-master
   namespace: nextcloud
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
