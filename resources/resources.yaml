@@ -329,8 +329,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.20.0
-    helm.sh/chart: external-dns-1.20.0
+    app.kubernetes.io/version: 0.21.0
+    helm.sh/chart: external-dns-1.21.1
   name: external-dns
   namespace: external-dns
 ---
@@ -3799,8 +3799,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.20.0
-    helm.sh/chart: external-dns-1.20.0
+    app.kubernetes.io/version: 0.21.0
+    helm.sh/chart: external-dns-1.21.1
   name: external-dns
 rules:
   - apiGroups:
@@ -6765,8 +6765,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.20.0
-    helm.sh/chart: external-dns-1.20.0
+    app.kubernetes.io/version: 0.21.0
+    helm.sh/chart: external-dns-1.21.1
   name: external-dns-viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -9315,8 +9315,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.20.0
-    helm.sh/chart: external-dns-1.20.0
+    app.kubernetes.io/version: 0.21.0
+    helm.sh/chart: external-dns-1.21.1
   name: external-dns
   namespace: external-dns
 spec:
@@ -11534,8 +11534,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.20.0
-    helm.sh/chart: external-dns-1.20.0
+    app.kubernetes.io/version: 0.21.0
+    helm.sh/chart: external-dns-1.21.1
   name: external-dns
   namespace: external-dns
 spec:
@@ -11575,7 +11575,7 @@ spec:
                 secretKeyRef:
                   key: email
                   name: cloudflare-api-key
-          image: registry.k8s.io/external-dns/external-dns:v0.20.0
+          image: registry.k8s.io/external-dns/external-dns:v0.21.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 2
