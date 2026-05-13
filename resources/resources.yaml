@@ -186,6 +186,17 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    helm.sh/chart: app-template-5.0.0
+  name: bambustudio
+  namespace: bambustudio
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
     operator.cdi.kubevirt.io: ""
   name: cdi-operator
   namespace: cdi
@@ -610,6 +621,17 @@ metadata:
     helm.sh/chart: open-webui-10.2.1
   name: existing-sa
   namespace: openwebui
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: pingvinshare
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pingvinshare
+    helm.sh/chart: app-template-5.0.0
+  name: pingvinshare
+  namespace: pingvinshare
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -9090,7 +9112,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
     app.kubernetes.io/service: bambustudio
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
   name: bambustudio
   namespace: bambustudio
 spec:
@@ -10111,7 +10133,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
     app.kubernetes.io/service: pingvinshare
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
   name: pingvinshare
   namespace: pingvinshare
 spec:
@@ -10604,7 +10626,7 @@ metadata:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
     sablier.enable: "true"
     sablier.group: bambustudio
   name: bambustudio
@@ -10625,7 +10647,7 @@ spec:
         app.kubernetes.io/instance: bambustudio
         app.kubernetes.io/name: bambustudio
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: DARK_MODE
@@ -10657,7 +10679,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
-      serviceAccountName: default
+      serviceAccountName: bambustudio
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -14171,7 +14193,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
     sablier.enable: "true"
     sablier.group: pingvinshare
   name: pingvinshare
@@ -14192,7 +14214,7 @@ spec:
         app.kubernetes.io/instance: pingvinshare
         app.kubernetes.io/name: pingvinshare
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: TRUST_PROXY
@@ -14253,7 +14275,7 @@ spec:
               readOnly: true
             - mountPath: /data
               name: data
-      serviceAccountName: default
+      serviceAccountName: pingvinshare
       volumes:
         - emptyDir: {}
           name: config
@@ -17940,7 +17962,7 @@ metadata:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: bambustudio
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
   name: bambustudio
   namespace: bambustudio
 spec:
@@ -18465,7 +18487,7 @@ metadata:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-4.6.2
+    helm.sh/chart: app-template-5.0.0
   name: pingvinshare
   namespace: pingvinshare
 spec:
