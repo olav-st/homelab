@@ -272,8 +272,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg
   namespace: cnpg-system
 ---
@@ -2912,8 +2912,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg
 rules:
   - apiGroups:
@@ -3150,8 +3150,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg-edit
 rules:
   - apiGroups:
@@ -3182,8 +3182,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg-view
 rules:
   - apiGroups:
@@ -6680,8 +6680,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7096,8 +7096,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-controller-manager-config
   namespace: cnpg-system
 ---
@@ -7124,11 +7124,11 @@ data:
             , state
             , usename
             , COALESCE(application_name, '') AS application_name
-            , COUNT(*)
-            , COALESCE(EXTRACT (EPOCH FROM (max(now() - xact_start))), 0) AS max_tx_secs
+            , pg_catalog.count(*)
+            , COALESCE(EXTRACT (EPOCH FROM (pg_catalog.max(pg_catalog.now() OPERATOR(pg_catalog.-) xact_start))), 0) AS max_tx_secs
           FROM pg_catalog.pg_stat_activity
           GROUP BY datname, state, usename, application_name
-        ) sa ON states.state = sa.state
+        ) sa ON states.state OPERATOR(pg_catalog.=) sa.state
         WHERE sa.usename IS NOT NULL
       metrics:
         - datname:
@@ -7152,10 +7152,10 @@ data:
 
     backends_waiting:
       query: |
-        SELECT count(*) AS total
+        SELECT pg_catalog.count(*) AS total
         FROM pg_catalog.pg_locks blocked_locks
         JOIN pg_catalog.pg_locks blocking_locks
-          ON blocking_locks.locktype = blocked_locks.locktype
+          ON blocking_locks.locktype OPERATOR(pg_catalog.=) blocked_locks.locktype
           AND blocking_locks.database IS NOT DISTINCT FROM blocked_locks.database
           AND blocking_locks.relation IS NOT DISTINCT FROM blocked_locks.relation
           AND blocking_locks.page IS NOT DISTINCT FROM blocked_locks.page
@@ -7165,8 +7165,8 @@ data:
           AND blocking_locks.classid IS NOT DISTINCT FROM blocked_locks.classid
           AND blocking_locks.objid IS NOT DISTINCT FROM blocked_locks.objid
           AND blocking_locks.objsubid IS NOT DISTINCT FROM blocked_locks.objsubid
-          AND blocking_locks.pid != blocked_locks.pid
-        JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid = blocking_locks.pid
+          AND blocking_locks.pid OPERATOR(pg_catalog.<>) blocked_locks.pid
+        JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid OPERATOR(pg_catalog.=) blocking_locks.pid
         WHERE NOT blocked_locks.granted
       metrics:
         - total:
@@ -7208,14 +7208,14 @@ data:
       query: |
         SELECT CASE WHEN (
             NOT pg_catalog.pg_is_in_recovery()
-            OR pg_catalog.pg_last_wal_receive_lsn() = pg_catalog.pg_last_wal_replay_lsn())
+            OR pg_catalog.pg_last_wal_receive_lsn() OPERATOR(pg_catalog.=) pg_catalog.pg_last_wal_replay_lsn())
           THEN 0
           ELSE GREATEST (0,
-            EXTRACT(EPOCH FROM (now() - pg_catalog.pg_last_xact_replay_timestamp())))
+            EXTRACT(EPOCH FROM (pg_catalog.now() OPERATOR(pg_catalog.-) pg_catalog.pg_last_xact_replay_timestamp())))
           END AS lag,
           pg_catalog.pg_is_in_recovery() AS in_recovery,
-          EXISTS (TABLE pg_stat_wal_receiver) AS is_wal_receiver_up,
-          (SELECT count(*) FROM pg_catalog.pg_stat_replication) AS streaming_replicas
+          EXISTS (TABLE pg_catalog.pg_stat_wal_receiver) AS is_wal_receiver_up,
+          (SELECT pg_catalog.count(*) FROM pg_catalog.pg_stat_replication) AS streaming_replicas
       metrics:
         - lag:
             usage: "GAUGE"
@@ -7263,17 +7263,17 @@ data:
       query: |
         SELECT archived_count
           , failed_count
-          , COALESCE(EXTRACT(EPOCH FROM (now() - last_archived_time)), -1) AS seconds_since_last_archival
-          , COALESCE(EXTRACT(EPOCH FROM (now() - last_failed_time)), -1) AS seconds_since_last_failure
+          , COALESCE(EXTRACT(EPOCH FROM (pg_catalog.now() OPERATOR(pg_catalog.-) last_archived_time)), -1) AS seconds_since_last_archival
+          , COALESCE(EXTRACT(EPOCH FROM (pg_catalog.now() OPERATOR(pg_catalog.-) last_failed_time)), -1) AS seconds_since_last_failure
           , COALESCE(EXTRACT(EPOCH FROM last_archived_time), -1) AS last_archived_time
           , COALESCE(EXTRACT(EPOCH FROM last_failed_time), -1) AS last_failed_time
-          , COALESCE(CAST(CAST('x'||pg_catalog.right(pg_catalog.split_part(last_archived_wal, '.', 1), 16) AS pg_catalog.bit(64)) AS pg_catalog.int8), -1) AS last_archived_wal_start_lsn
-          , COALESCE(CAST(CAST('x'||pg_catalog.right(pg_catalog.split_part(last_failed_wal, '.', 1), 16) AS pg_catalog.bit(64)) AS pg_catalog.int8), -1) AS last_failed_wal_start_lsn
+          , COALESCE(CAST(CAST('x' OPERATOR(pg_catalog.||) pg_catalog.right(pg_catalog.split_part(last_archived_wal, '.', 1), 16) AS pg_catalog.bit(64)) AS pg_catalog.int8), -1) AS last_archived_wal_start_lsn
+          , COALESCE(CAST(CAST('x' OPERATOR(pg_catalog.||) pg_catalog.right(pg_catalog.split_part(last_failed_wal, '.', 1), 16) AS pg_catalog.bit(64)) AS pg_catalog.int8), -1) AS last_failed_wal_start_lsn
           , EXTRACT(EPOCH FROM stats_reset) AS stats_reset_time
         FROM pg_catalog.pg_stat_archiver
       predicate_query: |
         SELECT NOT pg_catalog.pg_is_in_recovery()
-          OR pg_catalog.current_setting('archive_mode') = 'always'
+          OR pg_catalog.current_setting('archive_mode') OPERATOR(pg_catalog.=) 'always'
       metrics:
         - archived_count:
             usage: "COUNTER"
@@ -7559,12 +7559,12 @@ data:
     pg_extensions:
       query: |
         SELECT
-          current_database() as datname,
+          pg_catalog.current_database() as datname,
           name as extname,
           default_version,
           installed_version,
           CASE
-            WHEN default_version = installed_version THEN 0
+            WHEN default_version OPERATOR(pg_catalog.=) installed_version THEN 0
             ELSE 1
         END AS update_available
         FROM pg_catalog.pg_available_extensions
@@ -7593,9 +7593,9 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
+    app.kubernetes.io/version: 1.29.1
     cnpg.io/reload: ""
-    helm.sh/chart: cloudnative-pg-0.28.0
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-default-monitoring
   namespace: cnpg-system
 ---
@@ -9212,8 +9212,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-webhook-service
   namespace: cnpg-system
 spec:
@@ -11034,8 +11034,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-cloudnative-pg
   namespace: cnpg-system
 spec:
@@ -11047,9 +11047,9 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 0b84310a9b67b370b35d8358c17775dd28944c2e7990d461e55a116dc2c8ba6c
-        checksum/monitoring-config: abe87b2b96fa91351ae6517fb7fb1b291b3c2a07b20ad09ef524a3def8e2facf
-        checksum/rbac: f9ab1d3a43e8253c4414d3a1232d1725aeedf63996cac8c26e02ebfd76378b78
+        checksum/config: 17825b981b313287880caefe46b2302ee0839cb64efabd491e31cf053be33e4e
+        checksum/monitoring-config: f0ec10532c889feeeccf204bc274f39c36f167298be587ce996b73ddca7dd759
+        checksum/rbac: 6fee8b76d34f269b64d947cae0d965e524aeea028db83316355ab37c392d80c2
       labels:
         app.kubernetes.io/instance: cnpg
         app.kubernetes.io/name: cloudnative-pg
@@ -11065,14 +11065,14 @@ spec:
             - /manager
           env:
             - name: OPERATOR_IMAGE_NAME
-              value: ghcr.io/cloudnative-pg/cloudnative-pg:1.29.0
+              value: ghcr.io/cloudnative-pg/cloudnative-pg:1.29.1
             - name: OPERATOR_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: MONITORING_QUERIES_CONFIGMAP
               value: cnpg-default-monitoring
-          image: ghcr.io/cloudnative-pg/cloudnative-pg:1.29.0
+          image: ghcr.io/cloudnative-pg/cloudnative-pg:1.29.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -19402,8 +19402,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-mutating-webhook-configuration
 webhooks:
   - admissionReviewVersions:
@@ -19865,8 +19865,8 @@ metadata:
     app.kubernetes.io/instance: cnpg
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
-    app.kubernetes.io/version: 1.29.0
-    helm.sh/chart: cloudnative-pg-0.28.0
+    app.kubernetes.io/version: 1.29.1
+    helm.sh/chart: cloudnative-pg-0.28.2
   name: cnpg-validating-webhook-configuration
 webhooks:
   - admissionReviewVersions:
