@@ -361,6 +361,42 @@ metadata:
   namespace: hajimari
 ---
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: machine-learning
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.12.0
+  name: immich-machine-learning
+  namespace: immich
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: server
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.12.0
+  name: immich-server
+  namespace: immich
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.12.0
+  name: immich-valkey
+  namespace: immich
+---
+apiVersion: v1
 automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
@@ -7849,7 +7885,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: immich
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-immich-config
   namespace: immich
 ---
@@ -9520,7 +9556,7 @@ metadata:
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/service: immich-machine-learning
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -9544,7 +9580,7 @@ metadata:
     app.kubernetes.io/name: server
     app.kubernetes.io/service: immich-server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-server
   namespace: immich
 spec:
@@ -9569,7 +9605,7 @@ metadata:
     app.kubernetes.io/name: valkey
     app.kubernetes.io/service: immich-valkey
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-valkey
   namespace: immich
 spec:
@@ -12179,7 +12215,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: machine-learning
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-machine-learning
   namespace: immich
 spec:
@@ -12199,7 +12235,7 @@ spec:
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: machine-learning
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: DB_HOSTNAME
@@ -12268,7 +12304,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
-      serviceAccountName: default
+      serviceAccountName: immich-machine-learning
       volumes:
         - emptyDir: {}
           name: cache
@@ -12282,7 +12318,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-server
   namespace: immich
 spec:
@@ -12304,7 +12340,7 @@ spec:
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: server
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: DB_HOSTNAME
@@ -12371,7 +12407,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
-      serviceAccountName: default
+      serviceAccountName: immich-server
       volumes:
         - name: config
           secret:
@@ -12389,7 +12425,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-valkey
   namespace: immich
 spec:
@@ -12409,7 +12445,7 @@ spec:
         app.kubernetes.io/instance: immich
         app.kubernetes.io/name: valkey
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: DB_HOSTNAME
@@ -12428,7 +12464,7 @@ spec:
               value: http://immich-machine-learning:3003
             - name: REDIS_HOSTNAME
               value: immich-valkey
-          image: docker.io/valkey/valkey:9.1-alpine@sha256:355ae2c6c965769a0d9b9810711e6befd5b79fe676d1faa848247733ad6a4408
+          image: docker.io/valkey/valkey:9.1-alpine@sha256:34f4f659e02a67cfdf3995d11ae432219c936005055b2cd39a042e86280e053e
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -12475,7 +12511,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
-      serviceAccountName: default
+      serviceAccountName: immich-valkey
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18103,7 +18139,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: server
     app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.11.1
+    helm.sh/chart: immich-0.12.0
   name: immich-server
   namespace: immich
 spec:
