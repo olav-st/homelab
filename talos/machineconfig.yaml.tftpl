@@ -1,9 +1,11 @@
+version: v1alpha1
 machine:
   install:
     disk: ${install_disk}
     # nocloud image with siderolabs/intel-ucode, siderolabs/i915, siderolabs/amdgpu, siderolabs/iscsi-tools and siderolabs/util-linux-tools extensions
     image: factory.talos.dev/metal-installer/5fad2b86ebfc72aaaf4ebc31cc5c36642af6f8557f35132be6d86196058790a6:v1.12.6 # renovate: github-releases=siderolabs/talos
   kubelet:
+    image: ghcr.io/siderolabs/kubelet:v1.34.0
     extraMounts:
       - destination: /var/lib/longhorn
         type: bind
@@ -17,20 +19,6 @@ machine:
       - name: vfio
       - name: vfio_iommu_type1
       - name: vfio_pci
-  network:
-    hostname: ${hostname}
-    interfaces:
-      - interface: br0
-        bridge:
-          interfaces:
-            - enp2s0
-          stp:
-            enabled: true
-        dhcp: true
-        %{ if machine_type == "controlplane" }
-        vip:
-          ip: ${cluster_vip}
-        %{ endif }
   sysctls:
       net.bridge.bridge-nf-call-iptables: "0"
       net.bridge.bridge-nf-call-ip6tables: "0"
@@ -61,6 +49,7 @@ machine:
 cluster:
   allowSchedulingOnControlPlanes: true
   apiServer:
+    image: registry.k8s.io/kube-apiserver:v1.34.0
     extraArgs:
       oidc-issuer-url: https://keycloak.homelab.olav.ninja/realms/homelab
       oidc-client-id: kubectl
@@ -73,3 +62,37 @@ cluster:
     disabled: true
   inlineManifests:
     ${indent(4, yamlencode(inline_manifests))}
+  controllerManager:
+    image: registry.k8s.io/kube-controller-manager:v1.34.0
+  scheduler:
+    image: registry.k8s.io/kube-scheduler:v1.34.0
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: ${hostname}
+auto: off
+---
+apiVersion: v1alpha1
+kind: BridgeConfig
+name: br0
+links:
+    - enp2s0
+addresses:
+    - address: 192.168.0.190/24
+routes:
+    - gateway: 192.168.0.1
+stp:
+    enabled: true
+---
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+    - address: 192.168.0.1
+    - address: 1.1.1.1
+---
+%{ if machine_type == "controlplane" }
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: ${cluster_vip}
+link: enp2s0
+%{ endif }
