@@ -10299,7 +10299,7 @@ spec:
   clusterIP: 10.96.100.100
   externalTrafficPolicy: Local
   internalTrafficPolicy: Local
-  loadBalancerIP: 192.168.0.90
+  loadBalancerIP: 192.168.0.91
   ports:
     - name: ssh
       port: 22
@@ -17708,7 +17708,7 @@ metadata:
   namespace: kube-system
 spec:
   blocks:
-    - start: 192.168.0.90
+    - start: 192.168.0.91
       stop: 192.168.0.99
 ---
 apiVersion: deviceplugin.intel.com/v1
