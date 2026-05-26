@@ -17,7 +17,7 @@ service:
     externalTrafficPolicy: Local
     internalTrafficPolicy: Local
     clusterIP: 10.96.100.100
-    loadBalancerIP: 192.168.0.90
+    loadBalancerIP: 192.168.0.92
 
 providers:
   kubernetesIngress:
