@@ -10,7 +10,7 @@ data "talos_machine_configuration" "this" {
   for_each = local.nodes
 
   talos_version      = "v1.13.3" # renovate: github-releases=siderolabs/talos
-  kubernetes_version = "v1.34.8" # renovate: github-releases=kubernetes/kubernetes
+  kubernetes_version = "v1.36.1" # renovate: github-releases=kubernetes/kubernetes
 
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.cluster_vip}:6443"
@@ -70,7 +70,7 @@ resource "talos_cluster" "this" {
   depends_on           = [talos_machine_configuration_apply.this]
   node                 = local.nodes[local.bootstrap_node].ip_address
   client_configuration = talos_machine_secrets.this.client_configuration
-  kubernetes_version   = "v1.34.8" # renovate: github-releases=kubernetes/kubernetes
+  kubernetes_version   = "v1.36.1" # renovate: github-releases=kubernetes/kubernetes
 }
 
 data "talos_cluster_health" "this" {
