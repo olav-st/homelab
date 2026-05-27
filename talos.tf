@@ -33,8 +33,19 @@ data "talos_machine_configuration" "this" {
   ]
 }
 
+resource "talos_machine" "this" {
+  for_each = local.nodes
+
+  node                  = each.value.ip_address
+  client_configuration  = data.talos_client_configuration.this.client_configuration
+  machine_configuration = data.talos_machine_configuration.this[each.key].machine_configuration
+
+  # nocloud image with siderolabs/intel-ucode, siderolabs/i915, siderolabs/amdgpu, siderolabs/iscsi-tools and siderolabs/util-linux-tools extensions
+  image                 = "factory.talos.dev/metal-installer/5fad2b86ebfc72aaaf4ebc31cc5c36642af6f8557f35132be6d86196058790a6:v1.12.6" 
+}
+
 resource "talos_machine_configuration_apply" "this" {
-  for_each   = local.nodes
+  for_each = local.nodes
 
   client_configuration        = data.talos_client_configuration.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.this[each.key].machine_configuration
@@ -52,6 +63,13 @@ resource "talos_machine_bootstrap" "this" {
 
   client_configuration = data.talos_client_configuration.this.client_configuration
   node                 = local.nodes[local.bootstrap_node].ip_address
+}
+
+resource "talos_cluster" "this" {
+  depends_on           = [talos_machine_configuration_apply.this]
+  node                 = local.nodes[local.bootstrap_node].ip_address
+  client_configuration = talos_machine_secrets.this.client_configuration
+  kubernetes_version   = "v1.34.0"
 }
 
 data "talos_cluster_health" "this" {
