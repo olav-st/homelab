@@ -3,7 +3,6 @@ machine:
   install:
     disk: ${install_disk}
   kubelet:
-    image: ghcr.io/siderolabs/kubelet:v1.34.0
     extraMounts:
       - destination: /var/lib/longhorn
         type: bind
@@ -47,7 +46,6 @@ machine:
 cluster:
   allowSchedulingOnControlPlanes: true
   apiServer:
-    image: registry.k8s.io/kube-apiserver:v1.34.0
     extraArgs:
       oidc-issuer-url: https://keycloak.homelab.olav.ninja/realms/homelab
       oidc-client-id: kubectl
@@ -60,10 +58,6 @@ cluster:
     disabled: true
   inlineManifests:
     ${indent(4, yamlencode(inline_manifests))}
-  controllerManager:
-    image: registry.k8s.io/kube-controller-manager:v1.34.0
-  scheduler:
-    image: registry.k8s.io/kube-scheduler:v1.34.0
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig
