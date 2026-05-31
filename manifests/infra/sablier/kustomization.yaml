@@ -10,4 +10,4 @@ helmCharts:
   releaseName: sablier
   namespace: sablier
   repo: https://sablierapp.github.io/helm-charts
-  version: 1.0.3
+  version: 1.2.1
