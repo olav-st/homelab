@@ -17720,8 +17720,9 @@ spec:
   bypathMode: single
   denyIDs: ""
   enableMonitoring: false
-  image: intel/intel-gpu-plugin:0.35.0
+  image: intel/intel-gpu-plugin:0.36.0
   logLevel: 2
+  monitoringMode: single
   nodeSelector:
     intel.feature.node.kubernetes.io/gpu: "true"
   preferredAllocationPolicy: none
