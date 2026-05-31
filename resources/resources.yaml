@@ -14421,8 +14421,8 @@ spec:
         - args:
             - start
             - --provider.name=kubernetes
-            - --logging.level=trace
-          image: sablierapp/sablier:1.8.1
+            - --logging.level=info
+          image: sablierapp/sablier:1.13.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
