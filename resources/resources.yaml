@@ -18896,7 +18896,7 @@ metadata:
   name: provider-keycloak
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.19.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-keycloak:v2.19.1
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
