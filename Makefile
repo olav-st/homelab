@@ -13,6 +13,16 @@ check-remote-manifests:
 		echo "Processing $$file"; \
 		for url in $$(yq e '.resources[]' "$$file" | grep -E '^https?://'); do \
 			echo "Checking $$url"; \
+			if echo "$$url" | grep -q 'crds\.dev' && echo "$$url" | grep -q '/raw/'; then \
+				echo "URL contains crds.dev with /raw/, checking without /raw/ first: $$url_no_raw"; \
+				url_no_raw=$$(echo "$$url" | sed 's|/raw/|/|'); \
+				curl -fsSL --max-time 30 "$$url_no_raw" -o /dev/null; \
+				if [ $$? -eq 0 ]; then \
+					echo "OK"; \
+				else \
+					echo "Request failed for $$url_no_raw"; \
+				fi; \
+			fi; \
 			attempt=1; \
 			success=false; \
 			while [ $$attempt -le 3 ] && [ "$$success" = "false" ]; do \
