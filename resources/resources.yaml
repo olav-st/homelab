@@ -8368,6 +8368,13 @@ data:
     if ($autoconfig_enabled) {
         $AUTOCONFIG['directory'] = getenv('NEXTCLOUD_DATA_DIR') ?: '/var/www/html/data';
     }
+  helm-metrics.config.php: |-
+    <?php
+
+    $openmetricsAllowedClients = getenv('OPENMETRICS_ALLOWED_CLIENTS');
+    if ($openmetricsAllowedClients) {
+      $CONFIG['openmetrics_allowed_clients'] = array_filter(array_map('trim', explode(',', $openmetricsAllowedClients)));
+    }
   mycustom.config.php: |-
     <?php
     $CONFIG = array(
@@ -8549,8 +8556,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.6
-    helm.sh/chart: nextcloud-8.9.1
+    app.kubernetes.io/version: 33.0.5
+    helm.sh/chart: nextcloud-9.1.3
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8567,8 +8574,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.6
-    helm.sh/chart: nextcloud-8.9.1
+    app.kubernetes.io/version: 33.0.5
+    helm.sh/chart: nextcloud-9.1.3
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -10029,9 +10036,10 @@ metadata:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/monitor: enabled
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.6
-    helm.sh/chart: nextcloud-8.9.1
+    app.kubernetes.io/version: 33.0.5
+    helm.sh/chart: nextcloud-9.1.3
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13639,8 +13647,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.6
-    helm.sh/chart: nextcloud-8.9.1
+    app.kubernetes.io/version: 33.0.5
+    helm.sh/chart: nextcloud-9.1.3
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13656,7 +13664,7 @@ spec:
     metadata:
       annotations:
         hooks-hash: 9525c2748a6c7cd0e28ec740623d0b3fa5a75c83b51ccfd136bc89c76737b204
-        nextcloud-config-hash: a1d16d19d9e6a7542bf8cde75cecdc3357d062366aef5d2551e3b984a16915cf
+        nextcloud-config-hash: 7165019d42c3ee1ae2f29d8e52db42e7537e5848b3ea7ed09e50e0f7b383c6c4
         php-config-hash: ef6725a34482d427b584b8ddff54804f14e7c98827ae18ff7642f7cf0dd254af
       labels:
         app.kubernetes.io/component: app
@@ -13700,6 +13708,8 @@ spec:
                   name: nextcloud-admin-user
             - name: NEXTCLOUD_TRUSTED_DOMAINS
               value: nextcloud.homelab.olav.ninja
+            - name: OPENMETRICS_ALLOWED_CLIENTS
+              value: 127.0.0.1,10.42.0.0/16,10.43.0.0/16
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
             - name: REDIS_HOST
@@ -13711,7 +13721,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: docker.io/library/nextcloud:32.0.6-apache
+          image: docker.io/library/nextcloud:33.0.5-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -13783,6 +13793,9 @@ spec:
             - mountPath: /var/www/html/config/autoconfig.php
               name: nextcloud-config
               subPath: autoconfig.php
+            - mountPath: /var/www/html/config/helm-metrics.config.php
+              name: nextcloud-config
+              subPath: helm-metrics.config.php
             - mountPath: /var/www/html/config/redis.config.php
               name: nextcloud-config
               subPath: redis.config.php
@@ -13841,6 +13854,8 @@ spec:
                   name: nextcloud-admin-user
             - name: NEXTCLOUD_TRUSTED_DOMAINS
               value: nextcloud.homelab.olav.ninja
+            - name: OPENMETRICS_ALLOWED_CLIENTS
+              value: 127.0.0.1,10.42.0.0/16,10.43.0.0/16
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
             - name: REDIS_HOST
@@ -13852,7 +13867,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: nextcloud-redis-credentials
-          image: docker.io/library/nextcloud:32.0.6-apache
+          image: docker.io/library/nextcloud:33.0.5-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -13896,6 +13911,9 @@ spec:
             - mountPath: /var/www/html/config/autoconfig.php
               name: nextcloud-config
               subPath: autoconfig.php
+            - mountPath: /var/www/html/config/helm-metrics.config.php
+              name: nextcloud-config
+              subPath: helm-metrics.config.php
             - mountPath: /var/www/html/config/redis.config.php
               name: nextcloud-config
               subPath: redis.config.php
@@ -18426,8 +18444,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 32.0.6
-    helm.sh/chart: nextcloud-8.9.1
+    app.kubernetes.io/version: 33.0.5
+    helm.sh/chart: nextcloud-9.1.3
   name: nextcloud
   namespace: nextcloud
 spec:
