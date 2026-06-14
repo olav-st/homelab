@@ -273,7 +273,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg
   namespace: cnpg-system
 ---
@@ -2951,7 +2951,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg
 rules:
   - apiGroups:
@@ -3189,7 +3189,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg-edit
 rules:
   - apiGroups:
@@ -3221,7 +3221,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg-view
 rules:
   - apiGroups:
@@ -6719,7 +6719,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7135,7 +7135,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-controller-manager-config
   namespace: cnpg-system
 ---
@@ -7633,7 +7633,7 @@ metadata:
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
     cnpg.io/reload: ""
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-default-monitoring
   namespace: cnpg-system
 ---
@@ -9257,7 +9257,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-webhook-service
   namespace: cnpg-system
 spec:
@@ -11080,7 +11080,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-cloudnative-pg
   namespace: cnpg-system
 spec:
@@ -11092,9 +11092,9 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 17825b981b313287880caefe46b2302ee0839cb64efabd491e31cf053be33e4e
-        checksum/monitoring-config: f0ec10532c889feeeccf204bc274f39c36f167298be587ce996b73ddca7dd759
-        checksum/rbac: 6fee8b76d34f269b64d947cae0d965e524aeea028db83316355ab37c392d80c2
+        checksum/config: 75429caf3b4201deca75f56275f5efc5e74de840c3aba915683402b3f1e281ee
+        checksum/monitoring-config: 43768a10e741e11e644f3336c99ce6aff101b009078df133091770352f93f504
+        checksum/rbac: f6da5b14723070eedbea826f80887f736d1f7a46beeee04230937e0205520d79
       labels:
         app.kubernetes.io/instance: cnpg
         app.kubernetes.io/name: cloudnative-pg
@@ -19459,7 +19459,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-mutating-webhook-configuration
 webhooks:
   - admissionReviewVersions:
@@ -19922,7 +19922,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cloudnative-pg
     app.kubernetes.io/version: 1.29.1
-    helm.sh/chart: cloudnative-pg-0.28.2
+    helm.sh/chart: cloudnative-pg-0.28.3
   name: cnpg-validating-webhook-configuration
 webhooks:
   - admissionReviewVersions:
