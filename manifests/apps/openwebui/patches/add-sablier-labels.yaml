@@ -6,3 +6,12 @@ metadata:
   labels:
     sablier.enable: "true"
     sablier.group: ollama-openwebui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui-redis
+  namespace: openwebui
+  labels:
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
