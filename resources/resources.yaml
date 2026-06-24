@@ -14214,6 +14214,8 @@ metadata:
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.7.2
     helm.sh/chart: open-webui-10.2.1
+    sablier.enable: "true"
+    sablier.group: ollama-openwebui
   name: open-webui-redis
   namespace: openwebui
 spec:
@@ -14223,7 +14225,6 @@ spec:
       app.kubernetes.io/instance: openwebui
   template:
     metadata:
-      annotations: null
       labels:
         app.kubernetes.io/component: open-webui-redis
         app.kubernetes.io/instance: openwebui
