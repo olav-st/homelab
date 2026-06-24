@@ -3,7 +3,6 @@ FROM docker:29.5.3-dind-alpine3.23
 
 # Install required packages
 RUN apk -U add \
-    ansible \
     bash \
     curl \
     helm \
