@@ -12742,7 +12742,7 @@ spec:
                   key: debug
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/operator-generic:v1.19.4@sha256:1aa2b62735e7d8ab49ee840ae59c346932024c88901579121395c1271b435f71
+          image: quay.io/cilium/operator-generic:v1.19.5@sha256:be848a365776e07d0c5a895eda7aec928ddc52a5a1fa2f432fd7a286609e1db4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -12847,7 +12847,7 @@ spec:
             - serve
           command:
             - hubble-relay
-          image: quay.io/cilium/hubble-relay:v1.19.4@sha256:59af8c0d561e560c2a042e7600a3496bc0367df8fbf868aa68d5834c8ec1a431
+          image: quay.io/cilium/hubble-relay:v1.19.5@sha256:24409bfa1bca075c92acb26ba4b49cd573d99d68d5370f7cc825078185222a0c
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 12
@@ -15441,7 +15441,7 @@ spec:
                       - key encipherment
                       - client auth
                       validity: 8760h
-              image: quay.io/cilium/certgen:v0.4.3@sha256:d63d1cb3ee6db2167cb1ca9e7e31f30b6197846fcf42505d8f59e2f090a42c86
+              image: quay.io/cilium/certgen:v0.4.5@sha256:f107522ed4dcea62f918b8eb836142875a9b3e3cb2b2d728dc680f76cdbde6cf
               imagePullPolicy: IfNotPresent
               name: certgen
               securityContext:
@@ -15892,7 +15892,7 @@ spec:
               value: "1"
             - name: KUBE_CLIENT_BACKOFF_DURATION
               value: "120"
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -16044,7 +16044,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           name: config
           securityContext:
@@ -16067,7 +16067,7 @@ spec:
           env:
             - name: BIN_PATH
               value: /opt/cni/bin
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           name: apply-sysctl-overwrites
           securityContext:
@@ -16093,7 +16093,7 @@ spec:
             - /bin/bash
             - -c
             - --
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           name: mount-bpf-fs
           securityContext:
@@ -16124,7 +16124,7 @@ spec:
                   key: write-cni-conf-when-ready
                   name: cilium-config
                   optional: true
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           name: clean-cilium-state
           securityContext:
@@ -16149,7 +16149,7 @@ spec:
               name: cilium-run
         - command:
             - /install-plugin.sh
-          image: quay.io/cilium/cilium:v1.19.4@sha256:2eb67991eaa9368ba199c2fac2c573cb0ffdeb79184533344f42fc9a7ff6af3c
+          image: quay.io/cilium/cilium:v1.19.5@sha256:20fbbc14ac20b55a292c0dcda5571bf31cde30a7dbc68c29db3e709390ab0732
           imagePullPolicy: IfNotPresent
           name: install-cni-binaries
           resources:
@@ -16343,7 +16343,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-          image: quay.io/cilium/cilium-envoy:v1.36.6-1778235340-b87d1e32f522b33bd51701c6476d199326f01496@sha256:71d4fa0ec45e8d546dbd5604e169dc77fe92be63b799313bff031d00d89762e3
+          image: quay.io/cilium/cilium-envoy:v1.36.8-1781157951-a7f42a3390781539911b5b9107881b35ecc4e752@sha256:326f872e19ce8aa45170efbf583b3f301586ba3feead14b864676d4baf3b45ed
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10
@@ -16909,7 +16909,7 @@ metadata:
     app.kubernetes.io/name: hubble-generate-certs
     app.kubernetes.io/part-of: cilium
     k8s-app: hubble-generate-certs
-  name: hubble-generate-certs-10c12c6dc1
+  name: hubble-generate-certs-e8b35ec50c
   namespace: kube-system
 spec:
   template:
@@ -16952,7 +16952,7 @@ spec:
                   - key encipherment
                   - client auth
                   validity: 8760h
-          image: quay.io/cilium/certgen:v0.4.3@sha256:d63d1cb3ee6db2167cb1ca9e7e31f30b6197846fcf42505d8f59e2f090a42c86
+          image: quay.io/cilium/certgen:v0.4.5@sha256:f107522ed4dcea62f918b8eb836142875a9b3e3cb2b2d728dc680f76cdbde6cf
           imagePullPolicy: IfNotPresent
           name: certgen
           securityContext:
