@@ -132,23 +132,35 @@ provider "registry.opentofu.org/integrations/github" {
 }
 
 provider "registry.opentofu.org/siderolabs/talos" {
-  version     = "0.12.0-alpha.1"
-  constraints = "0.12.0-alpha.1"
+  version     = "0.12.0-alpha.5"
+  constraints = "0.12.0-alpha.5"
   hashes = [
-    "h1:quSLWPcPFKvVEYl1Cnbq6uFQXu2vWvXl6+mnjZUhOJc=",
-    "zh:0c0cda8f0c9f96a86d6f21f429e9ed6774a3ad926f75cbfc88c8db0eaf7a4595",
+    "h1:0Dy7gpnOcobhv4ZVoY0xTI6aHRya5zxDZZqP5ETkv+8=",
+    "h1:57fqjzJk2n4yRoC742M9i7RKKR8be/jX6SBxHT87k2k=",
+    "h1:FESkPqWlDSxn1ZoTfG9wRYaPpHwufUzvMe5ga3mIqGs=",
+    "h1:OZKjpM8pHkg0JphLvW5QGlfw9Y0OwXl1FC4Tc6wCiiY=",
+    "h1:QHHoakBcp8eW+OWUtp26hAlOJgtG8gnVDFDA641RC/s=",
+    "h1:RhkYeVAYryacqoK2wnZmXIi5VHCFs40zKkPaSYjPHV4=",
+    "h1:Tc/IW/w1Cei5cjxbOIK5G7R010IMInt1tknsWaWTVEA=",
+    "h1:X6s/YiphPU3jnUC2Qv+S4fr6Ockx1C8Mb/KhWleYnp4=",
+    "h1:YV9JjrcP3vYCTZtS5r53K1GesYD6QyjD04U4TmRdZXs=",
+    "h1:bJ4QvpKfDYe2TjMvwLV7Oqq7MTXl2RxVsll/QqgAJCA=",
+    "h1:q5a4QcHB4lnTPUureYCprvgJOjmSHLOpXap9PEjnRYQ=",
+    "h1:wNZ/jEQuGKWC7s6oFVKEJi/14gRGFZaIFX6uk4O1fss=",
+    "h1:y/q6xMFhEzKtsBjMGqtaZFSl30aLTe0fuxFNr5ppaaM=",
     "zh:0fa82a384b25a58b65523e0ea4768fa1212b1f5cfc0c9379d31162454fedcc9d",
-    "zh:1ba9023a9550c0f21017c6a1e6539d0257847f290c9774573ea3ceb410e2dd6b",
-    "zh:49d2009b01326843392a8d8475e11fde4adea5ed5150099b86e6a130e1de083a",
-    "zh:5e8f9c5730e56bedbe2fcb5759ca65a67b2d54abd731bb70e285049a1edfdbc0",
-    "zh:5ee208d93dc2a61917328ac2dc0128dc5a46fe37407be923cc67161ba2d237cc",
-    "zh:665930239c972568d8c4149d4defc8352faeee8c9ac15cb6f5ed72b6fbb64822",
-    "zh:6c60379f7267146dd96fb56b9e4e3ad05a6d17bbd2694acdd1e44a7ddca1f5da",
-    "zh:8491b1bf9a0e6d62287e2a16ef945b7c18d284b4474eb366ab259f252f9c6426",
-    "zh:a35100d992cfe649a528a345ca0bd9460f570a524f62f837f9f58007a0746742",
-    "zh:a78c24bfddf121059ae0601824fd1774935fc51df32b46d324c0879da402556a",
-    "zh:b5eac5cd02ccd7b9553d1edbea317c6e86ad540a412ff95cc7e179dc9db7ae50",
-    "zh:bcc11a3870b1bc94fc2f21d0db1ba047e484f796e4ca052c396c98029a084143",
-    "zh:dfff725abaac39ebf2b9d31e2f0be9e603c6595825578d47b52bf354fefdcea7",
+    "zh:157dadacb4ee9b2ef2aca06c3747889877d08dd57b0c0477a5ed91b1877963c2",
+    "zh:1f2ca704a1b025023e44b292f4e9776c9a77792c1bfc3d05700440176472d067",
+    "zh:4346c40649455dab01d243412d589569e1066640213776c5882ee853a0b2fa51",
+    "zh:50dbd3877dfebf9b828f8fcace1b5661df6b8816a2c62f8e9474f9b3a4b49043",
+    "zh:539b334c96b324fcb83abba67bebd847e51094da5f186c03b5312442eff10417",
+    "zh:55479e3e554ad8ec9939bfbc56169a4367b5f00a86b601b62e0136f71af461e0",
+    "zh:7152ba63f6e933b11ac75424e90fe12c4bebcc026bb6d7d9a254a6c61f222112",
+    "zh:77cdfacd15ab7c7777d2e10b22733caa0f86b7697a1842d282aea1627f5f202a",
+    "zh:87696b642df54a97315b5ab9c595fd7333aa410bf50c72b3ae42a6f4a795922f",
+    "zh:90182658520d3750fef6ca3faab3223b7fb8542d9c2d6ecd39fdae0b247de34e",
+    "zh:96923e35100803cf7e1dd797b2922c20d2adf877122babd986610fd28420a4ba",
+    "zh:b52d824e6d29ffd879b37d780de6eecef49b2a3ad76c55648154d222939a885a",
+    "zh:d4a110a3308614c86c763cba5349d0f8a27eb2676cffc69b2d577424464f2bb3",
   ]
 }
