@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+spec:
+  ports:
+  - name: api
+    port: 8096
+    protocol: TCP
+    targetPort: api
+  - name: dashboard
+    port: 9119
+    protocol: TCP
+    targetPort: dashboard
+  selector:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  type: ClusterIP
