@@ -12317,7 +12317,7 @@ spec:
           livenessProbe:
             initialDelaySeconds: 10
             tcpSocket:
-              port: api
+              port: dashboard
           name: hermes-agent
           ports:
             - containerPort: 8642
@@ -12329,7 +12329,7 @@ spec:
           readinessProbe:
             initialDelaySeconds: 10
             tcpSocket:
-              port: api
+              port: dashboard
           resources:
             requests:
               cpu: 100m
