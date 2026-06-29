@@ -66,6 +66,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: hermes-agent
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: homeassistant
 ---
 apiVersion: v1
@@ -359,6 +364,16 @@ metadata:
     helm.sh/chart: hajimari-2.0.2
   name: hajimari
   namespace: hajimari
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -9534,6 +9549,29 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  ports:
+    - name: api
+      port: 8096
+      protocol: TCP
+      targetPort: api
+    - name: dashboard
+      port: 9119
+      protocol: TCP
+      targetPort: dashboard
+  selector:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -10446,6 +10484,20 @@ spec:
       storage: 10Gi
   storageClassName: longhorn-static
   volumeName: gitea
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-agent-data
+  namespace: hermes-agent
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn-static
+  volumeName: hermes-agent-data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -12221,6 +12273,78 @@ spec:
         - configMap:
             name: hajimari-settings
           name: hajimari-settings
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: hermes-agent
+      app.kubernetes.io/name: hermes-agent
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: hermes-agent
+        app.kubernetes.io/name: hermes-agent
+    spec:
+      containers:
+        - env:
+            - name: HERMES_UID
+              value: "1000"
+            - name: HERMES_GID
+              value: "1000"
+            - name: HERMES_DASHBOARD
+              value: "1"
+            - name: HERMES_DASHBOARD_OIDC_ISSUER
+              value: https://keycloak.homelab.olav.ninja/realms/homelab
+            - name: HERMES_DASHBOARD_OIDC_CLIENT_ID
+              value: hermes-agent
+            - name: HERMES_DASHBOARD_PUBLIC_URL
+              value: https://hermes.homelab.olav.ninja
+          image: nousresearch/hermes-agent:v2026.6.19
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: api
+          name: hermes-agent
+          ports:
+            - containerPort: 8642
+              name: api
+              protocol: TCP
+            - containerPort: 9119
+              name: dashboard
+              protocol: TCP
+          readinessProbe:
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: api
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          securityContext: {}
+          volumeMounts:
+            - mountPath: /opt/data
+              name: data
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      serviceAccountName: hermes-agent
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: hermes-agent-data
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18172,6 +18296,37 @@ spec:
     - hosts:
         - homelab.olav.ninja
       secretName: hajimari-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: hermes-agent
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:hermes
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: hermes.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: hermes-agent
+                port:
+                  number: 9119
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - hermes.homelab.olav.ninja
+      secretName: hermes-agent-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
