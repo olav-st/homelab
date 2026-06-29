@@ -12336,10 +12336,6 @@ spec:
           volumeMounts:
             - mountPath: /opt/data
               name: data
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsUser: 1000
       serviceAccountName: hermes-agent
       volumes:
         - name: data
