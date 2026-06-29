@@ -12300,6 +12300,8 @@ spec:
         - env:
             - name: API_SERVER_ENABLED
               value: "true"
+            - name: AGENT_BROWSER_ARGS
+              value: --no-sandbox,--disable-dev-shm-usage
             - name: HERMES_UID
               value: "1000"
             - name: HERMES_GID
