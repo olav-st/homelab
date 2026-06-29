@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: hermes-agent
+      app.kubernetes.io/name: hermes-agent
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: hermes-agent
+        app.kubernetes.io/name: hermes-agent
+    spec:
+      containers:
+      - image: nousresearch/hermes-agent:v2026.6.19 # renovate: docker=nousresearch/hermes-agent
+        imagePullPolicy: IfNotPresent
+        name: hermes-agent
+        stdin: true # Required for first-run setup
+        tty: true   # Required for first-run setup
+        env:
+          - name: API_SERVER_ENABLED
+            value: "true"
+          - name: AGENT_BROWSER_ARGS
+            value: "--no-sandbox,--disable-dev-shm-usage" # Workaround for Chrome sandbox + AppArmor issue
+          - name: HERMES_UID
+            value: "1000"
+          - name: HERMES_GID
+            value: "1000"
+          - name: HERMES_DASHBOARD
+            value: "1"
+          - name: HERMES_DASHBOARD_OIDC_ISSUER
+            value: https://keycloak.homelab.olav.ninja/realms/homelab
+          - name: HERMES_DASHBOARD_OIDC_CLIENT_ID
+            value: hermes-agent
+          - name: HERMES_DASHBOARD_PUBLIC_URL
+            value: https://hermes.homelab.olav.ninja
+        ports:
+        - containerPort: 8642
+          name: api
+          protocol: TCP
+        - containerPort: 9119
+          name: dashboard
+          protocol: TCP
+        livenessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: dashboard
+        readinessProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+            port: dashboard
+        resources:
+          requests:
+            cpu: 100m
+            memory: 2048Mi # Required for browser tasks
+        securityContext: {}
+        volumeMounts:
+        - mountPath: /opt/data
+          name: data
+      serviceAccountName: hermes-agent
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: hermes-agent-data

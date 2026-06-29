@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: hermes-agent
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:hermes
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: hermes.homelab.olav.ninja
+    http:
+      paths:
+      - backend:
+          service:
+            name: hermes-agent
+            port:
+              number: 9119
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - hermes.homelab.olav.ninja
+    secretName: hermes-agent-tls-certificate

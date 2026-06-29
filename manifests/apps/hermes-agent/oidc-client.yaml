@@ -1,0 +1,14 @@
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: hermes-agent
+spec:
+  displayName: Hermes Agent
+  type: PUBLIC
+  clientId: hermes-agent
+  description: Hermes AI Agent
+  grantTypes:
+    - code
+  redirectUris:
+    - https://hermes.homelab.olav.ninja/auth/callback
+  realm: homelab
