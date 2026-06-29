@@ -12298,6 +12298,8 @@ spec:
     spec:
       containers:
         - env:
+            - name: API_SERVER_ENABLED
+              value: "true"
             - name: HERMES_UID
               value: "1000"
             - name: HERMES_GID
