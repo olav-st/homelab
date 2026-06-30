@@ -14592,7 +14592,7 @@ spec:
             - start
             - --provider.name=kubernetes
             - --logging.level=info
-          image: sablierapp/sablier:1.13.0
+          image: sablierapp/sablier:1.14.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
