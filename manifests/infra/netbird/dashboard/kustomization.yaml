@@ -11,5 +11,5 @@ helmCharts:
   releaseName: netbird-dashboard
   namespace: netbird
   repo: https://charts.jaconi.io
-  version: 1.2.0
+  version: 1.2.1
   valuesFile: values.yaml
