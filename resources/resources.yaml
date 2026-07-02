@@ -564,8 +564,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.12.0
-    helm.sh/chart: netbird-dashboard-1.2.0
+    app.kubernetes.io/version: v2.90.2
+    helm.sh/chart: netbird-dashboard-1.2.1
   name: netbird-dashboard
   namespace: netbird
 ---
@@ -10015,8 +10015,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.12.0
-    helm.sh/chart: netbird-dashboard-1.2.0
+    app.kubernetes.io/version: v2.90.2
+    helm.sh/chart: netbird-dashboard-1.2.1
   name: netbird-dashboard
   namespace: netbird
 spec:
@@ -13625,8 +13625,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.12.0
-    helm.sh/chart: netbird-dashboard-1.2.0
+    app.kubernetes.io/version: v2.90.2
+    helm.sh/chart: netbird-dashboard-1.2.1
   name: netbird-dashboard
   namespace: netbird
 spec:
@@ -18596,8 +18596,8 @@ metadata:
     app.kubernetes.io/instance: netbird-dashboard
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.12.0
-    helm.sh/chart: netbird-dashboard-1.2.0
+    app.kubernetes.io/version: v2.90.2
+    helm.sh/chart: netbird-dashboard-1.2.1
   name: netbird-dashboard
   namespace: netbird
 spec:
