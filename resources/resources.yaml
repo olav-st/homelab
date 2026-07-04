@@ -19148,11 +19148,12 @@ spec:
       owner: immich
       postInitSQL:
         - CREATE EXTENSION IF NOT EXISTS "vectors";
+        - CREATE EXTENSION IF NOT EXISTS "vchord" CASCADE;
         - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
         - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
       secret:
         name: immich-postgresql-user
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
+  imageName: ghcr.io/corentingiraud/cnpg-pgvector-vectorchord:16-migration
   instances: 1
   managed:
     roles:
@@ -19163,6 +19164,7 @@ spec:
     parameters:
       timezone: Europe/Oslo
     shared_preload_libraries:
+      - vchord.so
       - vectors.so
   storage:
     pvcTemplate:
