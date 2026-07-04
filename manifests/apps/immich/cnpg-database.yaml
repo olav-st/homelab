@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: immich-postgresql
 spec:
-  imageName: ghcr.io/corentingiraud/cnpg-pgvector-vectorchord:16-migration
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16-1.1.1@sha256:4a26ca6aad2482289f4a3d3317ccbf1439ce3de140994598375a1f4c4e2e9f8d
   instances: 1
 
   postgresql:
@@ -11,7 +11,6 @@ spec:
       timezone: Europe/Oslo
     shared_preload_libraries:
       - "vchord.so"
-      - "vectors.so"
 
   managed:
     roles:
@@ -26,7 +25,6 @@ spec:
       secret:
         name: immich-postgresql-user
       postInitSQL:
-        - CREATE EXTENSION IF NOT EXISTS "vectors";
         - CREATE EXTENSION IF NOT EXISTS "vchord" CASCADE;
         - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
         - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
