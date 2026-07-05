@@ -13365,6 +13365,8 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
       initContainers:
         - command:
             - sh
@@ -13378,7 +13380,7 @@ spec:
               value: 80:38:FB:EC:6E:D6
             - name: BROADCAST_ADDR
               value: 255.255.255.255
-          image: alpine:3.20
+          image: alpine:3.24
           imagePullPolicy: IfNotPresent
           name: wake-on-lan
           securityContext: {}
