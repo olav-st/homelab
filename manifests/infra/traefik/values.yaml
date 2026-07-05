@@ -42,6 +42,7 @@ ports:
     asDefault: true
     expose:
       default: true
+    port: 443
     exposedPort: 443
     http:
       middlewares:
