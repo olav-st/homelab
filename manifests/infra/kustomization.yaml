@@ -9,6 +9,7 @@ resources:
   - ./crossplane
   - ./device-plugins
   - ./external-dns
+  - ./gateway-api
   - ./hajimari
   - ./keycloak
   - ./kube-virt

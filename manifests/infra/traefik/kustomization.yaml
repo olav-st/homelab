@@ -4,6 +4,7 @@ namespace: traefik
 
 resources:
   - namespace.yaml
+  - gateways.yaml
   - middleware.yaml
   - proxy-external-cluster.yaml
   - oidc-client.yaml

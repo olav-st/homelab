@@ -19,11 +19,20 @@ service:
     clusterIP: 10.96.100.100
     loadBalancerIP: 192.168.0.92
 
+gatewayClass:
+  enabled: true
+  name: traefik
+
+gateway:
+  enabled: false
+
 providers:
   kubernetesIngress:
     publishedService:
       enabled: true
       pathOverride: "traefik/traefik"
+  kubernetesGateway:
+    enabled: true
 
 ports:
   web:
