@@ -14819,7 +14819,7 @@ spec:
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
             - --entryPoints.webpublic.address=:9443/tcp
-            - --entryPoints.websecure.address=:8443/tcp
+            - --entryPoints.websecure.address=:443/tcp
             - --entryPoints.websecure.asDefault=true
             - --api.dashboard=true
             - --ping=true
@@ -14885,7 +14885,7 @@ spec:
             - containerPort: 9443
               name: webpublic
               protocol: TCP
-            - containerPort: 8443
+            - containerPort: 443
               name: websecure
               protocol: TCP
           readinessProbe:
@@ -18046,7 +18046,7 @@ spec:
         namespaces:
           from: All
       hostname: '*.homelab.olav.ninja'
-      name: websecure
+      name: https
       port: 443
       protocol: HTTPS
       tls:
