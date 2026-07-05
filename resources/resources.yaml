@@ -7198,6 +7198,26 @@ subjects:
     namespace: traefik
 ---
 apiVersion: v1
+data:
+  config.yaml: |
+    apiVersion: controller.config.cert-manager.io/v1alpha1
+    gatewayAPI:
+      enable: true
+    kind: ControllerConfiguration
+kind: ConfigMap
+metadata:
+  labels:
+    app: cert-manager
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v1.20.3
+    helm.sh/chart: cert-manager-v1.20.3
+  name: cert-manager
+  namespace: cert-manager
+---
+apiVersion: v1
 data: {}
 kind: ConfigMap
 metadata:
@@ -10973,6 +10993,7 @@ spec:
       containers:
         - args:
             - --v=2
+            - --config=/var/cert-manager/config/config.yaml
             - --cluster-resource-namespace=$(POD_NAMESPACE)
             - --leader-election-namespace=cert-manager
             - --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver:v1.20.3
@@ -11008,6 +11029,9 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /var/cert-manager/config
+              name: config
       enableServiceLinks: false
       nodeSelector:
         kubernetes.io/os: linux
@@ -11016,6 +11040,10 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: cert-manager
+      volumes:
+        - configMap:
+            name: cert-manager
+          name: config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18007,6 +18035,8 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
   name: internal
   namespace: traefik
 spec:
@@ -18020,6 +18050,8 @@ spec:
       port: 443
       protocol: HTTPS
       tls:
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
         mode: Terminate
 ---
 apiVersion: gateway.networking.k8s.io/v1
