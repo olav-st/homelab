@@ -10,6 +10,7 @@ resources:
   - ./homeassistant
   - ./immich
   - ./jellyfin
+  - ./llm-proxy
   - ./nextcloud
   - ./ollama
   - ./openwebui

@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+    sablier.enable: "true"
+    sablier.group: llm-proxy
+  name: llm-proxy
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: llm-proxy
+      app.kubernetes.io/name: llm-proxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: llm-proxy
+        app.kubernetes.io/name: llm-proxy
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: llm-proxy
+        image: alpine/socat:1.8.1.3 # renovate: docker=alpine/socat
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REMOTE_HOST
+          value: "olav-gpu-machine.lan"
+        - name: REMOTE_PORT
+          value: "8080"
+        - name: REMOTE_MAC
+          value: "80:38:FB:EC:6E:D6"
+        - name: BROADCAST_ADDR
+          value: "255.255.255.255"
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          apk add --no-cache wakeonlan
+          wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
+          exec socat -d -d \
+            TCP-LISTEN:8080,fork,reuseaddr \
+            TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 20
+          exec:
+            command:
+            - sh
+            - -c
+            - "socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3"
+        readinessProbe:
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 20
+          exec:
+            command:
+            - sh
+            - -c
+            - "socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+
+      - name: keepalive-ping
+        image: alpine/curl:8.14.1 # renovate: docker=alpine/curl
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REMOTE_HOST
+          value: "olav-gpu-machine.lan"
+        - name: REMOTE_PORT
+          value: "8080"
+        command:
+        - sh
+        - -c
+        - |
+          # Pings the GPU box every 30s. "Connection: close" makes the server
+          # close the connection, leaving a server-side TIME_WAIT entry that
+          # the remote sleep-wrapper detects as activity. Sablier stopping
+          # this pod stops the pings; the remote sleeps after KeepAwakeSeconds.
+          while true; do
+            curl -s -o /dev/null --max-time 5 -H "Connection: close" \
+              "http://$REMOTE_HOST:$REMOTE_PORT/health" || true
+            sleep 30
+          done
+        resources:
+          requests:
+            cpu: 5m
+            memory: 16Mi
+      serviceAccountName: llm-proxy
