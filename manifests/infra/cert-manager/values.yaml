@@ -1,4 +1,9 @@
+# https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/values.yaml
 namespace: cert-manager
+
+config:
+  gatewayAPI:
+    enabled: true
 
 global:
   leaderElection:

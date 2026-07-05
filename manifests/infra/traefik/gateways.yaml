@@ -3,6 +3,8 @@ kind: Gateway
 metadata:
   name: internal
   namespace: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   gatewayClassName: traefik
   listeners:
@@ -12,6 +14,8 @@ spec:
       hostname: "*.homelab.olav.ninja"
       tls:
         mode: Terminate
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
       allowedRoutes:
         namespaces:
           from: All
