@@ -119,6 +119,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: llm-proxy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     pod-security.kubernetes.io/audit: privileged
     pod-security.kubernetes.io/enforce: privileged
@@ -484,6 +489,16 @@ metadata:
     kubevirt.io: ""
   name: kubevirt-operator
   namespace: kubevirt
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+  name: llm-proxy
+  namespace: llm-proxy
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -9880,6 +9895,25 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+  name: llm-proxy
+  namespace: llm-proxy
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
     app: longhorn-admission-webhook
     app.kubernetes.io/instance: longhorn
     app.kubernetes.io/managed-by: Helm
@@ -13264,6 +13298,91 @@ spec:
             secretName: kubevirt-operator-certs
         - emptyDir: {}
           name: profile-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+  name: llm-proxy
+  namespace: llm-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: llm-proxy
+      app.kubernetes.io/name: llm-proxy
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: llm-proxy
+        app.kubernetes.io/name: llm-proxy
+    spec:
+      containers:
+        - command:
+            - sh
+            - -c
+            - |
+              exec socat -d -d \
+                TCP-LISTEN:8080,fork,reuseaddr \
+                TCP:$(REMOTE_HOST):$(REMOTE_PORT),connect-timeout=5
+          env:
+            - name: REMOTE_HOST
+              value: olav-gpu-machine.lan
+            - name: REMOTE_PORT
+              value: "8080"
+          image: alpine/socat:1.8.0.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3
+            failureThreshold: 20
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+          name: llm-proxy
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3
+            failureThreshold: 20
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache wakeonlan
+              wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
+          env:
+            - name: REMOTE_MAC
+              value: 80:38:FB:EC:6E:D6
+            - name: BROADCAST_ADDR
+              value: 255.255.255.255
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          name: wake-on-lan
+          securityContext: {}
+      serviceAccountName: llm-proxy
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18021,6 +18140,34 @@ metadata:
 spec:
   controllerName: traefik.io/gateway-controller
 ---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  labels:
+    app.kubernetes.io/instance: llm-proxy
+    app.kubernetes.io/name: llm-proxy
+  name: llm-proxy
+  namespace: llm-proxy
+spec:
+  hostnames:
+    - llm-proxy.homelab.olav.ninja
+  parentRefs:
+    - name: Internal
+  rules:
+    - backendRefs:
+        - name: llm-proxy
+          port: 8080
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: llm-proxy-sablier
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 apiVersion: group.keycloak.crossplane.io/v1alpha1
 kind: Group
 metadata:
@@ -19511,6 +19658,20 @@ spec:
     permanent: false
     regex: ^(https?://[^/]+)/user/login(\?.*)?$
     replacement: ${1}/user/oauth2/keycloak${2}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: llm-proxy-sablier
+  namespace: llm-proxy
+spec:
+  plugin:
+    sablier:
+      blocking:
+        timeout: 5m
+      group: llm-proxy
+      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
+      sessionDuration: 24h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
