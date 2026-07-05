@@ -13342,7 +13342,7 @@ spec:
             - -c
             - |
               set -e
-              apk add --no-cache wakeonlan socat
+              apk add --no-cache wakeonlan
               wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
               exec socat -d -d \
                 TCP-LISTEN:8080,fork,reuseaddr \
@@ -13356,7 +13356,7 @@ spec:
               value: 80:38:FB:EC:6E:D6
             - name: BROADCAST_ADDR
               value: 255.255.255.255
-          image: alpine:3.24
+          image: alpine/socat:1.8.1.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -13387,6 +13387,30 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+        - command:
+            - sh
+            - -c
+            - |
+              # Holds a continuous TCP connection open to the remote machine
+              # for as long as this container runs, so it sees ongoing
+              # activity and doesn't go back to sleep. Sablier scaling this
+              # pod to zero kills this container, dropping the connection
+              # and allowing the remote to sleep again.
+              exec socat -d \
+                TCP:$(REMOTE_HOST):$(REMOTE_PORT),connect-timeout=5,forever,interval=5,keepalive \
+                /dev/null
+          env:
+            - name: REMOTE_HOST
+              value: olav-gpu-machine.lan
+            - name: REMOTE_PORT
+              value: "8080"
+          image: alpine/socat:1.8.1.3
+          imagePullPolicy: IfNotPresent
+          name: keepalive-connection
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       serviceAccountName: llm-proxy
