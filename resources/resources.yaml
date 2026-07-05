@@ -18168,7 +18168,7 @@ spec:
         - extensionRef:
             group: traefik.io
             kind: Middleware
-            name: llm-proxy-sablier
+            name: sablier
           type: ExtensionRef
       matches:
         - path:
@@ -19669,7 +19669,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: llm-proxy-sablier
+  name: sablier
   namespace: llm-proxy
 spec:
   plugin:
