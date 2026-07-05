@@ -6132,6 +6132,40 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - backendtlspolicies
+      - gatewayclasses
+      - gateways
+      - grpcroutes
+      - httproutes
+      - referencegrants
+      - tcproutes
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - backendtlspolicies/status
+      - gatewayclasses/status
+      - gateways/status
+      - grpcroutes/status
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+    verbs:
+      - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -14772,6 +14806,9 @@ spec:
             - --providers.kubernetesingress
             - --providers.kubernetesingress.allowEmptyServices=true
             - --providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik
+            - --providers.kubernetesgateway
+            - --providers.kubernetesgateway.statusaddress.service.name=traefik
+            - --providers.kubernetesgateway.statusaddress.service.namespace=traefik
             - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd
             - --entryPoints.webpublic.http.tls=true
             - --entryPoints.webpublic.transport.respondingTimeouts.readTimeout=0
@@ -17915,6 +17952,54 @@ spec:
   preferredAllocationPolicy: none
   sharedDevNum: 8
   tolerations: []
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: internal
+  namespace: traefik
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - allowedRoutes:
+        namespaces:
+          from: All
+      hostname: '*.homelab.olav.ninja'
+      name: https
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  labels:
+    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: traefik
+    helm.sh/chart: traefik-40.3.0
+  name: traefik-gateway
+  namespace: traefik
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: web
+      port: 8000
+      protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  labels:
+    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: traefik
+    helm.sh/chart: traefik-40.3.0
+  name: traefik
+  namespace: traefik
+spec:
+  controllerName: traefik.io/gateway-controller
 ---
 apiVersion: group.keycloak.crossplane.io/v1alpha1
 kind: Group
