@@ -7157,7 +7157,7 @@ data:
   config.yaml: |
     apiVersion: controller.config.cert-manager.io/v1alpha1
     gatewayAPI:
-      enable: true
+      enabled: true
     kind: ControllerConfiguration
 kind: ConfigMap
 metadata:
