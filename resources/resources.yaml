@@ -19679,7 +19679,7 @@ spec:
         timeout: 5m
       group: llm-proxy
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 24h
+      sessionDuration: 30m
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
