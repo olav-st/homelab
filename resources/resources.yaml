@@ -18158,7 +18158,8 @@ spec:
   hostnames:
     - llm-proxy.homelab.olav.ninja
   parentRefs:
-    - name: Internal
+    - name: internal
+      namespace: traefik
   rules:
     - backendRefs:
         - name: llm-proxy
