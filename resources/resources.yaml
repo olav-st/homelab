@@ -13329,7 +13329,7 @@ spec:
       app.kubernetes.io/instance: llm-proxy
       app.kubernetes.io/name: llm-proxy
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
@@ -13342,7 +13342,7 @@ spec:
             - -c
             - |
               set -e
-              apk add --no-cache wakeonlan
+              apk add --no-cache wakeonlan socat
               wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
               exec socat -d -d \
                 TCP-LISTEN:8080,fork,reuseaddr \
@@ -13356,7 +13356,7 @@ spec:
               value: 80:38:FB:EC:6E:D6
             - name: BROADCAST_ADDR
               value: 255.255.255.255
-          image: alpine/socat:1.8.0.1
+          image: alpine:3.24
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
