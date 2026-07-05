@@ -13323,7 +13323,6 @@ metadata:
   name: llm-proxy
   namespace: llm-proxy
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: llm-proxy
