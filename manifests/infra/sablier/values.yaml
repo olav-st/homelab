@@ -1,0 +1,3 @@
+# https://github.com/sablierapp/helm-charts/blob/main/charts/sablier/values.yaml
+rbac:
+  cnpg: true
