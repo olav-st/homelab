@@ -13390,22 +13390,23 @@ spec:
             - sh
             - -c
             - |
-              # Holds a continuous TCP connection open to the remote machine
-              # for as long as this container runs, so it sees ongoing
-              # activity and doesn't go back to sleep. Sablier scaling this
-              # pod to zero kills this container, dropping the connection
-              # and allowing the remote to sleep again.
-              exec socat -d \
-                TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5,forever,interval=5,keepalive \
-                /dev/null,ignoreeof
+              # Pings the GPU box every 30s. "Connection: close" makes the server
+              # close the connection, leaving a server-side TIME_WAIT entry that
+              # the remote sleep-wrapper detects as activity. Sablier stopping
+              # this pod stops the pings; the remote sleeps after KeepAwakeSeconds.
+              while true; do
+                curl -s -o /dev/null --max-time 5 -H "Connection: close" \
+                  "http://$REMOTE_HOST:$REMOTE_PORT/health" || true
+                sleep 30
+              done
           env:
             - name: REMOTE_HOST
               value: olav-gpu-machine.lan
             - name: REMOTE_PORT
               value: "8080"
-          image: alpine/socat:1.8.1.3
+          image: alpine/curl:8.14.1
           imagePullPolicy: IfNotPresent
-          name: keepalive-connection
+          name: keepalive-ping
           resources:
             requests:
               cpu: 5m
