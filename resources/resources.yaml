@@ -18046,7 +18046,7 @@ spec:
         namespaces:
           from: All
       hostname: '*.homelab.olav.ninja'
-      name: https
+      name: websecure
       port: 443
       protocol: HTTPS
       tls:
