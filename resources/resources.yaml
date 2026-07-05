@@ -13346,7 +13346,7 @@ spec:
               wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
               exec socat -d -d \
                 TCP-LISTEN:8080,fork,reuseaddr \
-                TCP:$(REMOTE_HOST):$(REMOTE_PORT),connect-timeout=5
+                TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5
           env:
             - name: REMOTE_HOST
               value: olav-gpu-machine.lan
@@ -13397,8 +13397,8 @@ spec:
               # pod to zero kills this container, dropping the connection
               # and allowing the remote to sleep again.
               exec socat -d \
-                TCP:$(REMOTE_HOST):$(REMOTE_PORT),connect-timeout=5,forever,interval=5,keepalive \
-                /dev/null
+                TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5,forever,interval=5,keepalive \
+                /dev/null,ignoreeof
           env:
             - name: REMOTE_HOST
               value: olav-gpu-machine.lan
