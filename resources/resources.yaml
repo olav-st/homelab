@@ -12367,7 +12367,7 @@ spec:
       app.kubernetes.io/instance: hermes-agent
       app.kubernetes.io/name: hermes-agent
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
