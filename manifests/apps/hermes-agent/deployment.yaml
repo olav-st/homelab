@@ -28,6 +28,11 @@ spec:
         env:
           - name: API_SERVER_ENABLED
             value: "true"
+          - name: API_SERVER_KEY
+            valueFrom:
+              secretKeyRef:
+                name: hermes-agent-secrets
+                key: apiServerKey
           - name: AGENT_BROWSER_ARGS
             value: "--no-sandbox,--disable-dev-shm-usage" # Workaround for Chrome sandbox + AppArmor issue
           - name: HERMES_UID

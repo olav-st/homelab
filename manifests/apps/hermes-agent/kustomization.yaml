@@ -10,3 +10,4 @@ resources:
   - pvcs.yaml
   - sa.yaml
   - service.yaml
+  - secrets.yaml
