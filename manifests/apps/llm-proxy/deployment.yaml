@@ -53,7 +53,7 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 15
           timeoutSeconds: 5
-          failureThreshold: 20
+          failureThreshold: 5
           exec:
             command:
             - sh
@@ -63,7 +63,7 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 20
+          failureThreshold: 5
           exec:
             command:
             - sh
