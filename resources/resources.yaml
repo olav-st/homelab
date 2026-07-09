@@ -5542,6 +5542,15 @@ rules:
       - update
       - watch
   - apiGroups:
+      - resource.k8s.io
+    resources:
+      - resourceclaims
+      - resourceclaims/status
+      - resourceslices
+    verbs:
+      - get
+      - list
+  - apiGroups:
       - ""
       - events.k8s.io
     resources:
@@ -13368,7 +13377,7 @@ spec:
                 - sh
                 - -c
                 - socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3
-            failureThreshold: 20
+            failureThreshold: 5
             initialDelaySeconds: 30
             periodSeconds: 15
             timeoutSeconds: 5
@@ -13383,7 +13392,7 @@ spec:
                 - sh
                 - -c
                 - socat -T3 /dev/null TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=3
-            failureThreshold: 20
+            failureThreshold: 5
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
