@@ -160,11 +160,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ollama
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: openwebui
 ---
 apiVersion: v1
@@ -664,19 +659,6 @@ metadata:
     helm.sh/chart: node-feature-discovery-0.19.0
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-  name: ollama
-  namespace: ollama
 ---
 apiVersion: v1
 automountServiceAccountToken: false
@@ -10224,28 +10206,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-  name: ollama
-  namespace: ollama
-spec:
-  ports:
-    - name: http
-      port: 11434
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/name: ollama
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
@@ -10653,26 +10613,6 @@ spec:
       storage: 400Gi
   storageClassName: longhorn-static
   volumeName: nextcloud-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-  name: ollama
-  namespace: ollama
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 60Gi
-  storageClassName: longhorn-static
-  volumeName: ollama
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -14464,83 +14404,6 @@ spec:
                 path: nfd-master.conf
             name: nfd-node-feature-discovery-master-conf
           name: nfd-master-conf
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-    sablier.enable: "true"
-    sablier.group: ollama-openwebui
-  name: ollama
-  namespace: ollama
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: ollama
-      app.kubernetes.io/name: ollama
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: ollama
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: ollama
-        app.kubernetes.io/version: 0.31.1
-        helm.sh/chart: ollama-1.65.0
-    spec:
-      containers:
-        - env:
-            - name: OLLAMA_VULKAN
-              value: "1"
-            - name: OLLAMA_HOST
-              value: 0.0.0.0:11434
-          image: ollama/ollama:0.31.1
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 6
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-          name: ollama
-          ports:
-            - containerPort: 11434
-              name: http
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 6
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 3
-          resources:
-            limits:
-              gpu.intel.com/i915: 1
-            requests:
-              gpu.intel.com/i915: 1
-          securityContext: {}
-          volumeMounts:
-            - mountPath: /root/.ollama
-              name: ollama-data
-      securityContext: {}
-      serviceAccountName: ollama
-      terminationGracePeriodSeconds: 120
-      volumes:
-        - name: ollama-data
-          persistentVolumeClaim:
-            claimName: ollama
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18977,37 +18840,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.middlewares: ollama-sablier@kubernetescrd
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-  name: ollama
-  namespace: ollama
-spec:
-  rules:
-    - host: ollama.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: ollama
-                port:
-                  number: 11434
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - ollama.homelab.olav.ninja
-      secretName: ollama-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
     traefik.ingress.kubernetes.io/router.middlewares: openwebui-sablier@kubernetescrd
@@ -19746,23 +19578,6 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: sablier
-  namespace: ollama
-spec:
-  plugin:
-    sablier:
-      dynamic:
-        displayName: Ollama / Open WebUI
-        refreshFrequency: 5s
-        showDetails: "true"
-        theme: ghost
-      group: ollama-openwebui
-      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 1h
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: sablier
   namespace: openwebui
 spec:
   plugin:
@@ -19907,31 +19722,6 @@ spec:
       command:
         - wget
       image: busybox:latest
-      name: wget
-  restartPolicy: Never
----
-apiVersion: v1
-kind: Pod
-metadata:
-  annotations:
-    helm.sh/hook: test
-  labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.31.1
-    helm.sh/chart: ollama-1.65.0
-  name: ollama-test-connection
-  namespace: ollama
-spec:
-  containers:
-    - args:
-        - |
-          wget -qO- "http://ollama:11434" >/dev/null
-      command:
-        - sh
-        - -ec
-      image: busybox
       name: wget
   restartPolicy: Never
 ---
