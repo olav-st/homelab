@@ -12,6 +12,5 @@ resources:
   - ./jellyfin
   - ./llm-proxy
   - ./nextcloud
-  - ./ollama
   - ./openwebui
   - ./pingvinshare
