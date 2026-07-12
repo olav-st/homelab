@@ -13412,7 +13412,7 @@ spec:
               value: olav-gpu-machine.lan
             - name: REMOTE_PORT
               value: "8080"
-          image: alpine/curl:8.14.1
+          image: alpine/curl:8.21.0
           imagePullPolicy: IfNotPresent
           name: keepalive-ping
           resources:
