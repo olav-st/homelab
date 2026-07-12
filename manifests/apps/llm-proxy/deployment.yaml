@@ -75,7 +75,7 @@ spec:
             memory: 64Mi
 
       - name: keepalive-ping
-        image: alpine/curl:8.14.1 # renovate: docker=alpine/curl
+        image: alpine/curl:8.21.0 # renovate: docker=alpine/curl
         imagePullPolicy: IfNotPresent
         env:
         - name: REMOTE_HOST
