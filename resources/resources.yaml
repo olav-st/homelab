@@ -11884,7 +11884,7 @@ spec:
               value: "568"
             - name: GID
               value: "568"
-          image: docker.io/revenz/fileflows:26.06
+          image: docker.io/revenz/fileflows:26.07
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 5
