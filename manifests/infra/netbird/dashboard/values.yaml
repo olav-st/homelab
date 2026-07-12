@@ -1,5 +1,5 @@
 image:
-  tag: v2.80.0 # renovate: docker=netbirdio/dashboard
+  tag: v2.90.3 # renovate: docker=netbirdio/dashboard
 
 auth:
   authority: https://keycloak.homelab.olav.ninja/realms/homelab
