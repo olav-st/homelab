@@ -16,6 +16,6 @@ helmCharts:
   releaseName: traefik
   namespace: traefik
   repo: https://traefik.github.io/charts
-  version: 40.3.0
+  version: 41.0.2
   includeCRDs: true
   valuesFile: values.yaml
