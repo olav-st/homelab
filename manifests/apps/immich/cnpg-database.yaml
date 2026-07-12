@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: immich-postgresql
 spec:
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16-1.1.1 # renovate: docker=ghcr.io/tensorchord/cloudnative-vectorchord
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18-1.1.1 # renovate: docker=ghcr.io/tensorchord/cloudnative-vectorchord
   instances: 1
 
   postgresql:
