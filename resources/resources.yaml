@@ -160,11 +160,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: openwebui
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: pingvinshare
 ---
 apiVersion: v1
@@ -659,20 +654,6 @@ metadata:
     helm.sh/chart: node-feature-discovery-0.19.0
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
----
-apiVersion: v1
-automountServiceAccountToken: false
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-  name: existing-sa
-  namespace: openwebui
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -10206,52 +10187,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-  name: open-webui
-  namespace: openwebui
-spec:
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: open-webui-redis
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-  name: open-webui-redis
-  namespace: openwebui
-spec:
-  ports:
-    - name: http
-      port: 6379
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/component: open-webui-redis
-    app.kubernetes.io/instance: openwebui
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
@@ -10613,20 +10548,6 @@ spec:
       storage: 400Gi
   storageClassName: longhorn-static
   volumeName: nextcloud-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: open-webui
-  namespace: openwebui
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: longhorn-static
-  volumeName: open-webui
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -14409,43 +14330,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: open-webui-redis
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-    sablier.enable: "true"
-    sablier.group: ollama-openwebui
-  name: open-webui-redis
-  namespace: openwebui
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: open-webui-redis
-      app.kubernetes.io/instance: openwebui
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: open-webui-redis
-        app.kubernetes.io/instance: openwebui
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: open-webui
-        app.kubernetes.io/version: 0.7.2
-        helm.sh/chart: open-webui-10.2.1
-    spec:
-      containers:
-        - image: redis:7.4.2-alpine3.21
-          imagePullPolicy: IfNotPresent
-          name: open-webui-redis
-          ports:
-            - containerPort: 6379
-              name: http
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app.kubernetes.io/controller: pingvinshare
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
@@ -15424,105 +15308,6 @@ spec:
           name: redis-data
   updateStrategy:
     type: RollingUpdate
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  labels:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-    sablier.enable: "true"
-    sablier.group: ollama-openwebui
-  name: open-webui
-  namespace: openwebui
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: open-webui
-      app.kubernetes.io/instance: openwebui
-  serviceName: open-webui
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: open-webui
-        app.kubernetes.io/instance: openwebui
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: open-webui
-        app.kubernetes.io/version: 0.7.2
-        helm.sh/chart: open-webui-10.2.1
-    spec:
-      automountServiceAccountToken: false
-      containers:
-        - env:
-            - name: WEBUI_URL
-              value: https://openwebui.homelab.olav.ninja
-            - name: OLLAMA_BASE_URLS
-              value: http://ollama.ollama.svc.cluster.local:11434
-            - name: OPENAI_API_BASE_URL
-              value: https://api.openai.com/v1
-            - name: OPENAI_API_KEY
-              value: 0p3n-w3bu!
-            - name: ENABLE_WEBSOCKET_SUPPORT
-              value: "True"
-            - name: WEBSOCKET_MANAGER
-              value: redis
-            - name: REDIS_URL
-              value: redis://open-webui-redis:6379/0
-            - name: WEBSOCKET_REDIS_URL
-              value: redis://open-webui-redis:6379/0
-            - name: ENABLE_OPENAI_API
-              value: "False"
-            - name: ENABLE_OAUTH_SIGNUP
-              value: "True"
-            - name: OAUTH_MERGE_ACCOUNTS_BY_EMAIL
-              value: "True"
-            - name: OAUTH_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  key: clientId
-                  name: openwebui-oidc-credentials
-            - name: OAUTH_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: clientSecret
-                  name: openwebui-oidc-credentials
-            - name: OPENID_PROVIDER_URL
-              value: https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration
-            - name: OAUTH_PROVIDER_NAME
-              value: Keycloak
-            - name: OAUTH_SCOPES
-              value: openid email profile
-          image: ghcr.io/open-webui/open-webui:0.7.2
-          imagePullPolicy: IfNotPresent
-          name: open-webui
-          ports:
-            - containerPort: 8080
-              name: http
-          tty: true
-          volumeMounts:
-            - mountPath: /app/backend/data
-              name: data
-      enableServiceLinks: false
-      initContainers:
-        - command:
-            - sh
-            - -c
-            - cp -R -n /app/backend/data/* /tmp/app-data/
-          image: ghcr.io/open-webui/open-webui:0.7.2
-          imagePullPolicy: IfNotPresent
-          name: copy-app-data
-          volumeMounts:
-            - mountPath: /tmp/app-data
-              name: data
-      serviceAccountName: existing-sa
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: open-webui
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -17785,21 +17570,6 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  name: openwebui-oidc-credentials
-  namespace: openwebui
-spec:
-  encryptedData:
-    clientId: AgATZxYet2gz1Of6VtDGIDaStL66v1Z4hJKja87uAnc730z78ePf5irRcv//h5rxJkA7Ge0dB8aAdyUSKwySIRwA67yV52bTPLroyYUuqe3bIRFaUWZJKWWf4gSpwHIXDDKMxhzq67k6fuwvVKT/Y74FgkUGRqmyDF0syvXiZ5dtS/V8wqxlWdS0cng03+JQf468N5LUM2CBW4kYwhfqB9EF2txNKABnAcBC5RVKRMq07VmP2BW645CpqlVCDiRQWeh25GsWDbd6YsA/BgG1uNY+OeN/Kd1TpjVdnMJJG5Kgud376Qmgl8fo7RKB51hnRETUL1yBMc5k/BUZH/deuZJTfvr9JqpWwjr2dAw9DPJvX+fTu2LT7kXQHJbYr74908Yd0JrUCO2yOz4e9DpHvCvWCOlYqN8VDc4D4ZKw7PJgNLPdkue8lNXsifCDARebtGScekXLuWnVfojTxmBPz/fUh/12VT1OJxmt0wGtbV3sPW/XT/abjdMI3/PVU4DCeD/4strplrwoPlehk6tQWtBxIIGD8KPHXiPX6WknNtWVlQ+iiIR6hHTLckCyFZ7f4x9msL8JdFquuv4ICdtJ1RJDajHjEm+GVIomsJKgUW1eN8b1pTptNM6YDPewRi87ASN7988s0semlV8YBtBoqs4p4PA3LX4PABEwBGEurJNVsTDW9HU4W786av3nQ3E8vsXMz1i0ZDNm8dY=
-    clientSecret: AgAAGMRkzGpDj+45aIwMQ+DoK1FF9Nlxq7GBYgp8+9HWSdRt5rwQqmMv636bQeGqx3PGzrrCkTTUqzlr1otF7ilrwMWV+mPPjoR+Zz1q0LvlzKmhFngcTtSJJtTT5VQyd62EyxOIuVyNItdJS5SYis4mvrRUBfVnlNIVi6deC+k1s8CiF+EJPOGKeQHV8ozG11ryqK5OqzZNiidd+PT47FEfdVbnNz2dQzPKFK84F8ob9kMgbcQrxW2q1OmTCgbtweQLVq5cKmIBeIuxtomg2PMwyeQNPxwkiCSHzbZ9DA42CzqbvmqyOw4U1Ylz9KeG4AhQZN+mNVVp0pzy4yiOeJ3g9bnUFFO3GjExTxS27IXRkWmhZbR33faOASNeBEgDaiQah7dS4XNCkAPj/cs8tfGkBCfs5vFO5Buc8I0VkZiQGecX8u4sQCX258Y0vIK5fWpc2sBUjypW9w34EaztA5QqNSwcIo1KrIuKBVThqTqE0+RPkJNe73fNpGR8e5bOxjF7truTjSNKpx2VXAizvg92+LvUcd3KmL0NfMHlIeUe2sW6EzbAwhjIK6p98pOl1mo1tk1B638KT6tnHvLyr6Ej0/+XJ8rhcp1LBkQYsAol1eEOej2Hik0G1HO1YerEoiK3TIou15HwpQ2vYLFtbuzyCiuyq422UWbYiclptN3R4B7g70mXbOeY4xY1lOVOSTHYtakHSg/3Mzfhg25wM69c0ycXqMtC
-  template:
-    metadata:
-      name: openwebui-oidc-credentials
-      namespace: openwebui
-    type: Opaque
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
   name: pingvinshare-oidc-credentials
   namespace: pingvinshare
 spec:
@@ -18840,40 +18610,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
-    traefik.ingress.kubernetes.io/router.middlewares: openwebui-sablier@kubernetescrd
-  labels:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: open-webui-10.2.1
-  name: open-webui
-  namespace: openwebui
-spec:
-  rules:
-    - host: openwebui.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: open-webui
-                port:
-                  name: http
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - openwebui.homelab.olav.ninja
-      secretName: openwebui-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/appName: Pingvin Share
     hajimari.io/enable: "true"
     hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
@@ -19573,23 +19309,6 @@ spec:
         ClientSecret: urn:k8s:secret:longhorn-oidc-credentials:clientSecret
         Url: https://keycloak.homelab.olav.ninja/realms/homelab
       Secret: urn:k8s:secret:longhorn-oidc-credentials:pluginSecret
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: sablier
-  namespace: openwebui
-spec:
-  plugin:
-    sablier:
-      dynamic:
-        displayName: Ollama / Open WebUI
-        refreshFrequency: 5s
-        showDetails: "true"
-        theme: ghost
-      group: ollama-openwebui
-      sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
-      sessionDuration: 1h
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware

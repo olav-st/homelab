@@ -204,27 +204,6 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
-  name: openwebui
-  namespace: openwebui
-spec:
-  baseUrl: https://openwebui.homelab.olav.ninja
-  clientId: openwebui
-  clientSecretSecretRef:
-    key: clientSecret
-    name: openwebui-oidc-credentials
-    namespace: openwebui
-  description: Open WebUI Client
-  displayName: Open WebUI
-  grantTypes:
-    - code
-  realm: homelab
-  redirectUris:
-    - https://openwebui.homelab.olav.ninja/oauth/oidc/callback
-  type: CONFIDENTIAL
----
-apiVersion: oidc.homelab.olav.ninja/v1alpha1
-kind: XOidcClient
-metadata:
   name: pingvinshare
   namespace: pingvinshare
 spec:
