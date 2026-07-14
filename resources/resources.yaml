@@ -692,8 +692,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets
   namespace: sealed-secrets
 ---
@@ -1478,8 +1478,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets-key-admin
   namespace: sealed-secrets
 rules:
@@ -1507,8 +1507,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets-service-proxier
   namespace: sealed-secrets
 rules:
@@ -5984,8 +5984,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: secrets-unsealer
 rules:
   - apiGroups:
@@ -6441,8 +6441,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets-key-admin
   namespace: sealed-secrets
 roleRef:
@@ -6463,8 +6463,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets-service-proxier
   namespace: sealed-secrets
 roleRef:
@@ -7115,8 +7115,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10248,8 +10248,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets
   namespace: sealed-secrets
 spec:
@@ -10257,6 +10257,7 @@ spec:
     - name: http
       nodePort: null
       port: 8080
+      protocol: TCP
       targetPort: http
   selector:
     app.kubernetes.io/instance: sealed-secrets
@@ -10272,8 +10273,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets-metrics
   namespace: sealed-secrets
 spec:
@@ -10281,6 +10282,7 @@ spec:
     - name: metrics
       nodePort: null
       port: 8081
+      protocol: TCP
       targetPort: metrics
   selector:
     app.kubernetes.io/instance: sealed-secrets
@@ -14560,8 +14562,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sealed-secrets
     app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.35.0
-    helm.sh/chart: sealed-secrets-2.18.1
+    app.kubernetes.io/version: 0.38.4
+    helm.sh/chart: sealed-secrets-2.19.1
   name: sealed-secrets
   namespace: sealed-secrets
 spec:
@@ -14588,7 +14590,7 @@ spec:
           command:
             - controller
           env: null
-          image: docker.io/bitnami/sealed-secrets-controller:0.35.0
+          image: docker.io/bitnami/sealed-secrets-controller:0.38.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -14603,8 +14605,10 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+              protocol: TCP
             - containerPort: 8081
               name: metrics
+              protocol: TCP
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -14618,6 +14622,7 @@ spec:
             limits: {}
             requests: {}
           securityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -14629,6 +14634,8 @@ spec:
               name: tmp
       securityContext:
         fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: sealed-secrets
       volumes:
         - emptyDir: {}
