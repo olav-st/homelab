@@ -9,7 +9,7 @@ data "talos_client_configuration" "this" {
 data "talos_machine_configuration" "this" {
   for_each = local.nodes
 
-  talos_version      = "v1.13.3" # renovate: github-releases=siderolabs/talos
+  talos_version      = "v1.13.7" # renovate: github-releases=siderolabs/talos
   kubernetes_version = "v1.36.3" # renovate: github-releases=kubernetes/kubernetes
 
   cluster_name     = var.cluster_name
@@ -42,7 +42,7 @@ resource "talos_machine" "this" {
   machine_configuration = data.talos_machine_configuration.this[each.key].machine_configuration
 
   # nocloud image with siderolabs/intel-ucode, siderolabs/i915, siderolabs/amdgpu, siderolabs/iscsi-tools and siderolabs/util-linux-tools extensions
-  image                 = "factory.talos.dev/metal-installer/5fad2b86ebfc72aaaf4ebc31cc5c36642af6f8557f35132be6d86196058790a6:v1.13.3" # renovate: github-releases=siderolabs/talos
+  image                 = "factory.talos.dev/metal-installer/5fad2b86ebfc72aaaf4ebc31cc5c36642af6f8557f35132be6d86196058790a6:v1.13.7" # renovate: github-releases=siderolabs/talos
 }
 
 resource "talos_machine_configuration_apply" "this" {
