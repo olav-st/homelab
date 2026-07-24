@@ -8598,7 +8598,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 34.0.1
-    helm.sh/chart: nextcloud-9.2.2
+    helm.sh/chart: nextcloud-9.2.4
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8616,7 +8616,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 34.0.1
-    helm.sh/chart: nextcloud-9.2.2
+    helm.sh/chart: nextcloud-9.2.4
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -10121,7 +10121,7 @@ metadata:
     app.kubernetes.io/monitor: enabled
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 34.0.1
-    helm.sh/chart: nextcloud-9.2.2
+    helm.sh/chart: nextcloud-9.2.4
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -13842,7 +13842,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 34.0.1
-    helm.sh/chart: nextcloud-9.2.2
+    helm.sh/chart: nextcloud-9.2.4
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -14074,6 +14074,9 @@ spec:
           name: nextcloud-cron
           resources: {}
           volumeMounts:
+            - mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+              name: php-confd
+              subPath: redis-session.ini
             - mountPath: /var/www/
               name: nextcloud-main
               subPath: root
@@ -14139,6 +14142,15 @@ spec:
               subPath: uploadLimit.ini
       dnsConfig:
         options: []
+      initContainers:
+        - command:
+            - touch
+            - /usr/local/etc/php/conf.d/redis-session.ini
+          image: docker.io/library/nextcloud:34.0.1-apache
+          name: init-redis-session-ini
+          volumeMounts:
+            - mountPath: /usr/local/etc/php/conf.d
+              name: php-confd
       securityContext:
         fsGroup: 33
       volumes:
@@ -14151,6 +14163,8 @@ spec:
         - configMap:
             name: nextcloud-phpconfig
           name: nextcloud-phpconfig
+        - emptyDir: {}
+          name: php-confd
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18593,7 +18607,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
     app.kubernetes.io/version: 34.0.1
-    helm.sh/chart: nextcloud-9.2.2
+    helm.sh/chart: nextcloud-9.2.4
   name: nextcloud
   namespace: nextcloud
 spec:
