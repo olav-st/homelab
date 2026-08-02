@@ -27,6 +27,11 @@ machine:
             device_ownership_from_security_context = true
       path: /etc/cri/conf.d/20-customization.part
       op: create
+  udev:
+    rules:
+      # Prevents USB devices that are passed through to KubeVirt VMs from autosuspending
+      - 'ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="10c4", ATTR{idProduct}=="ea60", TEST=="power/control", ATTR{power/control}="on"'
+      - 'ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="8087", ATTR{idProduct}=="0026", TEST=="power/control", ATTR{power/control}="on"'
   nodeLabels:
     node.longhorn.io/create-default-disk: config
   nodeAnnotations:
