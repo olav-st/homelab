@@ -7,6 +7,6 @@ spec:
     sablier:
       group: llm-proxy
       blocking:
-        timeout: 5m
+        timeout: 15m
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 30m
