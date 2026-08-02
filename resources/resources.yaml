@@ -19313,7 +19313,7 @@ spec:
   plugin:
     sablier:
       blocking:
-        timeout: 5m
+        timeout: 15m
       group: llm-proxy
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 30m
