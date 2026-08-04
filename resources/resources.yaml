@@ -13215,7 +13215,7 @@ spec:
               set -e
               apk add --no-cache wakeonlan
               wakeonlan -i "$BROADCAST_ADDR" "$REMOTE_MAC"
-              exec socat -d -d \
+              exec socat -v -d -d \
                 TCP-LISTEN:8080,fork,reuseaddr \
                 TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5
           env:
