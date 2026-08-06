@@ -40,6 +40,7 @@ resource "talos_machine" "this" {
   node                  = each.value.ip_address
   client_configuration  = data.talos_client_configuration.this.client_configuration
   machine_configuration = data.talos_machine_configuration.this[each.key].machine_configuration
+  kubeconfig_wo         = talos_cluster_kubeconfig.this.kubeconfig_raw
 
   # nocloud image with siderolabs/intel-ucode, siderolabs/i915, siderolabs/amdgpu, siderolabs/iscsi-tools and siderolabs/util-linux-tools extensions
   image                 = "factory.talos.dev/metal-installer/5fad2b86ebfc72aaaf4ebc31cc5c36642af6f8557f35132be6d86196058790a6:v1.13.3" # renovate: github-releases=siderolabs/talos
