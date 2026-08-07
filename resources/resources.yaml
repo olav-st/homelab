@@ -13718,7 +13718,7 @@ spec:
               value: https://netbird.homelab.olav.ninja
             - name: NGINX_SSL_PORT
               value: "443"
-          image: netbirdio/dashboard:v2.90.8
+          image: netbirdio/dashboard:v2.90.9
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
