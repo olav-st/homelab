@@ -934,6 +934,9 @@ spec:
                       rule: '!has(self.trustedIssuers) || size(self.trustedIssuers) > 0'
                     - message: only one entry in trustedIssuers may omit the issuer field
                       rule: '!has(self.trustedIssuers) || self.trustedIssuers.filter(x, !has(x.issuer) || x.issuer == "").size() <= 1'
+                keyless:
+                  description: Keyless configures keyless authentication.
+                  type: object
                 ldap:
                   description: LDAP configures LDAP authentication.
                   properties:
@@ -989,7 +992,7 @@ spec:
               type: object
               x-kubernetes-validations:
                 - message: exactly one authentication method must be specified
-                  rule: '[has(self.apiKey), has(self.jwt), has(self.ldap)].filter(x, x).size() == 1'
+                  rule: '[has(self.apiKey), has(self.jwt), has(self.ldap), has(self.keyless)].filter(x, x).size() == 1'
             status:
               description: The current status of this APIAuth.
               properties:
@@ -1870,6 +1873,12 @@ spec:
                         lastname:
                           description: Lastname is the JWT claim for user last name.
                           type: string
+                        organizationId:
+                          description: OrganizationID is the JWT claim for the ID of the organization the user belongs to.
+                          type: string
+                        organizationName:
+                          description: OrganizationName is the JWT claim for the name of the organization the user belongs to.
+                          type: string
                         userId:
                           description: UserID is the JWT claim for user ID mapping.
                           type: string
@@ -2547,6 +2556,9 @@ spec:
                       description: RefreshInterval defines the rate at which the OpenAPI specification is refreshed.
                       format: duration
                       type: string
+                      x-kubernetes-validations:
+                        - message: must be at least 1m
+                          rule: self >= duration('1m')
                     url:
                       description: |-
                         URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
@@ -2848,6 +2860,9 @@ spec:
                       description: RefreshInterval defines the rate at which the OpenAPI specification is refreshed.
                       format: duration
                       type: string
+                      x-kubernetes-validations:
+                        - message: must be at least 1m
+                          rule: self >= duration('1m')
                     url:
                       description: |-
                         URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
@@ -163911,6 +163926,54 @@ spec:
                 claims:
                   description: Claims specifies an expression that validate claims in order to authorize the request.
                   type: string
+                managedApplicationSelector:
+                  description: |-
+                    ManagedApplicationSelector selects the ManagedApplications that will gain access to the specified APIs.
+                    Multiple ManagedSubscriptions can select the same ManagedApplication.
+                    This field is optional and follows standard label selector semantics.
+                    An empty ManagedApplicationSelector matches any ManagedApplication.
+                  properties:
+                    matchExpressions:
+                      description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                      items:
+                        description: |-
+                          A label selector requirement is a selector that contains values, a key, and an operator that
+                          relates the key and values.
+                        properties:
+                          key:
+                            description: key is the label key that the selector applies to.
+                            type: string
+                          operator:
+                            description: |-
+                              operator represents a key's relationship to a set of values.
+                              Valid operators are In, NotIn, Exists and DoesNotExist.
+                            type: string
+                          values:
+                            description: |-
+                              values is an array of string values. If the operator is In or NotIn,
+                              the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                              the values array must be empty. This array is replaced during a strategic
+                              merge patch.
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                        required:
+                          - key
+                          - operator
+                        type: object
+                      type: array
+                      x-kubernetes-list-type: atomic
+                    matchLabels:
+                      additionalProperties:
+                        type: string
+                      description: |-
+                        matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                        map is equivalent to an element of matchExpressions, whose key field is "key", the
+                        operator is "In", and the values array contains only "value". The requirements are ANDed.
+                      type: object
+                  type: object
+                  x-kubernetes-map-type: atomic
                 managedApplications:
                   description: |-
                     ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
@@ -164029,6 +164092,18 @@ spec:
                       - name
                     type: object
                   type: array
+                resolvedManagedApplications:
+                  description: ResolvedManagedApplications is the list of ManagedApplications that were successfully resolved.
+                  items:
+                    description: ResolvedManagedApplicationReference references a resolved ManagedApplication.
+                    properties:
+                      name:
+                        description: Name of the ManagedApplication.
+                        type: string
+                    required:
+                      - name
+                    type: object
+                  type: array
                 syncedAt:
                   format: date-time
                   type: string
@@ -164039,6 +164114,18 @@ spec:
                     properties:
                       name:
                         description: Name of the API.
+                        type: string
+                    required:
+                      - name
+                    type: object
+                  type: array
+                unresolvedManagedApplications:
+                  description: UnresolvedManagedApplications is the list of ManagedApplications that could not be resolved.
+                  items:
+                    description: ResolvedManagedApplicationReference references a resolved ManagedApplication.
+                    properties:
+                      name:
+                        description: Name of the ManagedApplication.
                         type: string
                     required:
                       - name
@@ -165446,6 +165533,14 @@ spec:
                     This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes.
                     More info: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/middlewares/errorpages/
                   properties:
+                    errorRequestHeaders:
+                      description: |-
+                        ErrorRequestHeaders defines the list of request headers forwarded to the error page service.
+                        When nil (not set), all original request headers are forwarded.
+                        Set to an empty list to forward no headers, or list specific headers to forward only those.
+                      items:
+                        type: string
+                      type: array
                     query:
                       description: |-
                         Query defines the URL for the error page (hosted by service).
@@ -230471,6 +230566,8 @@ spec:
                   description: |-
                     ExposeName is the name of the service to expose.
                     By default it uses <namespace>-<name>.
+                  maxLength: 253
+                  pattern: ^[a-z0-9]([-a-z0-9.]*[a-z0-9])?$
                   type: string
                 healthCheck:
                   description: HealthCheck configures the active health check on the parent cluster for this uplink's load balancer.
