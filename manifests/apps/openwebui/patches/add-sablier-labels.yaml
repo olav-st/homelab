@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: open-webui
+  name: openwebui-open-webui
   namespace: openwebui
   labels:
     sablier.enable: "true"
@@ -10,7 +10,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: open-webui-redis
+  name: openwebui-open-webui-redis
   namespace: openwebui
   labels:
     sablier.enable: "true"
