@@ -23,6 +23,7 @@ terminals:
 
 persistence:
   enabled: true
+  provider: local
   existingClaim: open-webui
 
 extraEnvVars:

@@ -22,4 +22,4 @@ patches:
   - path: patches/remove-replicas.yaml
     target:
       kind: StatefulSet
-      name: open-webui
+      name: openwebui-open-webui
