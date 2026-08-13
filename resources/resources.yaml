@@ -675,20 +675,6 @@ metadata:
   namespace: openwebui
 ---
 apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: open-webui-ollama
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.13.3
-    helm.sh/chart: ollama-1.36.0
-  name: open-webui-ollama
-  namespace: openwebui
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
@@ -10244,29 +10230,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: open-webui-ollama
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.13.3
-    helm.sh/chart: ollama-1.36.0
-  name: open-webui-ollama
-  namespace: openwebui
-spec:
-  ports:
-    - name: http
-      port: 11434
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/component: open-webui-ollama
-    app.kubernetes.io/instance: openwebui
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
     app.kubernetes.io/component: open-webui-redis
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
@@ -14463,81 +14426,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: open-webui-ollama
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.13.3
-    helm.sh/chart: ollama-1.36.0
-  name: open-webui-ollama
-  namespace: openwebui
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: open-webui-ollama
-      app.kubernetes.io/instance: openwebui
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: open-webui-ollama
-        app.kubernetes.io/instance: openwebui
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: ollama
-        app.kubernetes.io/version: 0.13.3
-        helm.sh/chart: ollama-1.36.0
-    spec:
-      containers:
-        - args: null
-          env:
-            - name: OLLAMA_HOST
-              value: 0.0.0.0:11434
-          envFrom: null
-          image: ollama/ollama:0.13.3
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 6
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
-          name: ollama
-          ports:
-            - containerPort: 11434
-              name: http
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 6
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 3
-          resources:
-            limits: {}
-            requests: {}
-          securityContext: {}
-          volumeMounts:
-            - mountPath: /root/.ollama
-              name: ollama-data
-      securityContext: {}
-      serviceAccountName: open-webui-ollama
-      terminationGracePeriodSeconds: 120
-      volumes:
-        - emptyDir: {}
-          name: ollama-data
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app.kubernetes.io/component: open-webui-redis
     app.kubernetes.io/instance: openwebui
     app.kubernetes.io/managed-by: Helm
@@ -15594,8 +15482,8 @@ spec:
         - env:
             - name: WEBUI_URL
               value: https://openwebui.homelab.olav.ninja
-            - name: OLLAMA_BASE_URLS
-              value: http://open-webui-ollama.openwebui.svc.cluster.local:11434
+            - name: ENABLE_OLLAMA_API
+              value: "False"
             - name: OPENAI_API_BASE_URL
               value: https://llm-proxy.homelab.olav.ninja/v1
             - name: OPENAI_API_KEY
@@ -19856,30 +19744,6 @@ spec:
       command:
         - wget
       image: busybox:latest
-      name: wget
-  restartPolicy: Never
----
-apiVersion: v1
-kind: Pod
-metadata:
-  annotations:
-    helm.sh/hook: test
-  labels:
-    app.kubernetes.io/component: open-webui-ollama
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ollama
-    app.kubernetes.io/version: 0.13.3
-    helm.sh/chart: ollama-1.36.0
-  name: open-webui-ollama-test-connection
-  namespace: openwebui
-spec:
-  containers:
-    - args:
-        - open-webui-ollama:11434
-      command:
-        - wget
-      image: busybox
       name: wget
   restartPolicy: Never
 ---
