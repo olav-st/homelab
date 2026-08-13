@@ -9301,7 +9301,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: kenXnoiKeRnRiQaP15m22fiLKYxblpzT
+  api-key: EFUoV6iAtPTNLNO0q9ao0TQdLPgNjxmX
 type: Opaque
 ---
 apiVersion: v1
@@ -15764,8 +15764,8 @@ spec:
                   name: openwebui-terminals-api-key
             - name: TERMINAL_SERVER_CONNECTIONS
               value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"http://openwebui-terminals-orchestrator.openwebui.svc.cluster.local:8080","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
-            - name: ENABLE_OPENAI_API
-              value: "False"
+            - name: OPENAI_API_CONFIGS
+              value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}}'
             - name: ENABLE_OAUTH_SIGNUP
               value: "True"
             - name: OAUTH_MERGE_ACCOUNTS_BY_EMAIL
