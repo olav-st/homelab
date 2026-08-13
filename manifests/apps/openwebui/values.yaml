@@ -1,9 +1,4 @@
 # https://github.com/open-webui/helm-charts/blob/main/charts/open-webui/values.yaml
-ollama:
-  enabled: false
-enableOpenaiApi: true
-openaiBaseApiUrl: https://llm-proxy.homelab.olav.ninja/v1
-
 ingress:
   enabled: true
   annotations:
@@ -26,9 +21,15 @@ persistence:
   provider: local
   existingClaim: open-webui
 
+ollama:
+  enabled: false
+
+enableOpenaiApi: true
+openaiBaseApiUrl: https://llm-proxy.homelab.olav.ninja/v1
+
 extraEnvVars:
-  - name: ENABLE_OPENAI_API
-    value: "False"
+  - name: OPENAI_API_CONFIGS
+    value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}}'
   - name: ENABLE_OAUTH_SIGNUP
     value: "True"
   - name: OAUTH_MERGE_ACCOUNTS_BY_EMAIL
