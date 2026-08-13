@@ -5,7 +5,7 @@ metadata:
   namespace: openwebui
   labels:
     sablier.enable: "true"
-    sablier.group: ollama-openwebui
+    sablier.group: openwebui
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -14,4 +14,4 @@ metadata:
   namespace: openwebui
   labels:
     sablier.enable: "true"
-    sablier.group: ollama-openwebui
+    sablier.group: openwebui

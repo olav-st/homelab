@@ -5,9 +5,9 @@ metadata:
 spec:
   plugin:
     sablier:
-      group: ollama-openwebui # Shared group with ollama
+      group: openwebui
       dynamic:
-        displayName: Ollama / Open WebUI
+        displayName: Open WebUI
         refreshFrequency: 5s
         showDetails: "true"
         theme: ghost
