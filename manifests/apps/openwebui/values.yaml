@@ -1,8 +1,6 @@
-ollama:
-  enabled: false # Deployed separately
-
-ollamaUrls:
-  - http://ollama.ollama.svc.cluster.local:11434
+# https://github.com/open-webui/helm-charts/blob/main/charts/open-webui/values.yaml
+enableOpenaiApi: true
+openaiBaseApiUrl: https://llm-proxy.homelab.olav.ninja/v1
 
 ingress:
   enabled: true
