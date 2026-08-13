@@ -1,0 +1,20 @@
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
+  name: openwebui
+spec:
+  displayName: Open WebUI
+  type: CONFIDENTIAL
+  clientId: openwebui
+  clientSecretSecretRef:
+    key: clientSecret
+    name: openwebui-oidc-credentials
+    namespace: openwebui
+  description: Open WebUI Client
+  grantTypes:
+    - code
+  baseUrl: "https://openwebui.homelab.olav.ninja"
+  redirectUris:
+    - "https://openwebui.homelab.olav.ninja/oauth/oidc/callback"
+  realm: homelab
