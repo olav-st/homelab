@@ -14545,7 +14545,7 @@ metadata:
     app.kubernetes.io/version: 0.7.2
     helm.sh/chart: open-webui-10.2.1
     sablier.enable: "true"
-    sablier.group: ollama-openwebui
+    sablier.group: openwebui
   name: open-webui-redis
   namespace: openwebui
 spec:
@@ -15570,7 +15570,7 @@ metadata:
     app.kubernetes.io/version: 0.7.2
     helm.sh/chart: open-webui-10.2.1
     sablier.enable: "true"
-    sablier.group: ollama-openwebui
+    sablier.group: openwebui
   name: open-webui
   namespace: openwebui
 spec:
@@ -19717,11 +19717,11 @@ spec:
   plugin:
     sablier:
       dynamic:
-        displayName: Ollama / Open WebUI
+        displayName: Open WebUI
         refreshFrequency: 5s
         showDetails: "true"
         theme: ghost
-      group: ollama-openwebui
+      group: openwebui
       sablierUrl: http://sablier-sablier.sablier.svc.cluster.local:10000
       sessionDuration: 1h
 ---
