@@ -1,5 +1,5 @@
-apiVersion: netbird.io/v1
-kind: NBGroup
+apiVersion: netbird.io/v1alpha1
+kind: Group
 metadata:
   name: homelab
 spec:

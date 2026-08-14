@@ -3,19 +3,17 @@ kind: Kustomization
 namespace: netbird
 
 resources:
-  - jobs.yaml
-  - netbird-groups.yaml
+  - gateways.yaml
+  - groups.yaml
+  - routing-peers.yaml
+  - tcp-routes.yaml
   - secrets.yaml
 
 helmCharts:
-  - name: kubernetes-operator
-    releaseName: netbird
+  - name: netbird-operator
+    releaseName: netbird-operator
     namespace: netbird
-    repo: https://netbirdio.github.io/kubernetes-operator
-    version: 0.2.2
+    repo: oci://ghcr.io/netbirdio/helm-charts
+    version: 0.8.0
     includeCRDs: true
     valuesFile: values.yaml
-
-patches:
-  - path: patches/fix-nbpolicy-ports.yaml
-  - path: patches/fix-missing-envsubst.yaml # Temporary patch until latest tag is updated

@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name:  netbird-private
+  namespace: netbird
+spec:
+  gatewayClassName: netbird-private
+  listeners:
+  - protocol: gateway.netbird.io/NBRoutingPeer
+    name: netbird
+    port: 1
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: netbird-public
+  namespace: netbird
+spec:
+  gatewayClassName: netbird-public
+  listeners:
+  - protocol: gateway.netbird.io/NBRoutingPeer
+    name: netbird
+    port: 1
