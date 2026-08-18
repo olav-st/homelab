@@ -9384,7 +9384,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: LtBQ3vQaIn7pav89Xo2DNFN9vZy8DKAC
+  api-key: FFJyLeX73e9QOAty2gBcOgbjoeExywaX
 type: Opaque
 ---
 apiVersion: v1
@@ -18589,14 +18589,6 @@ metadata:
   name: netbird
   namespace: netbird
 spec: {}
----
-apiVersion: netbird.io/v1alpha1
-kind: Group
-metadata:
-  name: homelab
-  namespace: netbird
-spec:
-  name: homelab
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
