@@ -9384,7 +9384,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: VQbxxl8srVYfyBnmXthwD3LkRm8B1FSt
+  api-key: SeWAFwB6AQnghmr9Bqfhm2X7y0a1WxBt
 type: Opaque
 ---
 apiVersion: v1
@@ -18369,7 +18369,7 @@ metadata:
 spec:
   controllerName: traefik.io/gateway-controller
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha2
+apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
   name: kubernetes
