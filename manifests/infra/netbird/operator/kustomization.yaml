@@ -4,7 +4,7 @@ namespace: netbird
 
 resources:
   - gateways.yaml
-  - routing-peers.yaml
+  - network-routers.yaml
   - tcp-routes.yaml
   - secrets.yaml
 
