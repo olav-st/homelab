@@ -12,7 +12,7 @@ service:
     netbird.io/expose: true
     netbird.io/groups: cluster
     netbird.io/policy: cluster
-    external-dns.alpha.kubernetes.io/internal-hostname: "homelab.olav.ninja,*.homelab.olav.ninja"
+    external-dns.alpha.kubernetes.io/hostname: "homelab.olav.ninja,*.homelab.olav.ninja"
   spec:
     externalTrafficPolicy: Local
     internalTrafficPolicy: Local
