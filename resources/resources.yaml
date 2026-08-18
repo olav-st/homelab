@@ -9384,7 +9384,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: UExNF4sOesikf8GxMUiuxyCaWqAWEk5U
+  api-key: NnVl0DnrxuWRLS4gKyDrQrDlWRAlus7N
 type: Opaque
 ---
 apiVersion: v1
@@ -18583,12 +18583,14 @@ spec:
   retain: 1
   task: backup
 ---
-apiVersion: netbird.io/v1
-kind: NBRoutingPeer
+apiVersion: netbird.io/v1alpha1
+kind: NetworkRouter
 metadata:
   name: netbird
   namespace: netbird
-spec: {}
+spec:
+  dnsZoneRef:
+    name: cluster.internal
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
