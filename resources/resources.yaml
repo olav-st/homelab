@@ -678,19 +678,6 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app.kubernetes.io/component: operator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-operator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-operator
-  namespace: openwebui
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pingvinshare
@@ -5886,83 +5873,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/component: operator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-operator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-operator
-rules:
-  - apiGroups:
-      - openwebui.com
-    resources:
-      - terminals
-      - terminals/status
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-      - services
-      - persistentvolumeclaims
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - create
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - get
-      - list
-      - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
     app.kubernetes.io/instance: pubip-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: pubip-operator
@@ -7247,26 +7157,6 @@ subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: oidc:jiyoung
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: operator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-operator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-operator
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: openwebui-terminals-operator
-subjects:
-  - kind: ServiceAccount
-    name: openwebui-terminals-operator
-    namespace: openwebui
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -9375,19 +9265,6 @@ metadata:
 type: Opaque
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-api-key
-  namespace: openwebui
-stringData:
-  api-key: NnVl0DnrxuWRLS4gKyDrQrDlWRAlus7N
-type: Opaque
----
-apiVersion: v1
 kind: Endpoints
 metadata:
   name: external-cluster
@@ -10453,29 +10330,6 @@ spec:
   selector:
     app.kubernetes.io/component: openwebui-open-webui-redis
     app.kubernetes.io/instance: openwebui
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: orchestrator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-orchestrator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-orchestrator
-  namespace: openwebui
-spec:
-  ports:
-    - name: http
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-  selector:
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/name: openwebui-terminals-orchestrator
   type: ClusterIP
 ---
 apiVersion: v1
@@ -14696,121 +14550,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: operator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-operator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-operator
-  namespace: openwebui
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: openwebui
-      app.kubernetes.io/name: openwebui-terminals-operator
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: operator
-        app.kubernetes.io/instance: openwebui
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: openwebui-terminals-operator
-        app.kubernetes.io/part-of: open-terminal
-        helm.sh/chart: terminals-0.5.0
-    spec:
-      containers:
-        - image: ghcr.io/open-webui/terminals-operator:latest
-          imagePullPolicy: IfNotPresent
-          name: operator
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-            requests:
-              cpu: 50m
-              memory: 64Mi
-      serviceAccountName: openwebui-terminals-operator
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/component: orchestrator
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: openwebui-terminals-orchestrator
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-orchestrator
-  namespace: openwebui
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: openwebui
-      app.kubernetes.io/name: openwebui-terminals-orchestrator
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/component: orchestrator
-        app.kubernetes.io/instance: openwebui
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: openwebui-terminals-orchestrator
-        app.kubernetes.io/part-of: open-terminal
-        helm.sh/chart: terminals-0.5.0
-    spec:
-      containers:
-        - env:
-            - name: TERMINALS_PORT
-              value: "8080"
-            - name: TERMINALS_BACKEND
-              value: kubernetes-operator
-            - name: TERMINALS_KUBERNETES_NAMESPACE
-              value: openwebui
-            - name: TERMINALS_KUBERNETES_IMAGE
-              value: ghcr.io/open-webui/open-terminal:latest
-            - name: TERMINALS_KUBERNETES_IMAGE_PULL_POLICY
-              value: IfNotPresent
-            - name: TERMINALS_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: api-key
-                  name: openwebui-terminals-api-key
-            - name: TERMINALS_IDLE_TIMEOUT_MINUTES
-              value: "30"
-          image: ghcr.io/open-webui/terminals:latest
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 15
-          name: orchestrator
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 10
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-            requests:
-              cpu: 50m
-              memory: 128Mi
-      serviceAccountName: openwebui-terminals-operator
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app.kubernetes.io/controller: pingvinshare
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
@@ -15844,13 +15583,6 @@ spec:
               value: redis://openwebui-open-webui-redis.openwebui.svc.cluster.local:6379/0
             - name: WEBSOCKET_REDIS_URL
               value: redis://openwebui-open-webui-redis.openwebui.svc.cluster.local:6379/0
-            - name: TERMINALS_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: api-key
-                  name: openwebui-terminals-api-key
-            - name: TERMINAL_SERVER_CONNECTIONS
-              value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"http://openwebui-terminals-orchestrator.openwebui.svc.cluster.local:8080","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
             - name: OPENAI_API_CONFIGS
               value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}}'
             - name: ENABLE_OAUTH_SIGNUP
