@@ -9384,7 +9384,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: Ki4okH4aunQRwcGz6FgIOgpqBIIh4neN
+  api-key: UExNF4sOesikf8GxMUiuxyCaWqAWEk5U
 type: Opaque
 ---
 apiVersion: v1
@@ -18292,7 +18292,7 @@ spec:
   listeners:
     - name: netbird
       port: 1
-      protocol: gateway.netbird.io/NBRoutingPeer
+      protocol: gateway.netbird.io/NetworkRouter
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -18304,7 +18304,7 @@ spec:
   listeners:
     - name: netbird
       port: 1
-      protocol: gateway.netbird.io/NBRoutingPeer
+      protocol: gateway.netbird.io/NetworkRouter
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
