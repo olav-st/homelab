@@ -6,3 +6,11 @@ metadata:
 spec:
   dnsZoneRef:
     name: cluster.internal
+  workloadOverride: # Fix for issue https://github.com/netbirdio/kubernetes-operator/issues/349
+    podTemplate:
+      spec:
+        containers:
+          - name: netbird
+            env:
+              - name: NB_DISABLE_UPDATE_SETTINGS
+                value: 'false'
