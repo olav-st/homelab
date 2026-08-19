@@ -18105,7 +18105,7 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
   name: kubernetes
-  namespace: netbird
+  namespace: default
 spec:
   parentRefs:
     - name: netbird-private
