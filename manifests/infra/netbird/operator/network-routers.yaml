@@ -6,8 +6,9 @@ metadata:
 spec:
   dnsZoneRef:
     name: cluster.internal
-  workloadOverride: # Fix for issue https://github.com/netbirdio/kubernetes-operator/issues/349
-    podTemplate:
+  workloadOverride:
+    replicas: 1
+    podTemplate:  # Fix for issue https://github.com/netbirdio/kubernetes-operator/issues/349
       spec:
         containers:
           - name: netbird
