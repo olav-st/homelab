@@ -18019,7 +18019,7 @@ metadata:
 spec:
   gatewayClassName: netbird-private
   listeners:
-    - name: netbird
+    - name: cluster
       port: 1
       protocol: gateway.netbird.io/NetworkRouter
 ---
@@ -18031,7 +18031,7 @@ metadata:
 spec:
   gatewayClassName: netbird-public
   listeners:
-    - name: netbird
+    - name: cluster
       port: 1
       protocol: gateway.netbird.io/NetworkRouter
 ---
