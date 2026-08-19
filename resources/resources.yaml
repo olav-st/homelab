@@ -10457,9 +10457,6 @@ kind: Service
 metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: homelab.olav.ninja,*.homelab.olav.ninja
-    netbird.io/expose: "true"
-    netbird.io/groups: cluster
-    netbird.io/policy: cluster
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
@@ -18113,6 +18110,20 @@ spec:
   rules:
     - backendRefs:
         - name: kubernetes
+          port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  parentRefs:
+    - name: netbird-private
+      namespace: netbird
+  rules:
+    - backendRefs:
+        - name: traefik
           port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
