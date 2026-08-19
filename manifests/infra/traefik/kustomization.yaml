@@ -9,6 +9,7 @@ resources:
   - proxy-external-cluster.yaml
   - oidc-client.yaml
   - secrets.yaml
+  - services.yaml
   - tcp-routes.yaml
   - certificates.yaml
 
