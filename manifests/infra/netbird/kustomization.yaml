@@ -6,3 +6,4 @@ resources:
   - ./backend
   - ./dashboard
   - ./operator
+  - ./kubernetes-api-expose
