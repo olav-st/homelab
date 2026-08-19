@@ -7,7 +7,7 @@ defaultSettings:
   createDefaultDiskLabeledNodes: true
 
 defaultBackupStore:
-  backupTarget: cifs://100.124.87.95/backup-longhorn
+  backupTarget: cifs://100.124.195.204/backup-longhorn
   backupTargetCredentialSecret: longhorn-truenas-cifs-credentials
 
 persistence:
