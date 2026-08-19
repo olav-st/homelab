@@ -18323,6 +18323,14 @@ metadata:
 spec:
   dnsZoneRef:
     name: cluster.internal
+  workloadOverride:
+    podTemplate:
+      spec:
+        containers:
+          - env:
+              - name: NB_DISABLE_UPDATE_SETTINGS
+                value: "false"
+            name: netbird
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
