@@ -10487,6 +10487,22 @@ spec:
     app.kubernetes.io/name: traefik
   type: LoadBalancer
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-clusterip
+  namespace: traefik
+spec:
+  ports:
+    - name: websecure
+      port: 443
+      protocol: TCP
+      targetPort: websecure
+  selector:
+    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/name: traefik
+  type: ClusterIP
+---
 apiVersion: scheduling.k8s.io/v1
 description: This priority class should be used for core kubevirt components only.
 globalDefault: false
@@ -18129,7 +18145,7 @@ spec:
       namespace: netbird
   rules:
     - backendRefs:
-        - name: traefik
+        - name: traefik-clusterip
           port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
