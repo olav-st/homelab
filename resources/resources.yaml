@@ -434,7 +434,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
     app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.2
+    helm.sh/chart: keycloakx-7.2.3
   name: keycloak-keycloakx
   namespace: keycloak
 ---
@@ -9848,7 +9848,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
     app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.2
+    helm.sh/chart: keycloakx-7.2.3
   name: keycloak-keycloakx-headless
   namespace: keycloak
 spec:
@@ -9872,7 +9872,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
     app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.2
+    helm.sh/chart: keycloakx-7.2.3
   name: keycloak-keycloakx-http
   namespace: keycloak
 spec:
@@ -15200,7 +15200,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
     app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.2
+    helm.sh/chart: keycloakx-7.2.3
   name: keycloak-keycloakx
   namespace: keycloak
 spec:
@@ -18643,7 +18643,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
     app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.2
+    helm.sh/chart: keycloakx-7.2.3
   name: keycloak-keycloakx
   namespace: keycloak
 spec:
