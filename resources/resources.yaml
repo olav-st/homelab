@@ -8278,7 +8278,7 @@ metadata:
 apiVersion: v1
 data:
   default-resource.yaml: |-
-    backup-target: cifs://100.124.87.95/backup-longhorn
+    backup-target: cifs://100.124.195.204/backup-longhorn
     backup-target-credential-secret: longhorn-truenas-cifs-credentials
 kind: ConfigMap
 metadata:
@@ -10630,6 +10630,23 @@ spec:
       storage: 5Gi
   storageClassName: longhorn-static
   volumeName: hermes-agent-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    cdi.kubevirt.io/allowClaimAdoption: "true"
+    cdi.kubevirt.io/storage.populatedFor: homeassistant-vm-disk
+  name: homeassistant-vm-disk
+  namespace: homeassistant
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 32Gi
+  storageClassName: longhorn
+  volumeName: homeassistant-vm-disk
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
