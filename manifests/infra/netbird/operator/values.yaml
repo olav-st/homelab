@@ -1,7 +1,7 @@
 # https://github.com/netbirdio/kubernetes-operator/blob/main/charts/netbird-operator/values.yaml
 managementURL: https://netbird.homelab.olav.ninja
 
-routingClientImage: netbirdio/netbird:0.77.0-rootless # renovate: docker=netbirdio/netbird
+routingClientImage: netbirdio/netbird:0.77.1-rootless # renovate: docker=netbirdio/netbird
 
 cluster:
   name: cluster
