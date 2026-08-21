@@ -8699,8 +8699,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.2
-    helm.sh/chart: nextcloud-9.2.5
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
   name: nextcloud-config
   namespace: nextcloud
 ---
@@ -8717,8 +8717,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.2
-    helm.sh/chart: nextcloud-9.2.5
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
   name: nextcloud-phpconfig
   namespace: nextcloud
 ---
@@ -10222,8 +10222,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/monitor: enabled
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.2
-    helm.sh/chart: nextcloud-9.2.5
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -14038,8 +14038,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.2
-    helm.sh/chart: nextcloud-9.2.5
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -14116,7 +14116,7 @@ spec:
               value: 127.0.0.1,10.42.0.0/16,10.43.0.0/16
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
-          image: docker.io/library/nextcloud:34.0.2-apache
+          image: docker.io/library/nextcloud:34.0.3-apache
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -14266,7 +14266,7 @@ spec:
               value: 127.0.0.1,10.42.0.0/16,10.43.0.0/16
             - name: NEXTCLOUD_DATA_DIR
               value: /var/www/html/data
-          image: docker.io/library/nextcloud:34.0.2-apache
+          image: docker.io/library/nextcloud:34.0.3-apache
           imagePullPolicy: IfNotPresent
           name: nextcloud-cron
           resources: {}
@@ -14343,7 +14343,7 @@ spec:
         - command:
             - touch
             - /usr/local/etc/php/conf.d/redis-session.ini
-          image: docker.io/library/nextcloud:34.0.2-apache
+          image: docker.io/library/nextcloud:34.0.3-apache
           name: init-redis-session-ini
           volumeMounts:
             - mountPath: /usr/local/etc/php/conf.d
@@ -18884,8 +18884,8 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.2
-    helm.sh/chart: nextcloud-9.2.5
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
   name: nextcloud
   namespace: nextcloud
 spec:
