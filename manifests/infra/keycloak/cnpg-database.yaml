@@ -14,3 +14,4 @@ spec:
       owner: keycloak
   storage:
     size: 5G
+  priorityClassName: system-cluster-critical # Because many other apps depend on Keycloak when starting up

@@ -69,4 +69,4 @@ http:
   internalPort: http-internal
   internalScheme: HTTP
 
-priorityClassName: system-cluster-critical # Several other applications depend on Keycloak when starting up
+priorityClassName: system-cluster-critical # Because many other apps depend on Keycloak when starting up
