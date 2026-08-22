@@ -68,3 +68,5 @@ http:
   relativePath: /
   internalPort: http-internal
   internalScheme: HTTP
+
+priorityClassName: system-cluster-critical # Several other applications depend on Keycloak when starting up
