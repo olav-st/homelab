@@ -19638,6 +19638,7 @@ spec:
   postgresql:
     parameters:
       timezone: Europe/Oslo
+  priorityClassName: system-cluster-critical
   storage:
     size: 5G
 ---
