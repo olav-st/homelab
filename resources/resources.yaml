@@ -15463,6 +15463,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+      priorityClassName: system-cluster-critical
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
