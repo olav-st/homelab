@@ -15,3 +15,10 @@ spec:
             env:
               - name: NB_DISABLE_UPDATE_SETTINGS
                 value: 'false'
+            resources:
+              requests:
+                cpu: 50m
+          - name: kube-egress-forwarder
+            resources:
+              requests:
+                cpu: 50m
