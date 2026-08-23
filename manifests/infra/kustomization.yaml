@@ -14,6 +14,7 @@ resources:
   - ./keycloak
   - ./kube-virt
   - ./longhorn
+  - ./metrics-server
   - ./multus
   - ./netbird
   - ./oidc-config
