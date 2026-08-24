@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: m8DTIsstLeeWG5VwqPRjvhaB805T4Mfj
+  api-key: 6KBqUtKflJvj9nJhlYk7Agoojo6rWCBv
 type: Opaque
 ---
 apiVersion: v1
@@ -15876,11 +15876,11 @@ spec:
             timeoutSeconds: 2
           resources:
             limits:
-              cpu: 150m
+              cpu: 100m
               ephemeral-storage: 2Gi
               memory: 192Mi
             requests:
-              cpu: 100m
+              cpu: 50m
               ephemeral-storage: 50Mi
               memory: 128Mi
           securityContext:
