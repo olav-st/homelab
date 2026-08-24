@@ -1,0 +1,4 @@
+# https://github.com/intel/helm-charts/blob/main/charts/device-plugin-operator/values.yaml
+resources:
+  requests:
+    cpu: 20m

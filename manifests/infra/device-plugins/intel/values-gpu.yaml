@@ -1,3 +1,4 @@
+# https://github.com/intel/helm-charts/blob/main/charts/gpu-device-plugin/values.yaml
 name: igpu
 sharedDevNum: 8
 enableMonitoring: false

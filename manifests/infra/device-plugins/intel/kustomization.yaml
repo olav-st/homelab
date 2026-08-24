@@ -11,6 +11,7 @@ helmCharts:
     namespace: intel-device-plugins
     releaseName: intel-device-plugins-operator
     includeCRDs: true
+    valuesFile: values-operator.yaml
 
   - name: intel-device-plugins-gpu
     repo: https://intel.github.io/helm-charts/
@@ -18,7 +19,7 @@ helmCharts:
     namespace: intel-device-plugins
     releaseName: intel-device-plugins-gpu
     includeCRDs: true
-    valuesFile: values.yaml
+    valuesFile: values-gpu.yaml
 
 patches:
   - path: patches/fix-webhooks.yaml
