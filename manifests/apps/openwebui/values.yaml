@@ -13,6 +13,9 @@ ingress:
 pipelines:
   enabled: false
 
+terminals:
+  enabled: true
+
 persistence:
   enabled: true
   provider: local
