@@ -84,6 +84,15 @@ valkey:
   primary:
     persistence:
       enabled: false
+    resources:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 2Gi
+        memory: 192Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 50Mi
+        memory: 128Mi
 
 # Disable unused components
 postgresql:
