@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: jVVpSDj7G0tOYRIz9iKmKzgMmF2fUfXB
+  api-key: 7dXYt88kYl75rMi9zsZ1jRV1LPx7YewY
 type: Opaque
 ---
 apiVersion: v1
@@ -19966,6 +19966,120 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: nextcloud
       app.kubernetes.io/name: redis
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/instance: openwebui
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: openwebui-terminals-operator
+    app.kubernetes.io/part-of: open-terminal
+    helm.sh/chart: terminals-0.5.0
+  name: openwebui-terminals-operator
+  namespace: openwebui
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+      to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+  ingress: []
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: openwebui
+      app.kubernetes.io/name: openwebui-terminals-operator
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: orchestrator
+    app.kubernetes.io/instance: openwebui
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: openwebui-terminals-orchestrator
+    app.kubernetes.io/part-of: open-terminal
+    helm.sh/chart: terminals-0.5.0
+  name: openwebui-terminals-orchestrator
+  namespace: openwebui
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: terminal
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+      to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openwebui
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: openwebui
+      app.kubernetes.io/name: openwebui-terminals-orchestrator
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: open-terminal
+    helm.sh/chart: terminals-0.5.0
+  name: openwebui-terminals-terminals
+  namespace: openwebui
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: openwebui
+              app.kubernetes.io/name: openwebui-terminals-orchestrator
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: openwebui
+              app.kubernetes.io/name: openwebui-terminals-orchestrator
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: terminal
   policyTypes:
     - Ingress
     - Egress
