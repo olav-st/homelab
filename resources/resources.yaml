@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: 7dXYt88kYl75rMi9zsZ1jRV1LPx7YewY
+  api-key: lqFUY1z3IAt5dp1to5qtpr9CJsRj9qTr
 type: Opaque
 ---
 apiVersion: v1
@@ -19691,6 +19691,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    hajimari.io/appName: OpenWebUI
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
     traefik.ingress.kubernetes.io/router.middlewares: openwebui-sablier@kubernetescrd
