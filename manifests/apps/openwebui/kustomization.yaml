@@ -16,10 +16,3 @@ helmCharts:
     repo: https://helm.openwebui.com/
     version: 16.0.0
     valuesFile: values.yaml
-
-patches:
-  - path: patches/add-sablier-labels.yaml
-  - path: patches/remove-replicas.yaml
-    target:
-      kind: StatefulSet
-      name: openwebui-open-webui
