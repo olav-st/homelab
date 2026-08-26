@@ -17,6 +17,10 @@ terminals:
   enabled: true
   networkPolicy:
     enabled: true
+    terminalPodSelector:
+      app.kubernetes.io/component: null
+      app.kubernetes.io/name: open-terminal
+      app.kubernetes.io/managed-by: terminals
 
 persistence:
   enabled: true
