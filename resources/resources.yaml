@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: riLCP9aKxh0QeP0AaaUzKVf1qnd02Uqx
+  api-key: 3WHQkS0WWKdvP2yZQYfd04jRJOJ1CUuk
 type: Opaque
 ---
 apiVersion: v1
@@ -20056,7 +20056,6 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/component: terminal
               app.kubernetes.io/managed-by: terminals
               app.kubernetes.io/name: open-terminal
     - ports:
@@ -20109,7 +20108,6 @@ spec:
               app.kubernetes.io/name: openwebui-terminals-orchestrator
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: terminal
       app.kubernetes.io/managed-by: terminals
       app.kubernetes.io/name: open-terminal
   policyTypes:
