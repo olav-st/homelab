@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: openwebui
 
 resources:
+  - cilium-netpols.yaml
   - namespace.yaml
   - oidc-client.yaml
   - pvcs.yaml

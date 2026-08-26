@@ -1,0 +1,27 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: openwebui-terminals-orchestrator-apiserver
+  namespace: openwebui
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: openwebui
+      app.kubernetes.io/name: openwebui-terminals-orchestrator
+  egress:
+  - toEntities:
+    - kube-apiserver # Required because Cilium treats kube-apiserver as its own identity, so ipBlock/CIDR rules in vanilla netpols dont cover it
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: openwebui-terminals-operator-apiserver
+  namespace: openwebui
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: openwebui
+      app.kubernetes.io/name: openwebui-terminals-operator
+  egress:
+  - toEntities:
+    - kube-apiserver # Required because Cilium treats kube-apiserver as its own identity, so ipBlock/CIDR rules in vanilla netpols dont cover it
