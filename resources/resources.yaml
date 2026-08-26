@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: QVPgFwGQzyL0rXAQUvvJp4H87zaAHD92
+  api-key: pTFtgTVbd0kF88Y4OsdcL9Ow97KhRIB1
 type: Opaque
 ---
 apiVersion: v1
