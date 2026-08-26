@@ -10,5 +10,5 @@ helmCharts:
   releaseName: sablier
   namespace: sablier
   repo: https://sablierapp.github.io/helm-charts
-  version: 1.6.0
+  version: 1.7.1
   valuesFile: values.yaml
