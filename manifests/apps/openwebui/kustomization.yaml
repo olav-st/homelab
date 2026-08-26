@@ -7,7 +7,6 @@ resources:
   - oidc-client.yaml
   - pvcs.yaml
   - secrets.yaml
-  - middleware.yaml
 
 helmCharts:
   - name: open-webui
