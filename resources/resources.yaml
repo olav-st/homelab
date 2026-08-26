@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: 7U6hthSK4q07tCcZimxv5zpVUKoOyh1D
+  api-key: QVPgFwGQzyL0rXAQUvvJp4H87zaAHD92
 type: Opaque
 ---
 apiVersion: v1
@@ -18778,6 +18778,20 @@ metadata:
   namespace: netbird
 spec:
   selfSigned: {}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: openwebui-terminals-orchestrator-apiserver
+  namespace: openwebui
+spec:
+  egress:
+    - toEntities:
+        - kube-apiserver
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: openwebui
+      app.kubernetes.io/name: openwebui-terminals-orchestrator
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
