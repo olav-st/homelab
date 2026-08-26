@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: 3WHQkS0WWKdvP2yZQYfd04jRJOJ1CUuk
+  api-key: nkgF2rqvpQ8zdhhtrDqUJsQLWKpGMkuS
 type: Opaque
 ---
 apiVersion: v1
@@ -15170,8 +15170,6 @@ metadata:
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.0
     helm.sh/chart: open-webui-16.0.0
-    sablier.enable: "true"
-    sablier.group: openwebui
   name: openwebui-open-webui-redis
   namespace: openwebui
 spec:
@@ -15181,6 +15179,7 @@ spec:
       app.kubernetes.io/instance: openwebui
   template:
     metadata:
+      annotations: null
       labels:
         app.kubernetes.io/component: openwebui-open-webui-redis
         app.kubernetes.io/instance: openwebui
@@ -16311,11 +16310,10 @@ metadata:
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.0
     helm.sh/chart: open-webui-16.0.0
-    sablier.enable: "true"
-    sablier.group: openwebui
   name: openwebui-open-webui
   namespace: openwebui
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: open-webui
