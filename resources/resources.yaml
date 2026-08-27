@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: H0YtuopSABoko74WLWBAKSqodXjBFFRT
+  api-key: DMAW0qj5U0IjO43seDGkiYpUMafmwffZ
 type: Opaque
 ---
 apiVersion: v1
@@ -20396,7 +20396,7 @@ metadata:
   name: function-go-templating
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.12.3
+  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.12.4
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
