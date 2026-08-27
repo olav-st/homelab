@@ -445,8 +445,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.3
+    app.kubernetes.io/version: 26.7.2
+    helm.sh/chart: keycloakx-7.3.0
   name: keycloak-keycloakx
   namespace: keycloak
 ---
@@ -9636,7 +9636,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: DMAW0qj5U0IjO43seDGkiYpUMafmwffZ
+  api-key: F6IUjg79vMNcslpAahlUUzUSOiDxzT7L
 type: Opaque
 ---
 apiVersion: v1
@@ -10222,8 +10222,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.3
+    app.kubernetes.io/version: 26.7.2
+    helm.sh/chart: keycloakx-7.3.0
   name: keycloak-keycloakx-headless
   namespace: keycloak
 spec:
@@ -10246,8 +10246,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.3
+    app.kubernetes.io/version: 26.7.2
+    helm.sh/chart: keycloakx-7.3.0
   name: keycloak-keycloakx-http
   namespace: keycloak
 spec:
@@ -15951,8 +15951,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.3
+    app.kubernetes.io/version: 26.7.2
+    helm.sh/chart: keycloakx-7.3.0
   name: keycloak-keycloakx
   namespace: keycloak
 spec:
@@ -16048,7 +16048,7 @@ spec:
             - name: JAVA_OPTS_APPEND
               value: -Djgroups.dns.query=keycloak-keycloakx-headless
           envFrom: null
-          image: quay.io/keycloak/keycloak:26.6.4
+          image: quay.io/keycloak/keycloak:26.7.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -19466,8 +19466,8 @@ metadata:
     app.kubernetes.io/instance: keycloak
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.6.4
-    helm.sh/chart: keycloakx-7.2.3
+    app.kubernetes.io/version: 26.7.2
+    helm.sh/chart: keycloakx-7.3.0
   name: keycloak-keycloakx
   namespace: keycloak
 spec:
