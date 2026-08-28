@@ -36,10 +36,18 @@ openaiBaseApiUrl: https://llm-proxy.homelab.olav.ninja/v1
 extraEnvVars:
   - name: OPENAI_API_CONFIGS
     value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}}'
+  - name: ENABLE_LOGIN_FORM
+    value: "false"
+  - name: ENABLE_PASSWORD_AUTH
+    value: "false"
+  - name: ENABLE_PASSWORD_CHANGE_FORM
+    value: "false"
   - name: ENABLE_OAUTH_SIGNUP
-    value: "True"
+    value: "true"
   - name: OAUTH_MERGE_ACCOUNTS_BY_EMAIL
-    value: "True"
+    value: "true"
+  - name: OAUTH_AUTO_REDIRECT
+    value: "true"
   - name: OAUTH_CLIENT_ID
     valueFrom:
       secretKeyRef:
