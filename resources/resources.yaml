@@ -9342,6 +9342,18 @@ metadata:
   namespace: pingvinshare
 ---
 apiVersion: v1
+data:
+  sablier.yml: |
+    logging:
+      level: info
+kind: ConfigMap
+metadata:
+  labels:
+    app: sablier-sablier
+  name: sablier-sablier
+  namespace: sablier
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: crossplane-root-ca
@@ -9636,7 +9648,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: nhH92HcpHFSdv76dmMaKd41eVY1BMTmF
+  api-key: mN36cnlFTr1VotiRqwMgvhmfA4hOa8LX
 type: Opaque
 ---
 apiVersion: v1
@@ -15503,6 +15515,8 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      annotations:
+        checksum/config: 1c600f7676c17d5d44144ea86d8ffe99b662f8ed484e6d3bda38c3a3eea5281e
       labels:
         app: sablier-sablier
     spec:
@@ -15510,7 +15524,6 @@ spec:
         - args:
             - start
             - --provider.name=kubernetes
-            - --logging.level=info
           image: sablierapp/sablier:1.16.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -15535,7 +15548,16 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
+          volumeMounts:
+            - mountPath: /etc/sablier/sablier.yml
+              name: config
+              readOnly: true
+              subPath: sablier.yml
       serviceAccountName: sablier-sablier
+      volumes:
+        - configMap:
+            name: sablier-sablier
+          name: config
 ---
 apiVersion: apps/v1
 kind: Deployment
