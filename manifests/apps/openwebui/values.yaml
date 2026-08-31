@@ -45,8 +45,6 @@ extraEnvVars:
     value: "True"
   - name: WEB_SEARCH_ENGINE
     value: "duckduckgo"
-  - name: DDGS_BACKEND
-    value: "duckduckgo"
   - name: WEB_SEARCH_RESULT_COUNT
     value: "5"
   - name: WEB_SEARCH_CONCURRENT_REQUESTS
@@ -55,9 +53,9 @@ extraEnvVars:
   - name: ENABLE_BASE_MODELS_CACHE
     value: "True"
   - name: OPENROUTER_MODELS
-    value: '"nvidia/nemotron-3-ultra-550b-a55b:free","poolside/laguna-s-2.1:free","deepseek/deepseek-v4-flash-0731","openai/gpt-5.6-luna","z-ai/glm-5.3-flash","z-ai/glm-5.2"'
+    value: '"deepseek/deepseek-v4-flash-0731","openai/gpt-5.6-luna","z-ai/glm-5.3-flash","z-ai/glm-5.2"'
   - name: DEFAULT_MODELS
-    value: nvidia/nemotron-3-ultra-550b-a55b:free
+    value: "deepseek/deepseek-v4-flash-0731"
   - name: DEFAULT_MODEL_METADATA
     value: '{"capabilities":{"web_search":true}}}'
   - name: MODEL_ORDER_LIST
