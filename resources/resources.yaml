@@ -16364,14 +16364,18 @@ spec:
               value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"http://openwebui-terminals-orchestrator.openwebui.svc.cluster.local:8080","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
             - name: ENABLE_PERSISTENT_CONFIG
               value: "False"
-            - name: ENABLE_LOGIN_FORM
-              value: "False"
-            - name: ENABLE_PASSWORD_AUTH
-              value: "False"
-            - name: ENABLE_PASSWORD_CHANGE_FORM
-              value: "False"
-            - name: ENABLE_OAUTH_SIGNUP
+            - name: ENABLE_WEB_SEARCH
               value: "True"
+            - name: WEB_SEARCH_ENGINE
+              value: duckduckgo
+            - name: DDGS_BACKEND
+              value: duckduckgo
+            - name: WEB_SEARCH_RESULT_COUNT
+              value: "5"
+            - name: WEB_SEARCH_CONCURRENT_REQUESTS
+              value: "10"
+            - name: DEFAULT_MODEL_METADATA
+              value: '{"capabilities":{"web_search":true}}}'
             - name: OPENROUTER_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -16381,6 +16385,14 @@ spec:
               value: none;$(OPENROUTER_API_KEY)
             - name: OPENAI_API_CONFIGS
               value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}, "1":{"enable":true,"model_ids":["openai/gpt-5.6-luna","deepseek/deepseek-v4-flash-0731","z-ai/glm-5.3-flash","z-ai/glm-5.2","nvidia/nemotron-3-ultra-550b-a55b:free","poolside/laguna-s-2.1:free"]}'
+            - name: ENABLE_LOGIN_FORM
+              value: "False"
+            - name: ENABLE_PASSWORD_AUTH
+              value: "False"
+            - name: ENABLE_PASSWORD_CHANGE_FORM
+              value: "False"
+            - name: ENABLE_OAUTH_SIGNUP
+              value: "True"
             - name: OAUTH_MERGE_ACCOUNTS_BY_EMAIL
               value: "True"
             - name: OAUTH_AUTO_REDIRECT
