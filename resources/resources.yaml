@@ -16372,6 +16372,8 @@ spec:
               value: "5"
             - name: WEB_SEARCH_CONCURRENT_REQUESTS
               value: "10"
+            - name: WEB_FETCH_MAX_CONTENT_LENGTH
+              value: "12000"
             - name: ENABLE_BASE_MODELS_CACHE
               value: "True"
             - name: OPENROUTER_MODELS
