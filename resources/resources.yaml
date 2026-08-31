@@ -9648,7 +9648,7 @@ metadata:
   name: openwebui-terminals-api-key
   namespace: openwebui
 stringData:
-  api-key: mN36cnlFTr1VotiRqwMgvhmfA4hOa8LX
+  api-key: JLRKMunF9zGeVx7FmWAA9h4YxosVTVdR
 type: Opaque
 ---
 apiVersion: v1
@@ -16358,10 +16358,8 @@ spec:
               value: https://openwebui.homelab.olav.ninja
             - name: ENABLE_OLLAMA_API
               value: "False"
-            - name: OPENAI_API_BASE_URL
-              value: https://llm-proxy.homelab.olav.ninja/v1
-            - name: OPENAI_API_KEY
-              value: 0p3n-w3bu!
+            - name: OPENAI_API_BASE_URLS
+              value: https://llm-proxy.homelab.olav.ninja/v1;https://openrouter.ai/api/v1
             - name: ENABLE_WEBSOCKET_SUPPORT
               value: "True"
             - name: WEBSOCKET_MANAGER
@@ -16377,8 +16375,15 @@ spec:
                   name: openwebui-terminals-api-key
             - name: TERMINAL_SERVER_CONNECTIONS
               value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"http://openwebui-terminals-orchestrator.openwebui.svc.cluster.local:8080","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
+            - name: OPENROUTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: apiKey
+                  name: openrouter-api-key
+            - name: OPENAI_API_KEYS
+              value: none;$(OPENROUTER_API_KEY)
             - name: OPENAI_API_CONFIGS
-              value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}}'
+              value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp"}, "1":{"enable":true,"model_ids":["openai/gpt-5.6-luna","deepseek/deepseek-v4-flash-0731","z-ai/glm-5.3-flash","z-ai/glm-5.2","nvidia/nemotron-3-ultra-550b-a55b:free","poolside/laguna-s-2.1:free"]}'
             - name: ENABLE_LOGIN_FORM
               value: "false"
             - name: ENABLE_PASSWORD_AUTH
@@ -18605,6 +18610,19 @@ spec:
     metadata:
       name: nextcloud-redis-credentials
       namespace: nextcloud
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: openrouter-api-key
+  namespace: openwebui
+spec:
+  encryptedData:
+    apiKey: AgBswTsYNCb7sVbCDb0veUvParrEEEgrhPZp/FlcZfPYEsp5EZguvqdw50DNwqHwDhXUkMYXDuHopL/SIQ90lX1M9wt09gmVhy2nEAsH1MbZmvDu5Og5o73CfpU3vn6qNAr4TZu201Wg7Iambm9izjLi5czewl+bp5l9c4TaksSfBwbtwmpdk/o8ik9P4C10LRO0PjAlKgBixRnAKlXhaGAGaADbqgyCONk6q1S2LYUix3OpxLeNNaFaXqc8vxj013hDK7Kbjebtqa1excWf3V9WzAFA9S0M6WHerVABM89ZbDKDCMFK6sIdsW4DSnVahHsfk08Yoo7Gc+e5TWLD9lV0TA1LpCwPw0lOSLabEEi73p5Np9Kcl3VIsaa4psd93ZY0U0r68ZgupEekZsSPYbxEJ6Ke4T1bXA1ulXtyvkELa7c+AXCgV9bJFevm9GCXsCrtdwPFBBDf7+0sMjwxn76OmhGpjz4JirZ2iruqxNeHnHyZoBH9MQyrjQee2MKOXuLtsrfYQrFI+6XcdJyvsFG/mhoO0hVglbNGU7ccpf+mQzm3KJJmhAw/pTMW+9ZsQfcOf0PHicfDxEnNv5J0rx3I+U0pEnujuSWpoZ5LrCNBJsie7/nj7UjbwWpd6m5YWGoP+2HzKinnlE1+utcnDlYcYhetyogbZq2SM1FG5wzgdhg+GZN16ICy9V+rfs2IMO7q8n++a6YFRvp7/hkr2vdrqBuykA3N7NzJlVsf4CMUetz7Jd6lTUV9TJgH00geFxrS7MMrFGtOD4Zz5xpMSoY1JkKnj3cvzhfY
+  template:
+    metadata:
+      name: openrouter-api-key
+      namespace: openwebui
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
