@@ -9639,19 +9639,6 @@ metadata:
 type: Opaque
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
-  name: openwebui-terminals-api-key
-  namespace: openwebui
-stringData:
-  api-key: zodcouEjouCCMnznLvZTBGscTsqqEc40
-type: Opaque
----
-apiVersion: v1
 kind: Endpoints
 metadata:
   name: external-cluster
@@ -18640,6 +18627,19 @@ spec:
       name: openwebui-oidc-credentials
       namespace: openwebui
     type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: openwebui-terminals-api-key
+  namespace: openwebui
+spec:
+  encryptedData:
+    api-key: AgCpW94JvEt4mA3md2Tu3F1CGOYslPHWf1wp6G55K5AqmMZqJYbjSfnVc6SqFBhgmZTiS53EhGhLq4beCK4zZsAL5BT4gBtrrOOAQ7rSnZitGQe7exGHM0e4sjFA6teH1JyMy1ay9xHAyWEvEBIt7sqZTy3kV+QJsw3Mcq27Td62Rn7r5LHXokKV5xnzoyjkGJOUJ3vO/NQw4rMorEFjTTGFdyGrlfrFLzrqXxasoZo5ITp24OcP9kftQa11hW/1y/ykNglOgR7/laPuRfrfUkrrtGUuXUPXCK4JOcfjjqJKmpp8u/p4DlGu1P4/hNPBjF+GI6/BK2tG15DAnZtdsakhkJCR9cmMGF//Hg518UE0JZMeDN9g+FrbnDEHWimHoQuw9J9Y+F6C/FhQC/lJuqCS+ZK0jKU0YFMHVBEGIRHvZgtLFbKYaPlMEMHRxsrNOwcHlZ0JsrgCdfaTYI4w8thzyTMi2l6ksj/Ll6WPTLK+2fQqtlYdH//a6c0S3YJO2L8jX7tNhG9zLzbl0J8vZaqIc/kAYu/gxk0gBx7rlar5fuYFSv2ZrxAtlWTZZD+kbawOZQPLQkS4ljUQ9v2fWkBNhZHK6Zw80f9mdsKh+i6j9LNigVV4fPYmVHkDJphue6VQXA5+KAk42Go4IeCY6i/0fmObF3KJbi1bHx3eSm2zmyuntvmBK+GHvSRo+hFpd3nlX0H491WpHXyU6h1d4pET+hA6nAUyv7Y=
+  template:
+    metadata:
+      name: openwebui-terminals-api-key
+      namespace: openwebui
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
