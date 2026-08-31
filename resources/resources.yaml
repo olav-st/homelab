@@ -16374,6 +16374,8 @@ spec:
               value: "5"
             - name: WEB_SEARCH_CONCURRENT_REQUESTS
               value: "10"
+            - name: DEFAULT_MODELS
+              value: unsloth/Qwen3.6-35B-A3B-MTP-GGUF:Q8_0
             - name: DEFAULT_MODEL_METADATA
               value: '{"capabilities":{"web_search":true}}}'
             - name: OPENROUTER_API_KEY
