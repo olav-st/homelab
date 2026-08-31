@@ -36,6 +36,8 @@ openaiBaseApiUrls:
   - https://openrouter.ai/api/v1
 
 extraEnvVars:
+  - name: ENABLE_PERSISTENT_CONFIG
+    value: "False" # Settings are read from environment vars only, not DB (declarative config)
   - name: ENABLE_LOGIN_FORM
     value: "False"
   - name: ENABLE_PASSWORD_AUTH
