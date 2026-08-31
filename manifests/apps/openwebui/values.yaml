@@ -52,6 +52,8 @@ extraEnvVars:
   - name: WEB_SEARCH_CONCURRENT_REQUESTS
     value: "10"
   # Model settings
+  - name: DEFAULT_MODELS
+    value: unsloth/Qwen3.6-35B-A3B-MTP-GGUF:Q8_0
   - name: DEFAULT_MODEL_METADATA
     value: '{"capabilities":{"web_search":true}}}'
   # Connections 
