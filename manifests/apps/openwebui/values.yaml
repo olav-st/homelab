@@ -15,6 +15,7 @@ pipelines:
 
 terminals:
   enabled: true
+  existingSecret: openwebui-terminals-api-key
   networkPolicy:
     enabled: true
     terminalPodSelector:
