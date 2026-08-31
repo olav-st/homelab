@@ -57,7 +57,7 @@ extraEnvVars:
   - name: DEFAULT_MODELS
     value: "deepseek/deepseek-v4-flash-0731"
   - name: DEFAULT_MODEL_METADATA
-    value: '{"capabilities":{"web_search":true}}}'
+    value: '{"capabilities":{"web_search":true},"defaultFeatureIds":["web_search"]}'
   - name: MODEL_ORDER_LIST
     value: '[$(OPENROUTER_MODELS)]'
   # Connections 
