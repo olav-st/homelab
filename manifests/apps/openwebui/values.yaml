@@ -54,6 +54,8 @@ extraEnvVars:
   # Model settings
   - name: ENABLE_BASE_MODELS_CACHE
     value: "True"
+  - name: BYPASS_MODEL_ACCESS_CONTROL
+    value: "True"
   - name: OPENROUTER_MODELS
     value: '"deepseek/deepseek-v4-flash-0731","openai/gpt-5.6-luna","z-ai/glm-5.3-flash","z-ai/glm-5.2"'
   - name: DEFAULT_MODELS
