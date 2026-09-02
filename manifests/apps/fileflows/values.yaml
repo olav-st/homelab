@@ -1,5 +1,5 @@
 image:
-  tag: "26.07" # renovate: docker=docker.io/revenz/fileflows
+  tag: "26.09" # renovate: docker=docker.io/revenz/fileflows
 
 service:
   main:
