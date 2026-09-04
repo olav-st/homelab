@@ -12893,7 +12893,7 @@ spec:
               value: hermes-agent
             - name: HERMES_DASHBOARD_PUBLIC_URL
               value: https://hermes.homelab.olav.ninja
-          image: nousresearch/hermes-agent:v2026.8.27
+          image: nousresearch/hermes-agent:v2026.8.31
           imagePullPolicy: IfNotPresent
           livenessProbe:
             initialDelaySeconds: 10
