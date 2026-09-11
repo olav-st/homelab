@@ -17570,8 +17570,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: certificaterequests.cert-manager.io
 spec:
   group: cert-manager.io
@@ -17896,8 +17896,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: certificates.cert-manager.io
 spec:
   group: cert-manager.io
@@ -18810,8 +18810,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: challenges.acme.cert-manager.io
 spec:
   group: acme.cert-manager.io
@@ -70059,8 +70059,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: clusterissuers.cert-manager.io
 spec:
   group: cert-manager.io
@@ -151098,8 +151098,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: issuers.cert-manager.io
 spec:
   group: cert-manager.io
@@ -180708,8 +180708,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.21.1
-    helm.sh/chart: cert-manager-v1.21.1
+    app.kubernetes.io/version: v1.21.2
+    helm.sh/chart: cert-manager-v1.21.2
   name: orders.acme.cert-manager.io
 spec:
   group: acme.cert-manager.io
