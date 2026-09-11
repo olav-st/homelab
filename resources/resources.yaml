@@ -14285,7 +14285,7 @@ spec:
             - console
             - --dns-domain
             - netbird
-          image: netbirdio/management:0.77.1
+          image: netbirdio/management:0.78.1
           imagePullPolicy: IfNotPresent
           name: netbird-management
           ports:
@@ -14407,7 +14407,7 @@ spec:
           envFrom:
             - secretRef:
                 name: netbird-relay-secret
-          image: netbirdio/relay:0.77.1
+          image: netbirdio/relay:0.78.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
@@ -14458,7 +14458,7 @@ spec:
             - info
             - --log-file
             - console
-          image: netbirdio/signal:0.77.1
+          image: netbirdio/signal:0.78.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
@@ -14590,7 +14590,7 @@ spec:
             - --cluster-name=cluster
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
-            - --netbird-client-image=netbirdio/netbird:0.77.1-rootless
+            - --netbird-client-image=netbirdio/netbird:0.78.1-rootless
           env:
             - name: POD_NAMESPACE
               valueFrom:
@@ -20214,35 +20214,6 @@ spec:
             idxd:
               op: Exists
       name: intel.dsa
-    - labels:
-        intel.feature.node.kubernetes.io/fpga-arria10: "true"
-      matchAny:
-        - matchFeatures:
-            - feature: kernel.loadedmodule
-              matchExpressions:
-                dfl_pci:
-                  op: Exists
-        - matchFeatures:
-            - feature: kernel.loadedmodule
-              matchExpressions:
-                intel_fpga_pci:
-                  op: Exists
-      matchFeatures:
-        - feature: pci.device
-          matchExpressions:
-            class:
-              op: In
-              value:
-                - "1200"
-            device:
-              op: In
-              value:
-                - 09c4
-            vendor:
-              op: In
-              value:
-                - "8086"
-      name: intel.fpga-arria10
     - labels:
         intel.feature.node.kubernetes.io/gpu: "true"
       matchAny:
