@@ -231226,7 +231226,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: terminals.openwebui.com
 spec:
   group: openwebui.com

@@ -699,7 +699,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui-sa
   namespace: openwebui
 ---
@@ -712,7 +712,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-operator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-operator
   namespace: openwebui
 ---
@@ -6005,7 +6005,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-operator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-operator
 rules:
   - apiGroups:
@@ -7486,7 +7486,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-operator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10708,7 +10708,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui
   namespace: openwebui
 spec:
@@ -10731,7 +10731,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui-redis
   namespace: openwebui
 spec:
@@ -10754,7 +10754,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-orchestrator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-orchestrator
   namespace: openwebui
 spec:
@@ -15168,7 +15168,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui-redis
   namespace: openwebui
 spec:
@@ -15185,7 +15185,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: open-webui
         app.kubernetes.io/version: 0.11.3
-        helm.sh/chart: open-webui-16.3.0
+        helm.sh/chart: open-webui-16.5.0
     spec:
       containers:
         - image: redis:7.4.2-alpine3.21
@@ -15204,7 +15204,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-operator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-operator
   namespace: openwebui
 spec:
@@ -15221,7 +15221,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: openwebui-terminals-operator
         app.kubernetes.io/part-of: open-terminal
-        helm.sh/chart: terminals-0.5.0
+        helm.sh/chart: terminals-0.7.0
     spec:
       containers:
         - image: ghcr.io/open-webui/terminals-operator:latest
@@ -15245,7 +15245,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-orchestrator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-orchestrator
   namespace: openwebui
 spec:
@@ -15262,7 +15262,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: openwebui-terminals-orchestrator
         app.kubernetes.io/part-of: open-terminal
-        helm.sh/chart: terminals-0.5.0
+        helm.sh/chart: terminals-0.7.0
     spec:
       containers:
         - env:
@@ -16318,7 +16318,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui
   namespace: openwebui
 spec:
@@ -16336,7 +16336,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: open-webui
         app.kubernetes.io/version: 0.11.3
-        helm.sh/chart: open-webui-16.3.0
+        helm.sh/chart: open-webui-16.5.0
     spec:
       automountServiceAccountToken: false
       containers:
@@ -19798,7 +19798,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: open-webui
     app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.3.0
+    helm.sh/chart: open-webui-16.5.0
   name: openwebui-open-webui
   namespace: openwebui
 spec:
@@ -20077,7 +20077,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-operator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-operator
   namespace: openwebui
 spec:
@@ -20113,7 +20113,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: openwebui-terminals-orchestrator
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-orchestrator
   namespace: openwebui
 spec:
@@ -20155,7 +20155,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: open-terminal
-    helm.sh/chart: terminals-0.5.0
+    helm.sh/chart: terminals-0.7.0
   name: openwebui-terminals-terminals
   namespace: openwebui
 spec:
