@@ -12377,7 +12377,7 @@ spec:
               value: "568"
             - name: GID
               value: "568"
-          image: docker.io/revenz/fileflows:26.07
+          image: docker.io/revenz/fileflows:26.09
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 5
@@ -13871,6 +13871,12 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz
+              port: health
+            periodSeconds: 10
       priorityClassName: system-cluster-critical
       securityContext:
         fsGroup: 65534
