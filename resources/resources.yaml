@@ -20626,14 +20626,12 @@ spec:
     certificateSecretRef:
       key: tls.crt
       name: keycloak-jwt-signing-certificate
-      namespace: keycloak
     enabled: true
     name: jwt-signing-certificate
     priority: 110
     privateKeySecretRef:
       key: tls.key
       name: keycloak-jwt-signing-certificate
-      namespace: keycloak
     providerId: rsa
     realmIdRef:
       name: homelab
