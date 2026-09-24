@@ -19067,16 +19067,15 @@ spec:
   listeners:
     - allowedRoutes:
         namespaces:
-          from: Selector
-          selector:
-            matchExpressions:
-              - key: kubernetes.io/metadata.name
-                operator: In
-                values:
-                  - gitea
-      name: ssh
-      port: 22
-      protocol: TCP
+          from: All
+      hostname: '*.homelab.olav.ninja'
+      name: https
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+        mode: Terminate
     - allowedRoutes:
         namespaces:
           from: All
@@ -19090,15 +19089,16 @@ spec:
         mode: Terminate
     - allowedRoutes:
         namespaces:
-          from: All
-      hostname: '*.homelab.olav.ninja'
-      name: https
-      port: 443
-      protocol: HTTPS
-      tls:
-        certificateRefs:
-          - name: gateway-wildcard-tls-certificate
-        mode: Terminate
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - gitea
+      name: ssh
+      port: 22
+      protocol: TCP
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
