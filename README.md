@@ -26,7 +26,7 @@ For more details, see [Hardware](#hardware) and [Software](#software) below.
 
 |                                                                                                  |                                                                       |                         |
 |:------------------------------------------------------------------------------------------------:|-----------------------------------------------------------------------|-------------------------|
-| <img height="32" src="https://raw.githubusercontent.com/toboshii/hajimari/main/assets/logo.png"> | [Hajimari](https://github.com/toboshii/hajimari)                      | Dashboard               |
+| <img height="32" src="https://avatars.githubusercontent.com/u/122929872">                        | [Homepage](https://gethomepage.dev/)                                  | Dashboard               |
 | <img width="32" src="https://avatars.githubusercontent.com/u/19211038">                          | [Nextcloud](https://nextcloud.com/)                                   | File Syncing            |
 | <img width="32" src="https://avatars.githubusercontent.com/u/109746326">                         | [Immich](https://immich.app/)                                         | Photo/Video Gallery     |
 | <img width="32" src="https://avatars.githubusercontent.com/u/12724356">                          | [Gitea](https://about.gitea.com/products/gitea/)                      | Self-hosted Git server  |

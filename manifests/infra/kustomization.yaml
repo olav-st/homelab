@@ -10,7 +10,7 @@ resources:
   - ./device-plugins
   - ./external-dns
   - ./gateway-api
-  - ./hajimari
+  - ./homepage
   - ./keycloak
   - ./kube-virt
   - ./longhorn
