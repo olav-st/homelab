@@ -4,7 +4,7 @@ namespace: hermes-agent
 
 resources:
   - deployment.yaml
-  - ingress.yaml
+  - httproute.yaml
   - namespace.yaml
   - oidc-client.yaml
   - pvcs.yaml
