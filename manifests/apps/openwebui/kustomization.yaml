@@ -16,3 +16,6 @@ helmCharts:
     repo: https://helm.openwebui.com/
     version: 16.5.0
     valuesFile: values.yaml
+
+patches:
+  - path: patches/remove-http-redirect-route.yaml
