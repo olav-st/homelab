@@ -1,0 +1,35 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: aria2
+  namespace: aria2
+  labels:
+    app: aria2
+  annotations:
+    hajimari.io/enable: "true"
+    hajimari.io/icon: streamline-plump-color:download-box-2-flat
+spec:
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  hostnames:
+    - aria2.homelab.olav.ninja
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: aria2
+          port: 8080
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: oidc
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: sablier
