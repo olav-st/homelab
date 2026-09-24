@@ -24,11 +24,10 @@ csi:
   resizerReplicaCount: 1
   snapshotterReplicaCount: 1
 
-ingress:
+httproute:
   enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-oidc@kubernetescrd
-  host: longhorn.homelab.olav.ninja
-  tls: true
-  tlsSecret: longhorn-tls-certificate
+  hostnames:
+    - longhorn.homelab.olav.ninja
+  parentRefs:
+    - namespace: traefik
+      name: internal

@@ -1,0 +1,11 @@
+- op: add
+  path: /spec/rules/0/filters
+  value: []
+- op: add
+  path: /spec/rules/0/filters/0
+  value:
+    type: ExtensionRef
+    extensionRef:
+      group: traefik.io
+      kind: Middleware
+      name: oidc

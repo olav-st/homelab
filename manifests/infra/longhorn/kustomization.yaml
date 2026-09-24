@@ -28,3 +28,9 @@ patches:
       metadata:
         name: placeholder
       $patch: delete
+  - path: patches/add-middleware.yaml
+    target:
+      group: gateway.networking.k8s.io
+      version: v1
+      kind: HTTPRoute
+      name: longhorn-httproute
