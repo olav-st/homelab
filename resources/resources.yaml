@@ -19386,6 +19386,33 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
+  annotations:
+    hajimari.io/appName: hermes-agent
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:hermes
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  hostnames:
+    - hermes.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: hermes-agent
+          port: 9119
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
   labels:
     app.kubernetes.io/instance: llm-proxy
     app.kubernetes.io/name: llm-proxy
@@ -19678,37 +19705,6 @@ spec:
     - hosts:
         - homelab.olav.ninja
       secretName: hajimari-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: hermes-agent
-    hajimari.io/enable: "true"
-    hajimari.io/icon: simple-icons:hermes
-  labels:
-    app.kubernetes.io/instance: hermes-agent
-    app.kubernetes.io/name: hermes-agent
-  name: hermes-agent
-  namespace: hermes-agent
-spec:
-  ingressClassName: traefik
-  rules:
-    - host: hermes.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: hermes-agent
-                port:
-                  number: 9119
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - hermes.homelab.olav.ninja
-      secretName: hermes-agent-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
