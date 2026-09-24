@@ -20495,7 +20495,7 @@ metadata:
   name: function-go-templating
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.12.5
+  package: xpkg.upbound.io/crossplane-contrib/function-go-templating:v0.13.0
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
