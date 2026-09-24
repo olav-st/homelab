@@ -18964,6 +18964,18 @@ spec:
   listeners:
     - allowedRoutes:
         namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - gitea
+      name: ssh
+      port: 22
+      protocol: TCP
+    - allowedRoutes:
+        namespaces:
           from: All
       hostname: '*.homelab.olav.ninja'
       name: https
@@ -19015,6 +19027,40 @@ metadata:
 spec:
   controllerName: traefik.io/gateway-controller
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+  labels:
+    app: gitea
+    app.kubernetes.io/instance: gitea
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gitea
+    app.kubernetes.io/version: 1.27.0
+    helm.sh/chart: gitea-12.7.0
+    version: 1.27.0
+  name: gitea
+  namespace: gitea
+spec:
+  hostnames:
+    - gitea.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: gitea-http
+          port: 3000
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
@@ -19028,6 +19074,31 @@ spec:
     - backendRefs:
         - name: kubernetes
           port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  labels:
+    app: gitea
+    app.kubernetes.io/instance: gitea
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gitea
+    app.kubernetes.io/version: 1.27.0
+    helm.sh/chart: gitea-12.7.0
+    version: 1.27.0
+  name: gitea
+  namespace: gitea
+spec:
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: gitea-ssh
+          port: 22
+          weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
@@ -19370,42 +19441,6 @@ spec:
     - hosts:
         - fileflows.homelab.olav.ninja
       secretName: fileflows-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
-    ingress.kubernetes.io/proxy-body-size: 10000m
-  labels:
-    app: gitea
-    app.kubernetes.io/instance: gitea
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: gitea
-    app.kubernetes.io/version: 1.27.0
-    helm.sh/chart: gitea-12.7.0
-    version: 1.27.0
-  name: gitea
-  namespace: gitea
-spec:
-  ingressClassName: null
-  rules:
-    - host: gitea.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: gitea-http
-                port:
-                  number: 3000
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - gitea.homelab.olav.ninja
-      secretName: gitea-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
