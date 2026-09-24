@@ -18,7 +18,7 @@ spec:
         source: Inline
         inline:
           template: |
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.keycloak.m.crossplane.io/v1alpha1
             kind: Client
             metadata:
               annotations:
@@ -29,7 +29,9 @@ spec:
                 accessType: {{ .observed.composite.resource.spec.type }}
                 clientId: {{ .observed.composite.resource.spec.clientId }}
                 {{ with .observed.composite.resource.spec.clientSecretSecretRef }}
-                clientSecretSecretRef: {{ toYaml . | nindent 6 }}
+                clientSecretSecretRef:
+                  key: {{ .key }}
+                  name: {{ .name }}
                 {{ end }}
                 description: {{ .observed.composite.resource.spec.description }}
                 {{ with .observed.composite.resource.spec.baseUrl }}
@@ -58,6 +60,7 @@ spec:
                 {{- end }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
+                  namespace: keycloak
     - step: create-audience-mapper
       functionRef:
         name: function-go-templating
@@ -68,7 +71,7 @@ spec:
         inline:
           template: |
             {{ if ne $.observed.resources nil }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.keycloak.m.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -87,6 +90,7 @@ spec:
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
+                  namespace: keycloak
             {{ end }}
     - step: create-usermodel-property-mapper
       functionRef:
@@ -98,7 +102,7 @@ spec:
         inline:
           template: |
             {{ if ne $.observed.resources nil }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.keycloak.m.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -118,6 +122,7 @@ spec:
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
+                  namespace: keycloak
             {{ end }}
     - step: create-group-membership-mapper
       functionRef:
@@ -130,7 +135,7 @@ spec:
           template: |
             {{ if ne $.observed.resources nil }}
             {{ if .observed.composite.resource.spec.groupsClaim }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.keycloak.m.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -151,6 +156,7 @@ spec:
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
+                  namespace: keycloak
             {{ end }}
             {{ end }}
     - step: create-client-default-scopes
@@ -164,7 +170,7 @@ spec:
           template: |
             {{ if ne $.observed.resources nil }}
             {{ if .observed.composite.resource.spec.defaultScopes }}
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.keycloak.m.crossplane.io/v1alpha1
             kind: ClientDefaultScopes
             metadata:
               annotations:
@@ -177,6 +183,7 @@ spec:
                 clientId: {{ ( index .observed.resources .observed.composite.resource.metadata.name ).resource.status.atProvider.id | default "null" }}
                 realmIdRef:
                   name: {{ .observed.composite.resource.spec.realm }}
+                  namespace: keycloak
             {{ end }}
             {{ end }}
     - step: create-service-account-role
@@ -194,20 +201,22 @@ spec:
             kind: ExtraResources
             requirements:
               client:
-                apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+                apiVersion: openidclient.keycloak.m.crossplane.io/v1alpha1
                 kind: Client
                 matchName: {{ .client }}
+                namespace: keycloak
               realm:
-                apiVersion: realm.keycloak.crossplane.io/v1alpha1
+                apiVersion: realm.keycloak.m.crossplane.io/v1alpha1
                 kind: Realm
                 matchName: {{ .realm }}
+                namespace: keycloak
             {{ end }}
             {{ if and (ne .observed.resources nil) (ne .extraResources nil) }}
             {{ range $i, $serviceAccountRole := .observed.composite.resource.spec.serviceAccountRoles }}
             {{ $client := (index (index $.extraResources "client").items $i).resource }}
             {{ $realm := (index (index $.extraResources "realm").items $i).resource }}
             ---
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.keycloak.m.crossplane.io/v1alpha1
             kind: ClientServiceAccountRole
             metadata:
               annotations:
