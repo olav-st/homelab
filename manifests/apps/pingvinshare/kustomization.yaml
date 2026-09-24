@@ -15,7 +15,7 @@ helmCharts:
     releaseName: pingvinshare
     namespace: pingvinshare
     repo: https://bjw-s-labs.github.io/helm-charts
-    version: 5.1.0
+    version: 5.2.1
     apiVersions:
       - gateway.networking.k8s.io/v1/HTTPRoute
     valuesFile: values.yaml
