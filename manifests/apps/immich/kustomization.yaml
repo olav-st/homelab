@@ -15,6 +15,8 @@ helmCharts:
   namespace: immich
   repo: https://immich-app.github.io/immich-charts
   version: 0.12.0
+  apiVersions:
+      - gateway.networking.k8s.io/v1/HTTPRoute
   valuesFile: values.yaml
 
 patches:
