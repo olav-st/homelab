@@ -20891,7 +20891,6 @@ spec:
       - valueSecretRef:
           key: jiyoung
           name: keycloak-initial-passwords
-          namespace: keycloak
     realmIdRef:
       name: homelab
     username: jiyoung
@@ -20908,7 +20907,6 @@ spec:
       - valueSecretRef:
           key: olav
           name: keycloak-initial-passwords
-          namespace: keycloak
     realmIdRef:
       name: homelab
     username: olav
