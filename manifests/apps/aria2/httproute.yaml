@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/name: aria2
     gethomepage.dev/group: Applications
+    gethomepage.dev/icon: mdi-download
     gethomepage.dev/description: Download manager
 spec:
   parentRefs:
