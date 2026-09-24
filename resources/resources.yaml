@@ -19061,6 +19061,61 @@ spec:
             type: PathPrefix
             value: /
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
+  labels:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/version: 34.0.3
+    helm.sh/chart: nextcloud-9.2.6
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  hostnames:
+    - nextcloud.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - filters:
+        - requestRedirect:
+            path:
+              replaceFullPath: /remote.php/dav
+              type: ReplaceFullPath
+            statusCode: 301
+          type: RequestRedirect
+      matches:
+        - path:
+            type: Exact
+            value: /.well-known/carddav
+    - filters:
+        - requestRedirect:
+            path:
+              replaceFullPath: /remote.php/dav
+              type: ReplaceFullPath
+            statusCode: 301
+          type: RequestRedirect
+      matches:
+        - path:
+            type: Exact
+            value: /.well-known/caldav
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: nextcloud
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
@@ -19791,39 +19846,6 @@ spec:
     - hosts:
         - netbird.homelab.olav.ninja
       secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
-  labels:
-    app.kubernetes.io/component: app
-    app.kubernetes.io/instance: nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/version: 34.0.3
-    helm.sh/chart: nextcloud-9.2.6
-  name: nextcloud
-  namespace: nextcloud
-spec:
-  rules:
-    - host: nextcloud.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: nextcloud
-                port:
-                  number: 8080
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - nextcloud.homelab.olav.ninja
-      secretName: nextcloud-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
