@@ -1,3 +1,4 @@
+# https://github.com/nextcloud/helm/blob/main/charts/nextcloud/values.yaml
 nextcloud:
   host: nextcloud.homelab.olav.ninja
   existingSecret:
@@ -46,16 +47,16 @@ persistence:
 cronjob:
   enabled: true
 
-ingress:
+httpRoute:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
     hajimari.io/enable: 'true'
     hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
-  tls:
-    - secretName: nextcloud-tls-certificate
-      hosts:
-        - nextcloud.homelab.olav.ninja
+  hostnames:
+    -  nextcloud.homelab.olav.ninja
+  parentRefs:
+    - namespace: traefik
+      name: internal
 
 phpClientHttpsFix:
   enabled: true
