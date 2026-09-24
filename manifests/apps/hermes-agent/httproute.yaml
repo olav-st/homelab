@@ -11,6 +11,7 @@ metadata:
     gethomepage.dev/name: Hermes
     gethomepage.dev/group: Applications
     gethomepage.dev/icon: si-hermes
+    gethomepage.dev/description: AI Agent
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

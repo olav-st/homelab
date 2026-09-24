@@ -71,6 +71,8 @@ server:
         gethomepage.dev/enabled: 'true'
         gethomepage.dev/icon: https://avatars.githubusercontent.com/u/109746326
         gethomepage.dev/name: Immich
+        gethomepage.dev/group: Applications
+        gethomepage.dev/description: 'Photo hosting'
       hostnames:
         - immich.homelab.olav.ninja
       parentRefs:

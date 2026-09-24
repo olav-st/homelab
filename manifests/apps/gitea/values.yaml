@@ -61,7 +61,10 @@ gatewayAPI:
       tls: true
       annotations:
         gethomepage.dev/enabled: 'true'
+        gethomepage.dev/name: 'Gitea'
         gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+        gethomepage.dev/group: Applications
+        gethomepage.dev/description: 'Git hosting'
       hostnames:
         - gitea.homelab.olav.ninja
       parentRefs:

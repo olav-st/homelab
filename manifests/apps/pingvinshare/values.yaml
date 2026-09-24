@@ -98,6 +98,8 @@ route:
       gethomepage.dev/enabled: 'true'
       gethomepage.dev/name: 'Pingvin Share'
       gethomepage.dev/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
+      gethomepage.dev/description: 'File sharing'
+      gethomepage.dev/group: Applications
     hostnames:
       - pingvin.homelab.olav.ninja
     parentRefs:

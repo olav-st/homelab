@@ -48,6 +48,8 @@ route:
       gethomepage.dev/enabled: 'true'
       gethomepage.dev/name: 'Bambu Studio'
       gethomepage.dev/icon: https://avatars.githubusercontent.com/u/96461528
+      gethomepage.dev/description: '3D printing'
+      gethomepage.dev/group: Applications
     hostnames:
       - bambustudio.homelab.olav.ninja
     parentRefs:

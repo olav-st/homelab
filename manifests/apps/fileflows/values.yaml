@@ -19,6 +19,8 @@ route:
       gethomepage.dev/enabled: 'true'
       gethomepage.dev/name: 'FileFlows'
       gethomepage.dev/icon: https://avatars.githubusercontent.com/u/223186409
+      gethomepage.dev/description: 'Media automation'
+      gethomepage.dev/group: Applications
     hostnames:
       - fileflows.homelab.olav.ninja
     parentRefs:
