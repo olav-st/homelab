@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: homeassistant
+spec:
+  parentRefs:
+    - name: internal
+      namespace: traefik
+      sectionName: homeassistant-tls
+  hostnames:
+    - homeassistant.homelab.olav.ninja
+  rules:
+    - backendRefs:
+        - name: homeassistant
+          port: 443
