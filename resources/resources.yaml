@@ -19031,6 +19031,43 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    hajimari.io/appName: Bambu Studio
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+  labels:
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    helm.sh/chart: app-template-5.1.0
+  name: bambustudio
+  namespace: bambustudio
+spec:
+  hostnames:
+    - bambustudio.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: bambustudio
+          namespace: bambustudio
+          port: 3000
+          weight: 1
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: sablier
+          type: ExtensionRef
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
     hajimari.io/enable: "true"
     hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
   labels:
@@ -19188,23 +19225,23 @@ spec:
             type: PathPrefix
             value: /
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha2
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: Bambu Studio
+    hajimari.io/appName: Pingvin Share
     hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+    hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
   labels:
-    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: bambustudio
+    app.kubernetes.io/name: pingvinshare
     helm.sh/chart: app-template-5.1.0
-  name: bambustudio
-  namespace: bambustudio
+  name: pingvinshare
+  namespace: pingvinshare
 spec:
   hostnames:
-    - bambustudio.homelab.olav.ninja
+    - pingvin.homelab.olav.ninja
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
@@ -19214,10 +19251,16 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: bambustudio
-          namespace: bambustudio
+          name: pingvinshare
+          namespace: pingvinshare
           port: 3000
           weight: 1
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: sablier
+          type: ExtensionRef
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
@@ -19884,39 +19927,6 @@ spec:
     - hosts:
         - netbird.homelab.olav.ninja
       secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: Pingvin Share
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
-    traefik.ingress.kubernetes.io/router.middlewares: pingvinshare-sablier@kubernetescrd
-  labels:
-    app.kubernetes.io/instance: pingvinshare
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: pingvinshare
-    helm.sh/chart: app-template-5.1.0
-  name: pingvinshare
-  namespace: pingvinshare
-spec:
-  rules:
-    - host: pingvin.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: pingvinshare
-                port:
-                  number: 3000
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - pingvin.homelab.olav.ninja
-      secretName: pingvinshare-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
