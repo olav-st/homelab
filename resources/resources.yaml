@@ -19116,6 +19116,40 @@ spec:
             type: PathPrefix
             value: /
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    hajimari.io/appName: OpenWebUI
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
+  labels:
+    app.kubernetes.io/component: open-webui
+    app.kubernetes.io/instance: openwebui
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: open-webui
+    app.kubernetes.io/version: 0.11.3
+    helm.sh/chart: open-webui-16.5.0
+  name: openwebui-open-webui
+  namespace: openwebui
+spec:
+  hostnames:
+    - openwebui.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: openwebui-open-webui
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
@@ -19846,40 +19880,6 @@ spec:
     - hosts:
         - netbird.homelab.olav.ninja
       secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: OpenWebUI
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
-  labels:
-    app.kubernetes.io/component: open-webui
-    app.kubernetes.io/instance: openwebui
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: open-webui
-    app.kubernetes.io/version: 0.11.3
-    helm.sh/chart: open-webui-16.5.0
-  name: openwebui-open-webui
-  namespace: openwebui
-spec:
-  rules:
-    - host: openwebui.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: openwebui-open-webui
-                port:
-                  name: http
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - openwebui.homelab.olav.ninja
-      secretName: openwebui-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
