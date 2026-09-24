@@ -19068,6 +19068,51 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    hajimari.io/appName: FileFlows
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
+  labels:
+    app: fileflows-16.16.0
+    app.kubernetes.io/instance: fileflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fileflows
+    app.kubernetes.io/version: 26.09.0
+    helm-revision: "1"
+    helm.sh/chart: fileflows-16.16.0
+    release: fileflows
+  name: fileflows
+  namespace: fileflows
+spec:
+  hostnames:
+    - fileflows.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: fileflows
+          namespace: fileflows
+          port: 5000
+          weight: 1
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: oidc
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
     hajimari.io/enable: "true"
     hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
   labels:
@@ -19661,46 +19706,6 @@ spec:
               requests:
                 cpu: 50m
     replicas: 1
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
-    checksum/services: d7142975254d86e7952c9a1dcc2aef8d56fc97f2bd2bae51b68ee07e82f5686b
-    hajimari.io/appName: FileFlows
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
-    traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
-  labels:
-    app: fileflows-16.16.0
-    app.kubernetes.io/instance: fileflows
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: fileflows
-    app.kubernetes.io/version: 26.09.0
-    helm-revision: "1"
-    helm.sh/chart: fileflows-16.16.0
-    release: fileflows
-  name: fileflows
-  namespace: fileflows
-spec:
-  ingressClassName: null
-  rules:
-    - host: fileflows.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: fileflows
-                port:
-                  number: 5000
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - fileflows.homelab.olav.ninja
-      secretName: fileflows-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
