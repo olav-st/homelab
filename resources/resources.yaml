@@ -19145,9 +19145,48 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: Bambu Studio
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/name: aria2
+  labels:
+    app: aria2
+  name: aria2
+  namespace: aria2
+spec:
+  hostnames:
+    - aria2.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: aria2
+          port: 8080
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: oidc
+          type: ExtensionRef
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: sablier
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://avatars.githubusercontent.com/u/96461528
+    gethomepage.dev/name: Bambu Studio
   labels:
     app.kubernetes.io/instance: bambustudio
     app.kubernetes.io/managed-by: Helm
@@ -19182,9 +19221,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: FileFlows
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://avatars.githubusercontent.com/u/223186409
+    gethomepage.dev/name: FileFlows
   labels:
     app: fileflows-16.16.0
     app.kubernetes.io/instance: fileflows
@@ -19227,8 +19266,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
   labels:
     app: gitea
     app.kubernetes.io/instance: gitea
@@ -19252,6 +19291,36 @@ spec:
           name: gitea-http
           port: 3000
           weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/icon: si-hermes
+    gethomepage.dev/name: Hermes
+  labels:
+    app.kubernetes.io/instance: hermes-agent
+    app.kubernetes.io/name: hermes-agent
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  hostnames:
+    - hermes.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: hermes-agent
+          port: 9119
       matches:
         - path:
             type: PathPrefix
@@ -19287,9 +19356,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: Immich
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://avatars.githubusercontent.com/u/109746326
+    gethomepage.dev/name: Immich
   labels:
     app.kubernetes.io/instance: immich
     app.kubernetes.io/managed-by: Helm
@@ -19314,6 +19383,37 @@ spec:
           namespace: immich
           port: 2283
           weight: 1
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/description: Movies & TV
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/icon: jellyfin.png
+    gethomepage.dev/name: Jellyfin
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  hostnames:
+    - jellyfin.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: jellyfin
+          port: 8096
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -19357,8 +19457,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
   labels:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
@@ -19412,9 +19512,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: OpenWebUI
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/158137808
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://avatars.githubusercontent.com/u/158137808
+    gethomepage.dev/name: OpenWebUI
   labels:
     app.kubernetes.io/component: open-webui
     app.kubernetes.io/instance: openwebui
@@ -19446,9 +19546,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    hajimari.io/appName: Pingvin Share
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
+    gethomepage.dev/name: Pingvin Share
   labels:
     app.kubernetes.io/instance: pingvinshare
     app.kubernetes.io/managed-by: Helm
@@ -19531,96 +19631,6 @@ spec:
     - backendRefs:
         - name: traefik-clusterip
           port: 443
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  annotations:
-    hajimari.io/enable: "true"
-    hajimari.io/icon: streamline-plump-color:download-box-2-flat
-  labels:
-    app: aria2
-  name: aria2
-  namespace: aria2
-spec:
-  hostnames:
-    - aria2.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-  rules:
-    - backendRefs:
-        - name: aria2
-          port: 8080
-      filters:
-        - extensionRef:
-            group: traefik.io
-            kind: Middleware
-            name: oidc
-          type: ExtensionRef
-        - extensionRef:
-            group: traefik.io
-            kind: Middleware
-            name: sablier
-          type: ExtensionRef
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  annotations:
-    hajimari.io/appName: hermes-agent
-    hajimari.io/enable: "true"
-    hajimari.io/icon: simple-icons:hermes
-  labels:
-    app.kubernetes.io/instance: hermes-agent
-    app.kubernetes.io/name: hermes-agent
-  name: hermes-agent
-  namespace: hermes-agent
-spec:
-  hostnames:
-    - hermes.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-  rules:
-    - backendRefs:
-        - name: hermes-agent
-          port: 9119
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  annotations:
-    hajimari.io/appName: Jellyfin
-    hajimari.io/enable: "true"
-    hajimari.io/icon: simple-icons:jellyfin
-  labels:
-    app.kubernetes.io/instance: jellyfin
-    app.kubernetes.io/name: jellyfin
-  name: jellyfin
-  namespace: jellyfin
-spec:
-  hostnames:
-    - jellyfin.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-  rules:
-    - backendRefs:
-        - name: jellyfin
-          port: 8096
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
