@@ -19064,6 +19064,44 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  labels:
+    app: longhorn-httproute
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/version: v1.12.1
+    helm.sh/chart: longhorn-1.12.1
+  name: longhorn-httproute
+  namespace: longhorn-system
+spec:
+  hostnames:
+    - longhorn.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: longhorn-frontend
+          port: 80
+          weight: 1
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: longhorn-system-oidc
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
   annotations:
     hajimari.io/enable: "true"
     hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
@@ -19717,38 +19755,6 @@ spec:
     - hosts:
         - hubble.homelab.olav.ninja
       secretName: hubble-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-oidc@kubernetescrd
-  labels:
-    app: longhorn-ingress
-    app.kubernetes.io/instance: longhorn
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: longhorn
-    app.kubernetes.io/version: v1.12.1
-    helm.sh/chart: longhorn-1.12.1
-  name: longhorn-ingress
-  namespace: longhorn-system
-spec:
-  rules:
-    - host: longhorn.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: longhorn-frontend
-                port:
-                  number: 80
-            path: /
-            pathType: ImplementationSpecific
-  tls:
-    - hosts:
-        - longhorn.homelab.olav.ninja
-      secretName: longhorn-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
