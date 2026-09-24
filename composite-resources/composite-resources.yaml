@@ -127,6 +127,23 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: kubectl
+  namespace: kube-system
+spec:
+  clientId: kubectl
+  description: Kubectl Client
+  displayName: Kubectl
+  grantTypes:
+    - code
+  realm: homelab
+  redirectUris:
+    - http://localhost:8000
+    - http://localhost:18000
+  type: PUBLIC
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: longhorn
   namespace: longhorn-system
 spec:
@@ -265,19 +282,3 @@ spec:
   redirectUris:
     - https://traefik.homelab.olav.ninja/oidc/callback
   type: CONFIDENTIAL
----
-apiVersion: oidc.homelab.olav.ninja/v1alpha1
-kind: XOidcClient
-metadata:
-  name: kubectl
-spec:
-  clientId: kubectl
-  description: Kubectl Client
-  displayName: Kubectl
-  grantTypes:
-    - code
-  realm: homelab
-  redirectUris:
-    - http://localhost:8000
-    - http://localhost:18000
-  type: PUBLIC
