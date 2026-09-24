@@ -19413,6 +19413,33 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
+  annotations:
+    hajimari.io/appName: Jellyfin
+    hajimari.io/enable: "true"
+    hajimari.io/icon: simple-icons:jellyfin
+  labels:
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  hostnames:
+    - jellyfin.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: jellyfin
+          port: 8096
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
   labels:
     app.kubernetes.io/instance: llm-proxy
     app.kubernetes.io/name: llm-proxy
@@ -19705,37 +19732,6 @@ spec:
     - hosts:
         - homelab.olav.ninja
       secretName: hajimari-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: Jellyfin
-    hajimari.io/enable: "true"
-    hajimari.io/icon: simple-icons:jellyfin
-  labels:
-    app.kubernetes.io/instance: jellyfin
-    app.kubernetes.io/name: jellyfin
-  name: jellyfin
-  namespace: jellyfin
-spec:
-  ingressClassName: traefik
-  rules:
-    - host: jellyfin.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: jellyfin
-                port:
-                  number: 8096
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - jellyfin.homelab.olav.ninja
-      secretName: jellyfin-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
