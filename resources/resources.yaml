@@ -19350,6 +19350,42 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
+  annotations:
+    hajimari.io/enable: "true"
+    hajimari.io/icon: streamline-plump-color:download-box-2-flat
+  labels:
+    app: aria2
+  name: aria2
+  namespace: aria2
+spec:
+  hostnames:
+    - aria2.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: aria2
+          port: 8080
+      filters:
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: oidc
+          type: ExtensionRef
+        - extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: sablier
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
   labels:
     app.kubernetes.io/instance: llm-proxy
     app.kubernetes.io/name: llm-proxy
@@ -19571,36 +19607,6 @@ spec:
               requests:
                 cpu: 50m
     replicas: 1
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "true"
-    hajimari.io/icon: streamline-plump-color:download-box-2-flat
-    traefik.ingress.kubernetes.io/router.middlewares: aria2-oidc@kubernetescrd,aria2-sablier@kubernetescrd
-  labels:
-    app: aria2
-  name: aria2
-  namespace: aria2
-spec:
-  ingressClassName: traefik
-  rules:
-    - host: aria2.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: aria2
-                port:
-                  name: aria2
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - aria2.homelab.olav.ninja
-      secretName: aria2-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
