@@ -9,5 +9,6 @@ spec:
       name: homelab
     clientId: realm-management
   providerConfigRef:
+    kind: ClusterProviderConfig
     name: default
   managementPolicies: ["Observe"]
