@@ -1,5 +1,5 @@
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.keycloak.m.crossplane.io/v1alpha1
 kind: User
 metadata:
   name: olav
@@ -11,11 +11,10 @@ spec:
       - valueSecretRef:
           key: olav
           name: keycloak-initial-passwords
-          namespace: keycloak
     realmIdRef:
       name: homelab
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.keycloak.m.crossplane.io/v1alpha1
 kind: User
 metadata:
   name: jiyoung
@@ -27,11 +26,10 @@ spec:
       - valueSecretRef:
           key: jiyoung
           name: keycloak-initial-passwords
-          namespace: keycloak
     realmIdRef:
       name: homelab
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.keycloak.m.crossplane.io/v1alpha1
 kind: Groups
 metadata:
   name: homelab-olav
@@ -45,7 +43,7 @@ spec:
     userIdRef:
       name: olav
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.keycloak.m.crossplane.io/v1alpha1
 kind: Groups
 metadata:
   name: homelab-jiyoung

@@ -4,6 +4,7 @@ kind: CompositeResourceDefinition
 metadata:
   name: xoidcclients.oidc.homelab.olav.ninja  # required to be in the format <plural>.<group>
 spec:
+  scope: Namespaced
   group: oidc.homelab.olav.ninja
   names:
     kind: XOidcClient
