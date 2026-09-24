@@ -19101,6 +19101,38 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    hajimari.io/appName: Immich
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
+  labels:
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: server
+    app.kubernetes.io/version: v2.6.3
+    helm.sh/chart: immich-0.12.0
+  name: immich-server
+  namespace: immich
+spec:
+  hostnames:
+    - immich.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: immich-server
+          namespace: immich
+          port: 2283
+          weight: 1
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
   labels:
     app: longhorn-httproute
     app.kubernetes.io/instance: longhorn
@@ -19671,40 +19703,6 @@ spec:
     - hosts:
         - hermes.homelab.olav.ninja
       secretName: hermes-agent-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: Immich
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  labels:
-    app.kubernetes.io/instance: immich
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: server
-    app.kubernetes.io/version: v2.6.3
-    helm.sh/chart: immich-0.12.0
-  name: immich-server
-  namespace: immich
-spec:
-  rules:
-    - host: immich.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: immich-server
-                port:
-                  number: 2283
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - immich.homelab.olav.ninja
-      secretName: immich-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
