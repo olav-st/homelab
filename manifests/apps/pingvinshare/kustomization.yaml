@@ -16,10 +16,18 @@ helmCharts:
     namespace: pingvinshare
     repo: https://bjw-s-labs.github.io/helm-charts
     version: 5.1.0
+    apiVersions:
+      - gateway.networking.k8s.io/v1/HTTPRoute
     valuesFile: values.yaml
 
 patches:
   - path: patches/remove-replicas.yaml
     target:
       kind: Deployment
+      name: pingvinshare
+  - path: patches/add-middleware.yaml
+    target:
+      group: gateway.networking.k8s.io
+      version: v1
+      kind: HTTPRoute
       name: pingvinshare
