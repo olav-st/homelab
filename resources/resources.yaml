@@ -19156,6 +19156,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: Download manager
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
     gethomepage.dev/name: aria2
@@ -19195,7 +19196,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: 3D printing
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://avatars.githubusercontent.com/u/96461528
     gethomepage.dev/name: Bambu Studio
   labels:
@@ -19232,7 +19235,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: Media automation
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://avatars.githubusercontent.com/u/223186409
     gethomepage.dev/name: FileFlows
   labels:
@@ -19277,8 +19282,11 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: Git hosting
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+    gethomepage.dev/name: Gitea
   labels:
     app: gitea
     app.kubernetes.io/instance: gitea
@@ -19311,6 +19319,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: AI Agent
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
     gethomepage.dev/icon: si-hermes
@@ -19367,7 +19376,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: Photo hosting
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://avatars.githubusercontent.com/u/109746326
     gethomepage.dev/name: Immich
   labels:
@@ -19468,8 +19479,11 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: Cloud storage
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
+    gethomepage.dev/name: Nextcloud
   labels:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
@@ -19523,7 +19537,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: AI Chat
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://avatars.githubusercontent.com/u/158137808
     gethomepage.dev/name: OpenWebUI
   labels:
@@ -19557,7 +19573,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/description: File sharing
     gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
     gethomepage.dev/icon: https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg
     gethomepage.dev/name: Pingvin Share
   labels:
