@@ -53,23 +53,25 @@ service:
     port: 22
     clusterIP: None
 
-ingress:
+gatewayAPI:
   enabled: true
-  apiVersion: networking.k8s.io/v1
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    ingress.kubernetes.io/proxy-body-size: 10000m
-    hajimari.io/enable: 'true'
-    hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
-  hosts:
-    - host: gitea.homelab.olav.ninja
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: gitea-tls-certificate
-      hosts:
+  core:
+    httpRoute:
+      enabled: true
+      tls: true
+      annotations:
+        hajimari.io/enable: 'true'
+        hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+      hostnames:
         - gitea.homelab.olav.ninja
+      parentRefs:
+        - namespace: traefik
+          name: internal
+    tcpRoute:
+      enabled: true
+      parentRefs:
+        - namespace: traefik
+          name: internal
 
 persistence:
   enabled: true
