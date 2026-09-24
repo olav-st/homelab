@@ -19189,6 +19189,37 @@ spec:
             value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: HTTPRoute
+metadata:
+  annotations:
+    hajimari.io/appName: Bambu Studio
+    hajimari.io/enable: "true"
+    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
+  labels:
+    app.kubernetes.io/instance: bambustudio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bambustudio
+    helm.sh/chart: app-template-5.1.0
+  name: bambustudio
+  namespace: bambustudio
+spec:
+  hostnames:
+    - bambustudio.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: bambustudio
+          namespace: bambustudio
+          port: 3000
+          weight: 1
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
   name: kubernetes
@@ -19495,39 +19526,6 @@ spec:
     - hosts:
         - aria2.homelab.olav.ninja
       secretName: aria2-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/appName: Bambu Studio
-    hajimari.io/enable: "true"
-    hajimari.io/icon: https://avatars.githubusercontent.com/u/96461528
-    traefik.ingress.kubernetes.io/router.middlewares: bambustudio-sablier@kubernetescrd
-  labels:
-    app.kubernetes.io/instance: bambustudio
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: bambustudio
-    helm.sh/chart: app-template-5.1.0
-  name: bambustudio
-  namespace: bambustudio
-spec:
-  rules:
-    - host: bambustudio.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: bambustudio
-                port:
-                  number: 3000
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - bambustudio.homelab.olav.ninja
-      secretName: bambustudio-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
