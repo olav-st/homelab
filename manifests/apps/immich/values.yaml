@@ -68,9 +68,9 @@ server:
       enabled: true
       kind: HTTPRoute
       annotations:
-        hajimari.io/enable: 'true'
-        hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
-        hajimari.io/appName: Immich
+        gethomepage.dev/enabled: 'true'
+        gethomepage.dev/icon: https://avatars.githubusercontent.com/u/109746326
+        gethomepage.dev/name: Immich
       hostnames:
         - immich.homelab.olav.ninja
       parentRefs:

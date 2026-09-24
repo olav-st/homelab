@@ -60,8 +60,8 @@ gatewayAPI:
       enabled: true
       tls: true
       annotations:
-        hajimari.io/enable: 'true'
-        hajimari.io/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
+        gethomepage.dev/enabled: 'true'
+        gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/b/bb/Gitea_Logo.svg
       hostnames:
         - gitea.homelab.olav.ninja
       parentRefs:

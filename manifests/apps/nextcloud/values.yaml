@@ -50,8 +50,8 @@ cronjob:
 httpRoute:
   enabled: true
   annotations:
-    hajimari.io/enable: 'true'
-    hajimari.io/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
+    gethomepage.dev/enabled: 'true'
+    gethomepage.dev/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
   hostnames:
     -  nextcloud.homelab.olav.ninja
   parentRefs:
