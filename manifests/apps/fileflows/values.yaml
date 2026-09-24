@@ -1,3 +1,4 @@
+# https://github.com/trueforge-org/truecharts/blob/master/charts/stable/fileflows/values.yaml
 image:
   tag: "26.09" # renovate: docker=docker.io/revenz/fileflows
 
@@ -10,24 +11,19 @@ service:
         # Target the OAuth2 Proxy port (4180) to enforce authentication
         #targetPort: 4180
 
-ingress:
+route:
   main:
     enabled: true
+    kind: HTTPRoute
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
       hajimari.io/enable: 'true'
       hajimari.io/appName: 'FileFlows'
       hajimari.io/icon: https://avatars.githubusercontent.com/u/223186409
-      traefik.ingress.kubernetes.io/router.middlewares: fileflows-oidc@kubernetescrd
-    hosts:
-      - host: &hostName fileflows.homelab.olav.ninja
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - hosts:
-          - *hostName
-        secretName: fileflows-tls-certificate
+    hostnames:
+      - fileflows.homelab.olav.ninja
+    parentRefs:
+      - namespace: traefik
+        name: internal
 
 persistence:
   logs:
