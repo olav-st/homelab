@@ -19080,6 +19080,17 @@ spec:
     - allowedRoutes:
         namespaces:
           from: All
+      hostname: homelab.olav.ninja
+      name: https-apex
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+        mode: Terminate
+    - allowedRoutes:
+        namespaces:
+          from: All
       hostname: '*.homelab.olav.ninja'
       name: https
       port: 443
