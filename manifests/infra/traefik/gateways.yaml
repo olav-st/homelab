@@ -20,6 +20,17 @@ spec:
                 operator: In
                 values:
                   - gitea # Only gitea uses SSH for now
+    - name: https-apex
+      protocol: HTTPS
+      port: 443
+      hostname: "homelab.olav.ninja"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: https
       protocol: HTTPS
       port: 443
