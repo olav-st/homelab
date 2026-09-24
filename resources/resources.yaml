@@ -19092,7 +19092,7 @@ spec:
         - extensionRef:
             group: traefik.io
             kind: Middleware
-            name: longhorn-system-oidc
+            name: oidc
           type: ExtensionRef
       matches:
         - path:
