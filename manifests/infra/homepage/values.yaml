@@ -15,24 +15,24 @@ config:
   bookmarks:
     - Infrastructure:
         - Keycloak:
-            href: https://keycloak.homelab.olav.ninja
+            - href: https://keycloak.homelab.olav.ninja
         - Longhorn:
-            href: https://longhorn.homelab.olav.ninja
+            - href: https://longhorn.homelab.olav.ninja
         - Traefik:
-            href: https://traefik.homelab.olav.ninja
+            - href: https://traefik.homelab.olav.ninja
     - Networking:
         - OpenWrt:
-            href: http://192.168.0.1
+            - href: http://192.168.0.1
         - Netbird:
-            href: https://netbird.homelab.olav.ninja
+            - href: https://netbird.homelab.olav.ninja
     - External:
         - Cloudflare Dashboard:
-            href: https://dash.cloudflare.com
+            - href: https://dash.cloudflare.com
         - Github Repo:
-            href: https://github.com/olav-st/homelab
+            - href: https://github.com/olav-st/homelab
     - Utilities:
         - Hubble:
-            href: https://hubble.homelab.olav.ninja
+            - href: https://hubble.homelab.olav.ninja
 
   services:
     - Applications:
