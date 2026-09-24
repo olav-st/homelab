@@ -8360,23 +8360,31 @@ data:
     - Infrastructure:
       - Keycloak:
         - href: https://keycloak.homelab.olav.ninja
+          icon: keycloak.png
       - Longhorn:
         - href: https://longhorn.homelab.olav.ninja
+          icon: longhorn.png
       - Traefik:
         - href: https://traefik.homelab.olav.ninja
+          icon: traefik.png
     - Networking:
       - OpenWrt:
         - href: http://192.168.0.1
+          icon: openwrt.png
       - Netbird:
         - href: https://netbird.homelab.olav.ninja
+          icon: netbird.png
     - External:
       - Cloudflare Dashboard:
         - href: https://dash.cloudflare.com
+          icon: cloudflare.png
       - Github Repo:
         - href: https://github.com/olav-st/homelab
+          icon: github.png
     - Utilities:
       - Hubble:
         - href: https://hubble.homelab.olav.ninja
+          icon: mdi-telescope
   docker.yaml: ""
   kubernetes.yaml: |
     gateway: true
@@ -12925,7 +12933,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    values-checksum: 09a7b6b137ab2a1f09710c22981decc89e4e1e4f68237668ada5be0c93c25781
+    values-checksum: 5d6bc701a7049b90eaeffb194108c18f835edfc5e8197667f8574af3c14f949b
   labels:
     app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
@@ -12947,7 +12955,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
-        values-checksum: 09a7b6b137ab2a1f09710c22981decc89e4e1e4f68237668ada5be0c93c25781
+        values-checksum: 5d6bc701a7049b90eaeffb194108c18f835edfc5e8197667f8574af3c14f949b
       labels:
         app.kubernetes.io/instance: homepage
         app.kubernetes.io/name: homepage
@@ -19159,6 +19167,7 @@ metadata:
     gethomepage.dev/description: Download manager
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
+    gethomepage.dev/icon: mdi-download
     gethomepage.dev/name: aria2
   labels:
     app: aria2
