@@ -61,17 +61,17 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hajimari
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: hermes-agent
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: homeassistant
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: homepage
 ---
 apiVersion: v1
 kind: Namespace
@@ -370,18 +370,6 @@ metadata:
   namespace: gitea
 ---
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: hajimari
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
-  namespace: hajimari
----
-apiVersion: v1
 automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
@@ -390,6 +378,20 @@ metadata:
     app.kubernetes.io/name: hermes-agent
   name: hermes-agent
   namespace: hermes-agent
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
+  namespace: homepage
+secrets:
+  - name: homepage-sa-token
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -4015,25 +4017,60 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/instance: hajimari
+    app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
 rules:
   - apiGroups:
       - ""
-      - extensions
-      - networking.k8s.io
-      - discovery.k8s.io
     resources:
-      - ingresses
       - namespaces
-      - endpointslices
+      - pods
+      - nodes
     verbs:
       - get
       - list
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - traefik.containo.us
+      - traefik.io
+    resources:
+      - ingressroutes
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - httproutes
+      - gateways
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - metrics.k8s.io
+    resources:
+      - nodes
+      - pods
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions/status
+    verbs:
+      - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -7228,20 +7265,20 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app.kubernetes.io/instance: hajimari
+    app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: hajimari
+  name: homepage
 subjects:
   - kind: ServiceAccount
-    name: hajimari
-    namespace: hajimari
+    name: homepage
+    namespace: homepage
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -8319,58 +8356,71 @@ metadata:
 ---
 apiVersion: v1
 data:
-  config.yaml: |-
-    customApps:
-    - apps:
-      - icon: https://brands.home-assistant.io/homeassistant/icon.png
-        name: Home Assistant
-        url: https://homeassistant.homelab.olav.ninja
-      group: Applications
-    darkTheme: tron
-    defaultEnable: false
-    globalBookmarks:
-    - bookmarks:
-      - name: Keycloak
-        url: https://keycloak.homelab.olav.ninja
-      - name: Longhorn
-        url: https://longhorn.homelab.olav.ninja
-      - name: Traefik
-        url: https://traefik.homelab.olav.ninja
-      group: Infrastructure
-    - bookmarks:
-      - name: OpenWrt
-        url: http://192.168.0.1
-      - name: Netbird
-        url: https://netbird.homelab.olav.ninja
-      group: Networking
-    - bookmarks:
-      - name: Cloudflare Dashboard
-        url: https://dash.cloudflare.com
-      - name: Github Repo
-        url: https://github.com/olav-st/homelab
-      group: External
-    - bookmarks:
-      - name: Hubble
-        url: https://hubble.homelab.olav.ninja
-      group: Utilities
-    instanceName: null
-    lightTheme: gazette
-    name: Olav
-    namespaceSelector:
-      any: true
-      matchNames:
-      - media
+  bookmarks.yaml: |
+    - Infrastructure:
+      - Keycloak:
+          href: https://keycloak.homelab.olav.ninja
+      - Longhorn:
+          href: https://longhorn.homelab.olav.ninja
+      - Traefik:
+          href: https://traefik.homelab.olav.ninja
+    - Networking:
+      - OpenWrt:
+          href: http://192.168.0.1
+      - Netbird:
+          href: https://netbird.homelab.olav.ninja
+    - External:
+      - Cloudflare Dashboard:
+          href: https://dash.cloudflare.com
+      - Github Repo:
+          href: https://github.com/olav-st/homelab
+    - Utilities:
+      - Hubble:
+          href: https://hubble.homelab.olav.ninja
+  docker.yaml: ""
+  kubernetes.yaml: |
+    gateway: true
+    ingress: true
+    mode: cluster
+    traefik: true
+  services.yaml: |
+    - Applications:
+      - Home Assistant:
+          description: Home Automation
+          href: https://homeassistant.homelab.olav.ninja
+          icon: https://brands.home-assistant.io/homeassistant/icon.png
+  settings.yaml: |
+    color: nord
+    theme: dark
     title: Homelab
+  widgets.yaml: |
+    - greeting:
+        text_size: xl
+    - search:
+        provider: google
+        target: _blank
+    - kubernetes:
+        cluster:
+          cpu: true
+          label: cluster
+          memory: true
+          show: true
+          showLabel: true
+        nodes:
+          cpu: true
+          memory: true
+          show: true
+          showLabel: true
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/instance: hajimari
+    app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari-settings
-  namespace: hajimari
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
+  namespace: homepage
 ---
 apiVersion: v1
 data:
@@ -9639,6 +9689,21 @@ metadata:
 type: Opaque
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: homepage
+  labels:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage-sa-token
+  namespace: homepage
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
 kind: Endpoints
 metadata:
   name: external-cluster
@@ -10021,29 +10086,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/instance: hajimari
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/service: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
-  namespace: hajimari
-spec:
-  ports:
-    - name: http
-      port: 3000
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/instance: hajimari
-    app.kubernetes.io/name: hajimari
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
     app.kubernetes.io/instance: hermes-agent
     app.kubernetes.io/name: hermes-agent
   name: hermes-agent
@@ -10092,6 +10134,29 @@ spec:
       targetPort: 8883
   selector:
     kubevirt.io/vm: homeassistant-vm
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/service: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
+  namespace: homepage
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/name: homepage
   type: ClusterIP
 ---
 apiVersion: v1
@@ -12781,77 +12846,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: hajimari
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
-  namespace: hajimari
-spec:
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: hajimari
-      app.kubernetes.io/name: hajimari
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: hajimari
-        app.kubernetes.io/name: hajimari
-    spec:
-      automountServiceAccountToken: true
-      containers:
-        - env:
-            - name: TZ
-              value: UTC
-          image: ghcr.io/toboshii/hajimari:v0.3.1
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 0
-            periodSeconds: 10
-            tcpSocket:
-              port: 3000
-            timeoutSeconds: 1
-          name: hajimari
-          ports:
-            - containerPort: 3000
-              name: http
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 0
-            periodSeconds: 10
-            tcpSocket:
-              port: 3000
-            timeoutSeconds: 1
-          startupProbe:
-            failureThreshold: 30
-            initialDelaySeconds: 0
-            periodSeconds: 5
-            tcpSocket:
-              port: 3000
-            timeoutSeconds: 1
-          volumeMounts:
-            - mountPath: /config/config.yaml
-              name: hajimari-settings
-              subPath: config.yaml
-      dnsPolicy: ClusterFirst
-      enableServiceLinks: true
-      serviceAccountName: hajimari
-      volumes:
-        - configMap:
-            name: hajimari-settings
-          name: hajimari-settings
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app.kubernetes.io/instance: hermes-agent
     app.kubernetes.io/name: hermes-agent
   name: hermes-agent
@@ -12926,6 +12920,105 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: hermes-agent-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    values-checksum: 7c7b0c1251a0ff717e9e37924f2847d7b6653aeb3da9a4356b760747a795b815
+  labels:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/version: v1.2.0
+    helm.sh/chart: homepage-2.1.0
+  name: homepage
+  namespace: homepage
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: homepage
+      app.kubernetes.io/name: homepage
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
+        values-checksum: 7c7b0c1251a0ff717e9e37924f2847d7b6653aeb3da9a4356b760747a795b815
+      labels:
+        app.kubernetes.io/instance: homepage
+        app.kubernetes.io/name: homepage
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: homelab.olav.ninja
+          image: ghcr.io/gethomepage/homepage:v1.2.0
+          imagePullPolicy: null
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          name: homepage
+          ports:
+            - containerPort: 3000
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /app/config
+              name: homepage-base-config
+            - mountPath: /app/config/bookmarks.yaml
+              name: homepage-config
+              subPath: bookmarks.yaml
+            - mountPath: /app/config/docker.yaml
+              name: homepage-config
+              subPath: docker.yaml
+            - mountPath: /app/config/kubernetes.yaml
+              name: homepage-config
+              subPath: kubernetes.yaml
+            - mountPath: /app/config/services.yaml
+              name: homepage-config
+              subPath: services.yaml
+            - mountPath: /app/config/settings.yaml
+              name: homepage-config
+              subPath: settings.yaml
+            - mountPath: /app/config/widgets.yaml
+              name: homepage-config
+              subPath: widgets.yaml
+            - mountPath: /app/config/logs
+              name: logs
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      serviceAccountName: homepage
+      volumes:
+        - emptyDir: {}
+          name: homepage-base-config
+        - configMap:
+            name: homepage
+          name: homepage-config
+        - emptyDir: {}
+          name: logs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19157,6 +19250,32 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
+    gethomepage.dev/enabled: "false"
+  name: homepage
+  namespace: homepage
+spec:
+  hostnames:
+    - homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: homepage
+          port: 3000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
     hajimari.io/appName: Immich
     hajimari.io/enable: "true"
     hajimari.io/icon: https://avatars.githubusercontent.com/u/109746326
@@ -19716,37 +19835,6 @@ spec:
               requests:
                 cpu: 50m
     replicas: 1
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    hajimari.io/enable: "false"
-  labels:
-    app.kubernetes.io/instance: hajimari
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: hajimari
-    app.kubernetes.io/version: v0.3.1
-    helm.sh/chart: hajimari-2.0.2
-  name: hajimari
-  namespace: hajimari
-spec:
-  rules:
-    - host: homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: hajimari
-                port:
-                  number: 3000
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - homelab.olav.ninja
-      secretName: hajimari-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
