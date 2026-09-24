@@ -20458,6 +20458,7 @@ spec:
   managementPolicies:
     - Observe
   providerConfigRef:
+    kind: ClusterProviderConfig
     name: default
 ---
 apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
