@@ -16812,7 +16812,9 @@ spec:
                 accessType: {{ .observed.composite.resource.spec.type }}
                 clientId: {{ .observed.composite.resource.spec.clientId }}
                 {{ with .observed.composite.resource.spec.clientSecretSecretRef }}
-                clientSecretSecretRef: {{ toYaml . | nindent 6 }}
+                clientSecretSecretRef:
+                  key: {{ .key }}
+                  name: {{ .name }}
                 {{ end }}
                 description: {{ .observed.composite.resource.spec.description }}
                 {{ with .observed.composite.resource.spec.baseUrl }}
