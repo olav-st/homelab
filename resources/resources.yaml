@@ -19088,6 +19088,17 @@ spec:
           - name: gateway-wildcard-tls-certificate
         mode: Terminate
     - allowedRoutes:
+        kinds:
+          - kind: TLSRoute
+        namespaces:
+          from: All
+      hostname: homeassistant.homelab.olav.ninja
+      name: homeassistant-tls
+      port: 443
+      protocol: TLS
+      tls:
+        mode: Passthrough
+    - allowedRoutes:
         namespaces:
           from: Selector
           selector:
@@ -19630,6 +19641,23 @@ spec:
   rules:
     - backendRefs:
         - name: traefik-clusterip
+          port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  hostnames:
+    - homeassistant.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+      sectionName: homeassistant-tls
+  rules:
+    - backendRefs:
+        - name: homeassistant
           port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -20790,22 +20818,6 @@ spec:
           name: api@internal
   tls:
     secretName: traefik-dashboard-tls-certificate
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: homeassistant
-  namespace: homeassistant
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: HostSNI(`homeassistant.homelab.olav.ninja`)
-      services:
-        - name: homeassistant
-          port: 443
-  tls:
-    passthrough: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
