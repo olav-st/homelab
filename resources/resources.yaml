@@ -16800,7 +16800,7 @@ spec:
         apiVersion: gotemplating.fn.crossplane.io/v1beta1
         inline:
           template: |
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
             kind: Client
             metadata:
               annotations:
@@ -16850,7 +16850,7 @@ spec:
         inline:
           template: |
             {{ if ne $.observed.resources nil }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.m.keycloak.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -16880,7 +16880,7 @@ spec:
         inline:
           template: |
             {{ if ne $.observed.resources nil }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.m.keycloak.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -16912,7 +16912,7 @@ spec:
           template: |
             {{ if ne $.observed.resources nil }}
             {{ if .observed.composite.resource.spec.groupsClaim }}
-            apiVersion: client.keycloak.crossplane.io/v1alpha1
+            apiVersion: client.m.keycloak.crossplane.io/v1alpha1
             kind: ProtocolMapper
             metadata:
               annotations:
@@ -16946,7 +16946,7 @@ spec:
           template: |
             {{ if ne $.observed.resources nil }}
             {{ if .observed.composite.resource.spec.defaultScopes }}
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
             kind: ClientDefaultScopes
             metadata:
               annotations:
@@ -16976,11 +16976,11 @@ spec:
             kind: ExtraResources
             requirements:
               client:
-                apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+                apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
                 kind: Client
                 matchName: {{ .client }}
               realm:
-                apiVersion: realm.keycloak.crossplane.io/v1alpha1
+                apiVersion: realm.m.keycloak.crossplane.io/v1alpha1
                 kind: Realm
                 matchName: {{ .realm }}
             {{ end }}
@@ -16989,7 +16989,7 @@ spec:
             {{ $client := (index (index $.extraResources "client").items $i).resource }}
             {{ $realm := (index (index $.extraResources "realm").items $i).resource }}
             ---
-            apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+            apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
             kind: ClientServiceAccountRole
             metadata:
               annotations:
@@ -19511,7 +19511,7 @@ spec:
             type: PathPrefix
             value: /
 ---
-apiVersion: group.keycloak.crossplane.io/v1alpha1
+apiVersion: group.m.keycloak.crossplane.io/v1alpha1
 kind: Group
 metadata:
   name: homelab
@@ -20445,7 +20445,7 @@ spec:
                 - "8086"
       name: intel.npu
 ---
-apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
 kind: Client
 metadata:
   name: builtin-homelab-realm-management
@@ -20461,7 +20461,7 @@ spec:
     kind: ClusterProviderConfig
     name: default
 ---
-apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+apiVersion: openidclient.m.keycloak.crossplane.io/v1alpha1
 kind: ClientScope
 metadata:
   name: netbird-api
@@ -20614,7 +20614,7 @@ spec:
       name: public-services
       namespace: external-dns
 ---
-apiVersion: realm.keycloak.crossplane.io/v1alpha1
+apiVersion: realm.m.keycloak.crossplane.io/v1alpha1
 kind: KeystoreRsa
 metadata:
   name: jwt-signing-certificate
@@ -20638,7 +20638,7 @@ spec:
     realmIdRef:
       name: homelab
 ---
-apiVersion: realm.keycloak.crossplane.io/v1alpha1
+apiVersion: realm.m.keycloak.crossplane.io/v1alpha1
 kind: Realm
 metadata:
   name: homelab
@@ -20851,7 +20851,7 @@ spec:
     stsPreload: false
     stsSeconds: 15552000
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.m.keycloak.crossplane.io/v1alpha1
 kind: Groups
 metadata:
   name: homelab-jiyoung
@@ -20866,7 +20866,7 @@ spec:
     userIdRef:
       name: jiyoung
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.m.keycloak.crossplane.io/v1alpha1
 kind: Groups
 metadata:
   name: homelab-olav
@@ -20881,7 +20881,7 @@ spec:
     userIdRef:
       name: olav
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.m.keycloak.crossplane.io/v1alpha1
 kind: User
 metadata:
   name: jiyoung
@@ -20898,7 +20898,7 @@ spec:
       name: homelab
     username: jiyoung
 ---
-apiVersion: user.keycloak.crossplane.io/v1alpha1
+apiVersion: user.m.keycloak.crossplane.io/v1alpha1
 kind: User
 metadata:
   name: olav
