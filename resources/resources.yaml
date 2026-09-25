@@ -19512,6 +19512,8 @@ spec:
   hostnames:
     - keycloak.homelab.olav.ninja
   parentRefs:
+    - name: internal
+      namespace: traefik
     - name: external
       namespace: traefik
   rules:
