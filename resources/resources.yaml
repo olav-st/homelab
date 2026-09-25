@@ -19168,7 +19168,7 @@ metadata:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
     gethomepage.dev/icon: mdi-download
-    gethomepage.dev/name: aria2
+    gethomepage.dev/name: Aria2
   labels:
     app: aria2
   name: aria2
