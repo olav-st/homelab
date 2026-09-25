@@ -10,7 +10,7 @@ metadata:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/name: Home Assistant
     gethomepage.dev/group: Applications
-    gethomepage.dev/icon: homeassistant.png
+    gethomepage.dev/icon: https://brands.home-assistant.io/homeassistant/icon.png
     gethomepage.dev/description: Home Automation
 spec:
   parentRefs:

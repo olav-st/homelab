@@ -42,6 +42,8 @@ config:
             - icon: mdi-telescope
               href: https://hubble.homelab.olav.ninja
 
+  services: []
+
   settings:
     title: Homelab
     theme: dark
