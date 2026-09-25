@@ -19077,6 +19077,28 @@ kind: Gateway
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+  name: external
+  namespace: traefik
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - allowedRoutes:
+        namespaces:
+          from: All
+      hostname: '*.homelab.olav.ninja'
+      name: https
+      port: 9443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+        mode: Terminate
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
   name: internal
   namespace: traefik
 spec:
@@ -19470,6 +19492,32 @@ spec:
     - backendRefs:
         - name: jellyfin
           port: 8096
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.7.4
+    helm.sh/chart: keycloakx-7.3.2
+  name: keycloak-keycloakx
+  namespace: keycloak
+spec:
+  hostnames:
+    - keycloak.homelab.olav.ninja
+  parentRefs:
+    - name: external
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: keycloak-keycloakx-http
+          port: 80
       matches:
         - path:
             type: PathPrefix
@@ -19924,37 +19972,6 @@ spec:
               requests:
                 cpu: 50m
     replicas: 1
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.7.4
-    helm.sh/chart: keycloakx-7.3.2
-  name: keycloak-keycloakx
-  namespace: keycloak
-spec:
-  rules:
-    - host: keycloak.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: keycloak-keycloakx-http
-                port:
-                  name: http
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - keycloak.homelab.olav.ninja
-      secretName: keycloak-tls-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
