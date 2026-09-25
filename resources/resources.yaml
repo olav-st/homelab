@@ -19034,6 +19034,20 @@ spec:
   tolerations: []
 ---
 apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: homeassistant-backend-tls
+  namespace: homeassistant
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: homeassistant
+  validation:
+    hostname: homeassistant.homelab.olav.ninja
+    wellKnownCACertificates: System
+---
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: netbird-private
@@ -19095,17 +19109,6 @@ spec:
         certificateRefs:
           - name: gateway-wildcard-tls-certificate
         mode: Terminate
-    - allowedRoutes:
-        kinds:
-          - kind: TLSRoute
-        namespaces:
-          from: All
-      hostname: homeassistant.homelab.olav.ninja
-      name: homeassistant-tls
-      port: 443
-      protocol: TLS
-      tls:
-        mode: Passthrough
     - allowedRoutes:
         namespaces:
           from: Selector
@@ -19350,6 +19353,37 @@ spec:
     - backendRefs:
         - name: hermes-agent
           port: 9119
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/description: Home Automation
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/icon: homeassistant.png
+    gethomepage.dev/name: Home Assistant
+  labels:
+    app.kubernetes.io/instance: homeassistant
+    app.kubernetes.io/name: homeassistant
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  hostnames:
+    - homeassistant.homelab.olav.ninja
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: internal
+      namespace: traefik
+  rules:
+    - backendRefs:
+        - name: homeassistant
+          port: 443
       matches:
         - path:
             type: PathPrefix
@@ -19668,23 +19702,6 @@ spec:
   rules:
     - backendRefs:
         - name: traefik-clusterip
-          port: 443
----
-apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TLSRoute
-metadata:
-  name: homeassistant
-  namespace: homeassistant
-spec:
-  hostnames:
-    - homeassistant.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-      sectionName: homeassistant-tls
-  rules:
-    - backendRefs:
-        - name: homeassistant
           port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
