@@ -30,17 +30,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TLSRoute
-      hostname: homeassistant.homelab.olav.ninja
-      name: homeassistant-tls
-      port: 443
-      protocol: TLS
-      tls:
-        mode: Passthrough
     - name: ssh
       protocol: TCP
       port: 22

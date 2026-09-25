@@ -7,5 +7,6 @@ resources:
   - network-attachment-definition.yaml
   - pvcs.yaml
   - service.yaml
-  - tls-route.yaml
   - virtual-machine.yaml
+  - http-route.yaml
+  - backend-tls-policy.yaml
