@@ -8392,11 +8392,18 @@ data:
     mode: cluster
     traefik: true
   services.yaml: |
-    - Applications:
-      - Home Assistant:
-          description: Home Automation
-          href: https://homeassistant.homelab.olav.ninja
-          icon: https://brands.home-assistant.io/homeassistant/icon.png
+    - My First Group:
+      - My First Service:
+          description: Homepage is awesome
+          href: http://localhost/
+    - My Second Group:
+      - My Second Service:
+          description: Homepage is the best
+          href: http://localhost/
+    - My Third Group:
+      - My Third Service:
+          description: "Homepage is \U0001F60E"
+          href: http://localhost/
   settings.yaml: |
     color: slate
     theme: dark
@@ -12933,7 +12940,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    values-checksum: 5d6bc701a7049b90eaeffb194108c18f835edfc5e8197667f8574af3c14f949b
+    values-checksum: 29a723bebee43af57c2954b346859f380aa5c0a5c9a9b9533b0c0bef821849dc
   labels:
     app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
@@ -12955,7 +12962,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
-        values-checksum: 5d6bc701a7049b90eaeffb194108c18f835edfc5e8197667f8574af3c14f949b
+        values-checksum: 29a723bebee43af57c2954b346859f380aa5c0a5c9a9b9533b0c0bef821849dc
       labels:
         app.kubernetes.io/instance: homepage
         app.kubernetes.io/name: homepage
