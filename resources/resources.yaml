@@ -19517,7 +19517,7 @@ spec:
   rules:
     - backendRefs:
         - name: keycloak-keycloakx-http
-          port: 80
+          port: 8080
       matches:
         - path:
             type: PathPrefix
