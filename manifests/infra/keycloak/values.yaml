@@ -1,3 +1,4 @@
+# https://github.com/codecentric/helm-charts/blob/master/charts/keycloakx/values.yaml
 command:
   - "/opt/keycloak/bin/kc.sh"
   - "start"
@@ -27,20 +28,14 @@ resources:
   limits:
     memory: 4096Mi
 
-ingress:
+httpRoute:
   enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  rules:
-    - host: keycloak.homelab.olav.ninja
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - keycloak.homelab.olav.ninja
-      secretName: keycloak-tls-secret
+  servicePort: 8080
+  hostnames:
+    - keycloak.homelab.olav.ninja
+  parentRefs:
+    - namespace: traefik
+      name: external
 
 dbchecker:
   enabled: true
