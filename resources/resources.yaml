@@ -19532,6 +19532,7 @@ metadata:
     gethomepage.dev/description: Cloud storage
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://nextcloud.homelab.olav.ninja/
     gethomepage.dev/icon: https://nextcloud.com/wp-content/uploads/2022/08/nextcloud-logo-icon.svg
     gethomepage.dev/name: Nextcloud
   labels:
