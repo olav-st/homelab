@@ -42,3 +42,25 @@ spec:
                 operator: In
                 values:
                   - gitea # Only gitea uses SSH for now
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external
+  namespace: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 9443
+      hostname: "*.homelab.olav.ninja"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+      allowedRoutes:
+        namespaces:
+          from: All
