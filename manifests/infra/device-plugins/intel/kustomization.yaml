@@ -15,7 +15,7 @@ helmCharts:
 
   - name: intel-device-plugins-gpu
     repo: https://intel.github.io/helm-charts/
-    version: 0.36.0
+    version: 0.37.0
     namespace: intel-device-plugins
     releaseName: intel-device-plugins-gpu
     includeCRDs: true
