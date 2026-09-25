@@ -8391,19 +8391,7 @@ data:
     ingress: true
     mode: cluster
     traefik: true
-  services.yaml: |
-    - My First Group:
-      - My First Service:
-          description: Homepage is awesome
-          href: http://localhost/
-    - My Second Group:
-      - My Second Service:
-          description: Homepage is the best
-          href: http://localhost/
-    - My Third Group:
-      - My Third Service:
-          description: "Homepage is \U0001F60E"
-          href: http://localhost/
+  services.yaml: ""
   settings.yaml: |
     color: slate
     theme: dark
@@ -12940,7 +12928,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    values-checksum: 29a723bebee43af57c2954b346859f380aa5c0a5c9a9b9533b0c0bef821849dc
+    values-checksum: cf64a80386075a7d0bb8cba95522ab7a756ee4e2127daba2524c3a2cc3b33aaa
   labels:
     app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
@@ -12962,7 +12950,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
-        values-checksum: 29a723bebee43af57c2954b346859f380aa5c0a5c9a9b9533b0c0bef821849dc
+        values-checksum: cf64a80386075a7d0bb8cba95522ab7a756ee4e2127daba2524c3a2cc3b33aaa
       labels:
         app.kubernetes.io/instance: homepage
         app.kubernetes.io/name: homepage
@@ -19372,7 +19360,7 @@ metadata:
     gethomepage.dev/description: Home Automation
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Applications
-    gethomepage.dev/icon: homeassistant.png
+    gethomepage.dev/icon: https://brands.home-assistant.io/homeassistant/icon.png
     gethomepage.dev/name: Home Assistant
   labels:
     app.kubernetes.io/instance: homeassistant
