@@ -42,13 +42,6 @@ config:
             - icon: mdi-telescope
               href: https://hubble.homelab.olav.ninja
 
-  services:
-    - Applications:
-        - Home Assistant:
-            href: https://homeassistant.homelab.olav.ninja
-            icon: https://brands.home-assistant.io/homeassistant/icon.png
-            description: Home Automation
-
   settings:
     title: Homelab
     theme: dark
