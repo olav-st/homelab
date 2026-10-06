@@ -14446,7 +14446,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: netbird-turn-credentials
-          image: netbirdio/management:0.78.1
+          image: netbirdio/management:0.80.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -14529,7 +14529,7 @@ spec:
                 secretKeyRef:
                   key: NB_EXPOSED_ADDRESS
                   name: netbird-relay-secret
-          image: netbirdio/relay:0.78.1
+          image: netbirdio/relay:0.80.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             initialDelaySeconds: 5
@@ -14587,7 +14587,7 @@ spec:
             - info
             - --log-file
             - console
-          image: netbirdio/signal:0.78.1
+          image: netbirdio/signal:0.80.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             initialDelaySeconds: 5
@@ -14652,7 +14652,7 @@ spec:
             - --cluster-name=cluster
             - --cluster-dns=svc.cluster.local
             - --netbird-api-key=$(NB_API_KEY)
-            - --netbird-client-image=netbirdio/netbird:0.78.1-rootless
+            - --netbird-client-image=netbirdio/netbird:0.80.0-rootless
           env:
             - name: POD_NAMESPACE
               valueFrom:
