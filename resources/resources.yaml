@@ -8798,10 +8798,6 @@ data:
         },
         "Datadir": "",
         "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
-        "HttpConfig": {
-            "CertFile": "",
-            "CertKey": ""
-        },
         "EmbeddedIdP": {
             "Enabled": true,
             "Issuer": "https://netbird.homelab.olav.ninja/oauth2",
@@ -14417,7 +14413,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 5b4d30feab10b575fe29f13afc022295934862656aef5fe2610212fa0c4b9dea
+        checksum/config: 2d4a59eeae26c8e7c339687d2067e2892a0e0bd0cc3a623f9c11201fa8399a3f
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
