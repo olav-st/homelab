@@ -8792,6 +8792,7 @@ data:
             "Password": null
         },
         "Datadir": "",
+        "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
         "HttpConfig": {
             "Address": "0.0.0.0:80",
             "AuthAudience": "netbird",
@@ -14411,7 +14412,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 24c4ef7207f7c19809d4b7d399944be93ba88f58b502a2bc5c334558e96c4f1d
+        checksum/config: d21ec90794d24d6e52ed352b44b105b77b48c929edfdca857773241b7a28595b
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
