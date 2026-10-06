@@ -3,7 +3,18 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - ./backend
-  - ./dashboard
-  - ./operator
+  - oidc-client.yaml
+  - oidc-scopes.yaml
+  - secrets.yaml
   - ./kubernetes-api-expose
+
+helmCharts:
+- name: netbird
+  releaseName: netbird-backend
+  namespace: netbird
+  repo: https://netbirdio.github.io/helms
+  version: 1.9.0
+  valuesFile: values.yaml
+
+patches:
+  - path: patches/set-deployment-strategy.yaml

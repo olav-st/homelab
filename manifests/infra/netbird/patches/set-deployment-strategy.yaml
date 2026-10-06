@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netbird-backend-management
+  namespace: netbird
 spec:
   strategy:
     type: Recreate
@@ -11,6 +12,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netbird-backend-signal
+  namespace: netbird
 spec:
   strategy:
     type: Recreate

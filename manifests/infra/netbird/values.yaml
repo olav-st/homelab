@@ -1,0 +1,204 @@
+management:
+  # https://netbird.io/docs/selfhosted/configuration
+  configmap: |-
+    {
+        "Stuns": [
+            {
+                "Proto": "udp",
+                "URI": "stun:coturn.homelab.olav.ninja:3478",
+                "Username": "",
+                "Password": null
+            }
+        ],
+        "TURNConfig": {
+            "Turns": [
+                {
+                    "Proto": "udp",
+                    "URI": "turn:coturn.homelab.olav.ninja:3478",
+                    "Username": "netbird",
+                    "Password": "{{ .NETBIRD_TURN_PASSWORD }}"
+                }
+            ],
+            "CredentialsTTL": "12h",
+            "Secret": "secret",
+            "TimeBasedCredentials": false
+        },
+        "Signal": {
+            "Proto": "https",
+            "URI": "netbird.homelab.olav.ninja:443",
+            "Username": "",
+            "Password": null
+        },
+        "Datadir": "",
+        "HttpConfig": {
+            "Address": "0.0.0.0:80",
+            "AuthAudience": "netbird",
+            "AuthUserIDClaim": "sub",
+            "CertFile": "",
+            "CertKey": "",
+            "IdpSignKeyRefreshEnabled": true,
+            "OIDCConfigEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration"
+        },
+        "IdpManagerConfig": {
+            "ManagerType": "none"
+        },
+        "DeviceAuthorizationFlow": {
+            "Provider": "hosted",
+            "ProviderConfig": {
+                "Audience": "netbird",
+                "ClientID": "netbird",
+                "DeviceAuthEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/auth",
+                "Domain": "https://keycloak.homelab.olav.ninja/realms/homelab",
+                "TokenEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token",
+                "Scope": "openid",
+                "UseIDToken": false
+            }
+        },
+        "Relay": {
+            "Addresses": ["{{ .NB_EXPOSED_ADDRESS }}"],
+            "CredentialsTTL": "24h",
+            "Secret": "{{ .NB_AUTH_SECRET }}"
+        }
+    }
+
+  podCommand:
+    args:
+      - --log-level
+      - info
+      - --log-file
+      - console
+      - --dns-domain
+      - netbird
+
+  image:
+    tag: 0.78.1 # renovate: docker=netbirdio/management
+
+  envFromSecret:
+    NETBIRD_TURN_PASSWORD: netbird-turn-credentials/password
+    NB_AUTH_SECRET: netbird-relay-secret/NB_AUTH_SECRET
+    NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
+
+  service:
+    annotations:
+      traefik.ingress.kubernetes.io/service.serversscheme: h2c
+
+  persistentVolume:
+    enabled: true
+    size: 1Gi
+    storageClass: longhorn-static
+    existingPVName: netbird-management
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+    hosts:
+      - host: netbird.homelab.olav.ninja
+        paths:
+          - path: /api
+            pathType: Prefix
+          - path: /management.ManagementService/
+            pathType: Prefix
+    tls:
+      - secretName: netbird-tls-certificate
+        hosts:
+          - netbird.homelab.olav.ninja
+
+signal:
+  image:
+    tag: 0.78.1 # renovate: docker=netbirdio/signal
+
+  logLevel: info
+
+  service:
+    annotations:
+      traefik.ingress.kubernetes.io/service.serversscheme: h2c
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+    hosts:
+      - host: netbird.homelab.olav.ninja
+        paths:
+          - path: /signalexchange.SignalExchange/
+            pathType: Prefix
+    tls:
+      - secretName: netbird-tls-certificate
+        hosts:
+          - netbird.homelab.olav.ninja
+
+relay:
+  replicaCount: 1
+
+  image:
+    repository: netbirdio/relay
+    pullPolicy: IfNotPresent
+    tag: 0.78.1 # renovate: docker=netbirdio/relay
+
+  env:
+    NB_LISTEN_ADDRESS: ":80"
+    NB_LOG_LEVEL: info
+
+  envFromSecret:
+    NB_AUTH_SECRET: netbird-relay-secret/NB_AUTH_SECRET
+    NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
+
+  containerPort: 80
+
+  service:
+    type: ClusterIP
+    port: 80
+    name: http
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+    hosts:
+      - host: netbird.homelab.olav.ninja
+        paths:
+          - path: /relay
+            pathType: Prefix
+    tls:
+      - hosts:
+          - netbird.homelab.olav.ninja
+        secretName: netbird-tls-certificate
+
+dashboard:
+  enabled: true
+
+  image:
+    tag: v2.91.1 # renovate: docker=netbirdio/dashboard
+
+  podCommand:
+    args:
+      - sed -i 's/listen \[\:\:\]\:80 default_server\;//g' /etc/nginx/http.d/default.conf && /usr/bin/supervisord -c /etc/supervisord.conf
+
+  env:
+    AUTH_AUDIENCE: netbird
+    AUTH_AUTHORITY: https://keycloak.homelab.olav.ninja/realms/homelab
+    AUTH_CLIENT_ID: netbird
+    AUTH_SUPPORTED_SCOPES: openid profile email offline_access netbird-api
+    USE_AUTH0: "false"
+    NETBIRD_MGMT_API_ENDPOINT: https://netbird.homelab.olav.ninja
+    NETBIRD_MGMT_GRPC_API_ENDPOINT: https://netbird.homelab.olav.ninja
+    NGINX_SSL_PORT: "443"
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+    hosts:
+      - host: netbird.homelab.olav.ninja
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: netbird-tls-certificate
+        hosts:
+          - netbird.homelab.olav.ninja
