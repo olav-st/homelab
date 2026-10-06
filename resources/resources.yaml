@@ -8796,7 +8796,7 @@ data:
             "CredentialsTTL": "24h",
             "Secret": "{{ .NB_AUTH_SECRET }}"
         },
-        "Datadir": "",
+        "Datadir": "/var/lib/netbird",
         "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
         "EmbeddedIdP": {
             "Enabled": true,
@@ -14413,7 +14413,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 80efa10f49c457f68c519091fe964761928b9ac2c2b5b8a4fede98b1e731f524
+        checksum/config: 8b9840271233d2a120e93b28fd11865f8866cd88970de2489d1a589a5b24c68d
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
