@@ -10684,6 +10684,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: netbird-proxy
+  namespace: netbird
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8443
+  selector:
+    app: netbird-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   labels:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
@@ -10992,19 +11006,6 @@ spec:
   selector:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/name: traefik
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: netbird-proxy
-spec:
-  ports:
-    - name: https
-      port: 443
-      targetPort: 8443
-  selector:
-    app: netbird-proxy
   type: ClusterIP
 ---
 apiVersion: scheduling.k8s.io/v1
@@ -14733,6 +14734,84 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: netbird-proxy
+  namespace: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird-proxy
+  template:
+    metadata:
+      labels:
+        app: netbird-proxy
+    spec:
+      containers:
+        - env:
+            - name: NB_PROXY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: token
+                  name: netbird-proxy-token
+            - name: NB_PROXY_DEBUG_LOGS
+              value: "true"
+            - name: NB_PROXY_MANAGEMENT_ADDRESS
+              value: https://netbird.homelab.olav.ninja:443
+            - name: NB_PROXY_DOMAIN
+              value: proxy.netbird.homelab.olav.ninja
+            - name: NB_PROXY_ACME_CERTIFICATES
+              value: "false"
+            - name: NB_PROXY_CERTIFICATE_DIRECTORY
+              value: /certs
+            - name: NB_PROXY_LISTEN_ADDRESS
+              value: :8443
+            - name: NB_PROXY_HEALTH_ADDRESS
+              value: :8080
+          image: netbirdio/reverse-proxy:0.80.0
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: reverse-proxy
+          ports:
+            - containerPort: 8443
+          readinessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /healthz/startup
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /certs
+              name: certs
+              readOnly: true
+      volumes:
+        - name: certs
+          secret:
+            secretName: proxy-wildcard-cert
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   labels:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
@@ -15865,83 +15944,6 @@ spec:
           name: tmp
         - emptyDir: {}
           name: plugins
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: netbird-proxy
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: netbird-proxy
-  template:
-    metadata:
-      labels:
-        app: netbird-proxy
-    spec:
-      containers:
-        - env:
-            - name: NB_PROXY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: token
-                  name: netbird-proxy-token
-            - name: NB_PROXY_DEBUG_LOGS
-              value: "true"
-            - name: NB_PROXY_MANAGEMENT_ADDRESS
-              value: https://netbird.homelab.olav.ninja:443
-            - name: NB_PROXY_DOMAIN
-              value: proxy.netbird.homelab.olav.ninja
-            - name: NB_PROXY_ACME_CERTIFICATES
-              value: "false"
-            - name: NB_PROXY_CERTIFICATE_DIRECTORY
-              value: /certs
-            - name: NB_PROXY_LISTEN_ADDRESS
-              value: :8443
-            - name: NB_PROXY_HEALTH_ADDRESS
-              value: :8080
-          image: netbirdio/reverse-proxy:0.80.0
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /healthz/live
-              port: 8080
-            periodSeconds: 10
-            timeoutSeconds: 5
-          name: reverse-proxy
-          ports:
-            - containerPort: 8443
-          readinessProbe:
-            failureThreshold: 2
-            httpGet:
-              path: /healthz/ready
-              port: 8080
-            periodSeconds: 5
-            timeoutSeconds: 5
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-            requests:
-              cpu: 50m
-              memory: 128Mi
-          startupProbe:
-            failureThreshold: 10
-            httpGet:
-              path: /healthz/startup
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 5
-          volumeMounts:
-            - mountPath: /certs
-              name: certs
-              readOnly: true
-      volumes:
-        - name: certs
-          secret:
-            secretName: proxy-wildcard-cert
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -18997,6 +18999,21 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: proxy-wildcard-cert
+  namespace: netbird
+spec:
+  commonName: proxy.netbird.homelab.olav.ninja
+  dnsNames:
+    - proxy.netbird.homelab.olav.ninja
+    - '*.proxy.netbird.homelab.olav.ninja'
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-dns
+  secretName: proxy-wildcard-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: traefik-dashboard-tls-certificate
   namespace: traefik
 spec:
@@ -19007,20 +19024,6 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt
   secretName: traefik-dashboard-tls-certificate
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: proxy-wildcard-cert
-spec:
-  commonName: proxy.netbird.homelab.olav.ninja
-  dnsNames:
-    - proxy.netbird.homelab.olav.ninja
-    - '*.proxy.netbird.homelab.olav.ninja'
-  issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-dns
-  secretName: proxy-wildcard-cert
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -19896,6 +19899,7 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TLSRoute
 metadata:
   name: netbird-proxy
+  namespace: netbird
 spec:
   hostnames:
     - proxy.netbird.homelab.olav.ninja
