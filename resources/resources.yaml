@@ -20237,6 +20237,13 @@ spec:
                 name: netbird-backend-management
                 port:
                   number: 80
+            path: /management.ProxyService
+            pathType: Prefix
+          - backend:
+              service:
+                name: netbird-backend-management
+                port:
+                  number: 80
             path: /oauth2
             pathType: Prefix
   tls:
