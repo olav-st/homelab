@@ -170,42 +170,9 @@ metadata:
 spec:
   baseUrl: https://netbird.homelab.olav.ninja
   clientId: netbird
-  defaultScopes:
-    - acr
-    - basic
-    - email
-    - profile
-    - roles
-    - web-origins
-    - netbird-api
-  description: Netbird Client
-  displayName: Netbird
-  grantTypes:
-    - code
-    - device_code
-    - password
-  groupsClaim: groups
-  postLogoutRedirectUris:
-    - https://netbird.homelab.olav.ninja/*
-  realm: homelab
-  redirectUris:
-    - http://localhost:53000
-    - https://netbird.homelab.olav.ninja/*
-  type: PUBLIC
-  webOrigins:
-    - +
----
-apiVersion: oidc.homelab.olav.ninja/v1alpha1
-kind: XOidcClient
-metadata:
-  name: netbird-embedded
-  namespace: netbird
-spec:
-  baseUrl: https://netbird.homelab.olav.ninja
-  clientId: netbird-embedded
   clientSecretSecretRef:
     key: clientSecret
-    name: netbird-embedded-oidc-credentials
+    name: netbird-oidc-credentials
     namespace: netbird
   description: Netbird embedded IdP (Dex) OIDC connector
   displayName: Netbird Embedded IdP
