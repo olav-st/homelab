@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: netbird-proxy
+spec:
+  parentRefs:
+    - name: external
+      namespace: traefik
+      sectionName: netbird-proxy
+  hostnames:
+    - "proxy.netbird.homelab.olav.ninja"
+    - "*.proxy.netbird.homelab.olav.ninja"
+  rules:
+    - backendRefs:
+        - name: netbird-proxy
+          port: 443

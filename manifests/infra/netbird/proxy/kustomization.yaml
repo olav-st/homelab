@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: netbird
+
+resources:
+  - certificate.yaml
+  - deployment.yaml
+  - secrets.yaml
+  - service.yaml
+  - tls-route.yaml

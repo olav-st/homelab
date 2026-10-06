@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: netbird-proxy
+spec:
+  selector:
+    app: netbird-proxy
+  type: ClusterIP
+  ports:
+  - name: https
+    targetPort: 8443
+    port: 443

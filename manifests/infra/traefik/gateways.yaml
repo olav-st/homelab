@@ -53,6 +53,38 @@ metadata:
 spec:
   gatewayClassName: traefik
   listeners:
+    - name: netbird-proxy
+      protocol: TLS
+      port: 9443
+      hostname: "*.proxy.netbird.homelab.olav.ninja"
+      tls:
+        mode: Passthrough
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird
+    - name: netbird-proxy-apex
+      protocol: TLS
+      port: 9443
+      hostname: "proxy.netbird.homelab.olav.ninja"
+      tls:
+        mode: Passthrough
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird
     - name: https
       protocol: HTTPS
       port: 9443

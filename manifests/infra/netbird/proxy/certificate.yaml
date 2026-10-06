@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: netbird-proxy-wildcard-cert
+spec:
+  secretName: netbird-proxy-wildcard-cert
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: "proxy.netbird.homelab.olav.ninja"
+  dnsNames:
+    - "proxy.netbird.homelab.olav.ninja"
+    - "*.proxy.netbird.homelab.olav.ninja"

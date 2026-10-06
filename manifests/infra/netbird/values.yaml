@@ -100,6 +100,8 @@ management:
             pathType: Prefix
           - path: /management.ManagementService/
             pathType: Prefix
+          - path: /management.ProxyService
+            pathType: Prefix
           - path: /oauth2
             pathType: Prefix
     tls:

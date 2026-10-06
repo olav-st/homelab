@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbird-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird-proxy
+  template:
+    metadata:
+      labels:
+        app: netbird-proxy
+    spec:
+      containers:
+        - name: reverse-proxy
+          image: netbirdio/reverse-proxy:0.80.0 # renovate: docker=netbirdio/reverse-proxy
+          env:
+            - name: NB_PROXY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: netbird-proxy-token
+                  key: token
+            - name: NB_PROXY_DEBUG_LOGS
+              value: "true"
+            - name: NB_PROXY_MANAGEMENT_ADDRESS
+              value: "https://netbird.homelab.olav.ninja:443"
+            - name: NB_PROXY_DOMAIN
+              value: "proxy.netbird.homelab.olav.ninja"
+            - name: NB_PROXY_ACME_CERTIFICATES
+              value: "false"
+            - name: NB_PROXY_CERTIFICATE_DIRECTORY
+              value: "/certs"
+            - name: "NB_PROXY_LISTEN_ADDRESS"
+              value: ":8443"
+              # required for health checks, otherwise it just serves on 127.0.0.1
+            - name: NB_PROXY_HEALTH_ADDRESS
+              value: ":8080"
+          ports:
+            - containerPort: 8443
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          startupProbe:
+            httpGet:
+              path: /healthz/startup
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+              readOnly: true
+      volumes:
+        - name: certs
+          secret:
+            secretName: netbird-proxy-wildcard-cert
