@@ -198,6 +198,30 @@ spec:
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
+  name: netbird-embedded
+  namespace: netbird
+spec:
+  baseUrl: https://netbird.homelab.olav.ninja
+  clientId: netbird-embedded
+  clientSecretSecretRef:
+    key: clientSecret
+    name: netbird-embedded-oidc-credentials
+    namespace: netbird
+  description: Netbird embedded IdP (Dex) OIDC connector
+  displayName: Netbird Embedded IdP
+  grantTypes:
+    - code
+  groupsClaim: groups
+  postLogoutRedirectUris:
+    - https://netbird.homelab.olav.ninja/oauth2/logout/callback
+  realm: homelab
+  redirectUris:
+    - https://netbird.homelab.olav.ninja/oauth2/callback
+  type: CONFIDENTIAL
+---
+apiVersion: oidc.homelab.olav.ninja/v1alpha1
+kind: XOidcClient
+metadata:
   name: nextcloud
   namespace: nextcloud
 spec:
