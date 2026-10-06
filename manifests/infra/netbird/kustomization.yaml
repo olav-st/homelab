@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - oidc-client.yaml
+  - oidc-client-embedded.yaml
   - oidc-scopes.yaml
   - secrets.yaml
   - ./kubernetes-api-expose
