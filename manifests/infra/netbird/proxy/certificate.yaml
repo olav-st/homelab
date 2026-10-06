@@ -7,7 +7,7 @@ spec:
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: "proxy.netbird.homelab.olav.ninja"
+  commonName: "proxy.homelab.olav.ninja"
   dnsNames:
-    - "proxy.netbird.homelab.olav.ninja"
-    - "*.proxy.netbird.homelab.olav.ninja"
+    - "proxy.homelab.olav.ninja"
+    - "*.proxy.homelab.olav.ninja"

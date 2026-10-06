@@ -56,7 +56,7 @@ spec:
     - name: netbird-proxy
       protocol: TLS
       port: 9443
-      hostname: "*.proxy.netbird.homelab.olav.ninja"
+      hostname: "*.proxy.homelab.olav.ninja"
       tls:
         mode: Passthrough
       allowedRoutes:
@@ -71,7 +71,7 @@ spec:
     - name: netbird-proxy-apex
       protocol: TLS
       port: 9443
-      hostname: "proxy.netbird.homelab.olav.ninja"
+      hostname: "proxy.homelab.olav.ninja"
       tls:
         mode: Passthrough
         certificateRefs:

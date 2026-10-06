@@ -8,8 +8,8 @@ spec:
       namespace: traefik
       sectionName: netbird-proxy
   hostnames:
-    - "proxy.netbird.homelab.olav.ninja"
-    - "*.proxy.netbird.homelab.olav.ninja"
+    - "proxy.homelab.olav.ninja"
+    - "*.proxy.homelab.olav.ninja"
   rules:
     - backendRefs:
         - name: netbird-proxy
