@@ -29,36 +29,37 @@ management:
             "Username": "",
             "Password": null
         },
-        "Datadir": "",
-        "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
-        "HttpConfig": {
-            "Address": "0.0.0.0:80",
-            "AuthAudience": "netbird",
-            "AuthUserIDClaim": "sub",
-            "CertFile": "",
-            "CertKey": "",
-            "IdpSignKeyRefreshEnabled": true,
-            "OIDCConfigEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration"
-        },
-        "IdpManagerConfig": {
-            "ManagerType": "none"
-        },
-        "DeviceAuthorizationFlow": {
-            "Provider": "hosted",
-            "ProviderConfig": {
-                "Audience": "netbird",
-                "ClientID": "netbird",
-                "DeviceAuthEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/auth",
-                "Domain": "https://keycloak.homelab.olav.ninja/realms/homelab",
-                "TokenEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token",
-                "Scope": "openid",
-                "UseIDToken": false
-            }
-        },
         "Relay": {
             "Addresses": ["{{ .NB_EXPOSED_ADDRESS }}"],
             "CredentialsTTL": "24h",
             "Secret": "{{ .NB_AUTH_SECRET }}"
+        },
+        "Datadir": "",
+        "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
+        "HttpConfig": {
+            "CertFile": "",
+            "CertKey": ""
+        },
+        "EmbeddedIdP": {
+            "Enabled": true,
+            "Issuer": "https://netbird.homelab.olav.ninja/oauth2",
+            "DashboardRedirectURIs": [
+                "https://netbird.homelab.olav.ninja/nb-auth",
+                "https://netbird.homelab.olav.ninja/nb-silent-auth"
+            ],
+            "StaticConnectors": [
+                {
+                    "type": "oidc",
+                    "name": "Keycloak",
+                    "id": "keycloak",
+                    "config": {
+                        "issuer": "https://keycloak.homelab.olav.ninja/realms/homelab",
+                        "clientID": "netbird-embedded",
+                        "clientSecret": "{{ .NETBIRD_IDP_CLIENT_SECRET }}",
+                        "redirectURI": "https://netbird.homelab.olav.ninja/oauth2/callback"
+                    }
+                }
+            ]
         }
     }
 
@@ -79,6 +80,7 @@ management:
     NETBIRD_TURN_PASSWORD: netbird-turn-credentials/password
     NB_AUTH_SECRET: netbird-relay-secret/NB_AUTH_SECRET
     NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
+    NETBIRD_IDP_CLIENT_SECRET: netbird-embedded-oidc-credentials/clientSecret
 
   service:
     annotations:
@@ -101,6 +103,8 @@ management:
           - path: /api
             pathType: Prefix
           - path: /management.ManagementService/
+            pathType: Prefix
+          - path: /oauth2
             pathType: Prefix
     tls:
       - secretName: netbird-tls-certificate
@@ -181,10 +185,12 @@ dashboard:
       - sed -i 's/listen \[\:\:\]\:80 default_server\;//g' /etc/nginx/http.d/default.conf && /usr/bin/supervisord -c /etc/supervisord.conf
 
   env:
-    AUTH_AUDIENCE: netbird
-    AUTH_AUTHORITY: https://keycloak.homelab.olav.ninja/realms/homelab
-    AUTH_CLIENT_ID: netbird
-    AUTH_SUPPORTED_SCOPES: openid profile email offline_access netbird-api
+    AUTH_AUDIENCE: netbird-dashboard
+    AUTH_AUTHORITY: https://netbird.homelab.olav.ninja/oauth2
+    AUTH_CLIENT_ID: netbird-dashboard
+    AUTH_SUPPORTED_SCOPES: openid profile email groups
+    AUTH_REDIRECT_URI: /nb-auth
+    AUTH_SILENT_REDIRECT_URI: /nb-silent-auth
     USE_AUTH0: "false"
     NETBIRD_MGMT_API_ENDPOINT: https://netbird.homelab.olav.ninja
     NETBIRD_MGMT_GRPC_API_ENDPOINT: https://netbird.homelab.olav.ninja
