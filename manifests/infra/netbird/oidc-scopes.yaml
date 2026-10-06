@@ -2,6 +2,7 @@ apiVersion: openidclient.keycloak.m.crossplane.io/v1alpha1
 kind: ClientScope
 metadata:
   name: netbird-api
+  namespace: netbird
 spec:
   forProvider:
     name: netbird-api

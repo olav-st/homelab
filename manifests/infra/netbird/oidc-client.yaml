@@ -3,6 +3,7 @@ apiVersion: oidc.homelab.olav.ninja/v1alpha1
 kind: XOidcClient
 metadata:
   name: netbird
+  namespace: netbird
 spec:
   displayName: Netbird
   type: PUBLIC

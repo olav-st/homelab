@@ -17,6 +17,7 @@ resources:
   - ./metrics-server
   - ./multus
   - ./netbird
+  - ./netbird-operator
   - ./oidc-config
   - ./pubip-operator
   - ./sablier
