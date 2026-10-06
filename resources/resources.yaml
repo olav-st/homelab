@@ -14807,7 +14807,7 @@ spec:
       volumes:
         - name: certs
           secret:
-            secretName: proxy-wildcard-cert
+            secretName: netbird-proxy-wildcard-cert
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18999,7 +18999,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: proxy-wildcard-cert
+  name: netbird-proxy-wildcard-cert
   namespace: netbird
 spec:
   commonName: proxy.netbird.homelab.olav.ninja
@@ -19009,7 +19009,7 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-dns
-  secretName: proxy-wildcard-cert
+  secretName: netbird-proxy-wildcard-cert
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
