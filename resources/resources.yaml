@@ -10994,6 +10994,19 @@ spec:
     app.kubernetes.io/name: traefik
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbird-proxy
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8443
+  selector:
+    app: netbird-proxy
+  type: ClusterIP
+---
 apiVersion: scheduling.k8s.io/v1
 description: This priority class should be used for core kubevirt components only.
 globalDefault: false
@@ -15854,6 +15867,83 @@ spec:
           name: plugins
 ---
 apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbird-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird-proxy
+  template:
+    metadata:
+      labels:
+        app: netbird-proxy
+    spec:
+      containers:
+        - env:
+            - name: NB_PROXY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: token
+                  name: netbird-proxy-token
+            - name: NB_PROXY_DEBUG_LOGS
+              value: "true"
+            - name: NB_PROXY_MANAGEMENT_ADDRESS
+              value: https://netbird.homelab.olav.ninja:443
+            - name: NB_PROXY_DOMAIN
+              value: proxy.netbird.homelab.olav.ninja
+            - name: NB_PROXY_ACME_CERTIFICATES
+              value: "false"
+            - name: NB_PROXY_CERTIFICATE_DIRECTORY
+              value: /certs
+            - name: NB_PROXY_LISTEN_ADDRESS
+              value: :8443
+            - name: NB_PROXY_HEALTH_ADDRESS
+              value: :8080
+          image: netbirdio/reverse-proxy:0.80.0
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: reverse-proxy
+          ports:
+            - containerPort: 8443
+          readinessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /healthz/startup
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /certs
+              name: certs
+              readOnly: true
+      volumes:
+        - name: certs
+          secret:
+            secretName: proxy-wildcard-cert
+---
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
@@ -18659,6 +18749,19 @@ spec:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  name: netbird-proxy-token
+  namespace: netbird
+spec:
+  encryptedData:
+    token: AgAD8sDQEMzv1GJeTm/EzDYRC1Evu3vaimS/lIDH4oMNQh3N75nXWJ3sqdOJ59k1rWpc4U+VtKnjCXviE2Zohn0Nm2KvfFUsvnshsoQzj5PsR5zJg0lV4D6m3E2dlKDDA/YSQqsM5TctzMMNZViYamNALmex3Y44MBFv6FgT+WhXMTIInyqYmo3UjytMiL81zvWq8sLhCfK0kmBemfnLQ07c8Trx7QzSATndFV/PEAYRbISvv5Wdf35chcrqUZZlt8Wjg8283izsxmYFIFn8uWNbfvq13cPSZi/+L6zxlIE1UEWse0ItAAdcO6UcYx4sWEVYmY1M6R4ltP57hRb2jgYJTjP3Xq8seKF97ruJLJQnPLO38ev81Ci/iFQWvhwcEbXusHfm5GOv+SDOTWlg4R8+od/Ylb5Q/6YnjaAFBB+WNMvef91QD7881dDOEBnJVEQTabtZJ+Yfgz4OOvajTwdhjelKzmRGjMXyMr7CdbXpwFXuk83ppsmaDY96hMpwZEasgX7KpTsRxtNTGeL05yWuYp9IVIj6RbRcIxq/APCqEDcEoEMcnbB+eYWvJAflMKYJ0oOLNcEl7Z+LTgXrP0gedMPXHpqwQ1SpEhCW17dYYGJV+ZQHQg576k4gB3GW07F1VrFPMi7s8ct4gdjqHL6NjFeXxpYhrQXvjkoDcYuXT2EYEcPGHxoQi3yFxaDz1DGHMfDeH2gzswpZGox6tQTrzwgceiQqY6eHk8VdCT7BG9m9EC8NUHi1
+  template:
+    metadata:
+      name: netbird-proxy-token
+      namespace: netbird
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
   name: netbird-relay-secret
   namespace: netbird
 spec:
@@ -18906,6 +19009,20 @@ spec:
   secretName: traefik-dashboard-tls-certificate
 ---
 apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: proxy-wildcard-cert
+spec:
+  commonName: proxy.netbird.homelab.olav.ninja
+  dnsNames:
+    - proxy.netbird.homelab.olav.ninja
+    - '*.proxy.netbird.homelab.olav.ninja'
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-dns
+  secretName: proxy-wildcard-cert
+---
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
@@ -19075,6 +19192,38 @@ metadata:
 spec:
   gatewayClassName: traefik
   listeners:
+    - allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird
+      hostname: '*.proxy.netbird.homelab.olav.ninja'
+      name: netbird-proxy
+      port: 9443
+      protocol: TLS
+      tls:
+        mode: Passthrough
+    - allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird
+      hostname: proxy.netbird.homelab.olav.ninja
+      name: netbird-proxy-apex
+      port: 9443
+      protocol: TLS
+      tls:
+        certificateRefs:
+          - name: gateway-wildcard-tls-certificate
+        mode: Passthrough
     - allowedRoutes:
         namespaces:
           from: All
