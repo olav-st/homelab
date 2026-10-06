@@ -74,6 +74,7 @@ management:
     tag: 0.78.1 # renovate: docker=netbirdio/management
 
   envFromSecret:
+    NETBIRD_DATASTORE_ENC_KEY: netbird-management-secret/NETBIRD_DATASTORE_ENC_KEY
     NETBIRD_TURN_PASSWORD: netbird-turn-credentials/password
     NB_AUTH_SECRET: netbird-relay-secret/NB_AUTH_SECRET
     NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
