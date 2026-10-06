@@ -19008,7 +19008,7 @@ spec:
     - '*.proxy.netbird.homelab.olav.ninja'
   issuerRef:
     kind: ClusterIssuer
-    name: letsencrypt-dns
+    name: letsencrypt
   secretName: netbird-proxy-wildcard-cert
 ---
 apiVersion: cert-manager.io/v1
