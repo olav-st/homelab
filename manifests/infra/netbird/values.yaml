@@ -50,7 +50,7 @@ management:
                     "id": "keycloak",
                     "config": {
                         "issuer": "https://keycloak.homelab.olav.ninja/realms/homelab",
-                        "clientID": "netbird-embedded",
+                        "clientID": "netbird",
                         "clientSecret": "{{ .NETBIRD_IDP_CLIENT_SECRET }}",
                         "redirectURI": "https://netbird.homelab.olav.ninja/oauth2/callback"
                     }
@@ -76,7 +76,7 @@ management:
     NETBIRD_TURN_PASSWORD: netbird-turn-credentials/password
     NB_AUTH_SECRET: netbird-relay-secret/NB_AUTH_SECRET
     NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
-    NETBIRD_IDP_CLIENT_SECRET: netbird-embedded-oidc-credentials/clientSecret
+    NETBIRD_IDP_CLIENT_SECRET: netbird-oidc-credentials/clientSecret
 
   service:
     annotations:
