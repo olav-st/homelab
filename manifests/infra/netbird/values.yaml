@@ -34,7 +34,7 @@ management:
             "CredentialsTTL": "24h",
             "Secret": "{{ .NB_AUTH_SECRET }}"
         },
-        "Datadir": "",
+        "Datadir": "/var/lib/netbird",
         "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
         "EmbeddedIdP": {
             "Enabled": true,
