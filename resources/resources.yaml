@@ -572,9 +572,20 @@ metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-dashboard
+    helm.sh/chart: netbird-1.9.0
+  name: netbird-backend-dashboard
+  namespace: netbird
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 ---
@@ -585,8 +596,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-relay
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-relay
   namespace: netbird
 ---
@@ -597,21 +608,9 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-signal
-  namespace: netbird
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: netbird-dashboard
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.90.2
-    helm.sh/chart: netbird-dashboard-1.2.1
-  name: netbird-dashboard
   namespace: netbird
 ---
 apiVersion: v1
@@ -8763,12 +8762,12 @@ metadata:
 ---
 apiVersion: v1
 data:
-  management.tmpl.json: |-
+  management.json: |-
     {
         "Stuns": [
             {
                 "Proto": "udp",
-                "URI": "${NETBIRD_STUN_URI}",
+                "URI": "stun:coturn.homelab.olav.ninja:3478",
                 "Username": "",
                 "Password": null
             }
@@ -8777,9 +8776,9 @@ data:
             "Turns": [
                 {
                     "Proto": "udp",
-                    "URI": "${NETBIRD_TURN_URI}",
-                    "Username": "${NETBIRD_TURN_USER}",
-                    "Password": "${NETBIRD_TURN_PASSWORD}"
+                    "URI": "turn:coturn.homelab.olav.ninja:3478",
+                    "Username": "netbird",
+                    "Password": "{{ .NETBIRD_TURN_PASSWORD }}"
                 }
             ],
             "CredentialsTTL": "12h",
@@ -8787,49 +8786,40 @@ data:
             "TimeBasedCredentials": false
         },
         "Signal": {
-            "Proto": "${NETBIRD_SIGNAL_PROTOCOL}",
-            "URI": "${NETBIRD_SIGNAL_URI}",
+            "Proto": "https",
+            "URI": "netbird.homelab.olav.ninja:443",
             "Username": "",
             "Password": null
         },
         "Datadir": "",
         "HttpConfig": {
             "Address": "0.0.0.0:80",
-            "AuthAudience": "${NETBIRD_AUTH_AUDIENCE}",
-            "AuthUserIDClaim": "${NETBIRD_AUTH_USER_ID_CLAIM:-sub}",
-            "CertFile": "${NETBIRD_MGMT_API_CERT_FILE}",
-            "CertKey": "${NETBIRD_MGMT_API_CERT_KEY_FILE}",
+            "AuthAudience": "netbird",
+            "AuthUserIDClaim": "sub",
+            "CertFile": "",
+            "CertKey": "",
             "IdpSignKeyRefreshEnabled": true,
-            "OIDCConfigEndpoint": "${NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT}"
+            "OIDCConfigEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration"
         },
         "IdpManagerConfig": {
-            "ManagerType": "${NETBIRD_IDP_MANAGER_TYPE}",
-            "${NETBIRD_IDP_MANAGER_TYPE^}ClientCredentials": {
-                "ClientID": "${NETBIRD_IDP_CLIENT_ID}",
-                "ClientSecret": "${NETBIRD_IDP_CLIENT_SECRET}",
-                "GrantType": "${NETBIRD_IDP_GRANT_TYPE}",
-                "Audience": "${NETBIRD_IDP_AUTH0_AUDIENCE}",
-                "AuthIssuer": "${NETBIRD_IDP_AUTH0_AUTH_ISSUER}",
-                "AdminEndpoint": "${NETBIRD_IDP_KEYCLOAK_ADMIN_ENDPOINT}",
-                "TokenEndpoint": "${NETBIRD_IDP_KEYCLOAK_TOKEN_ENDPOINT}"
-            }
+            "ManagerType": "none"
         },
         "DeviceAuthorizationFlow": {
-            "Provider": "${NETBIRD_AUTH_DEVICE_AUTH_PROVIDER}",
+            "Provider": "hosted",
             "ProviderConfig": {
-                "Audience": "${NETBIRD_AUTH_DEVICE_AUTH_AUDIENCE}",
-                "ClientID": "${NETBIRD_AUTH_DEVICE_AUTH_CLIENT_ID}",
-                "DeviceAuthEndpoint": "${NETBIRD_AUTH_DEVICE_AUTH_DEVICE_AUTHORIZATION_ENDPOINT}",
-                "Domain": "${NETBIRD_AUTH_DEVICE_AUTH_AUTHORITY}",
-                "TokenEndpoint": "${NETBIRD_AUTH_DEVICE_AUTH_TOKEN_ENDPOINT}",
-                "Scope": "${NETBIRD_AUTH_DEVICE_AUTH_SCOPE}",
-                "UseIDToken": ${NETBIRD_AUTH_DEVICE_AUTH_USE_ID_TOKEN:-false}
+                "Audience": "netbird",
+                "ClientID": "netbird",
+                "DeviceAuthEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/auth",
+                "Domain": "https://keycloak.homelab.olav.ninja/realms/homelab",
+                "TokenEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token",
+                "Scope": "openid",
+                "UseIDToken": false
             }
         },
         "Relay": {
-            "Addresses": ["${NB_EXPOSED_ADDRESS}"],
+            "Addresses": ["{{ .NB_EXPOSED_ADDRESS }}"],
             "CredentialsTTL": "24h",
-            "Secret": "${NB_AUTH_SECRET}"
+            "Secret": "{{ .NB_AUTH_SECRET }}"
         }
     }
 kind: ConfigMap
@@ -8838,8 +8828,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 ---
@@ -10561,14 +10551,35 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-dashboard
+    helm.sh/chart: netbird-1.9.0
+  name: netbird-backend-dashboard
+  namespace: netbird
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/name: netbird-dashboard
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: h2c
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -10589,8 +10600,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-relay
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-relay
   namespace: netbird
 spec:
@@ -10613,41 +10624,19 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-signal
   namespace: netbird
 spec:
   ports:
-    - name: https
+    - name: grpc
       port: 80
       protocol: TCP
-      targetPort: https
+      targetPort: grpc
   selector:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/name: netbird-signal
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/instance: netbird-dashboard
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.90.2
-    helm.sh/chart: netbird-dashboard-1.2.1
-  name: netbird-dashboard
-  namespace: netbird
-spec:
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
-  selector:
-    app.kubernetes.io/instance: netbird-dashboard
-    app.kubernetes.io/name: netbird-dashboard
   type: ClusterIP
 ---
 apiVersion: v1
@@ -11188,8 +11177,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -11200,26 +11189,6 @@ spec:
       storage: 1Gi
   storageClassName: longhorn-static
   volumeName: netbird-management
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app.kubernetes.io/instance: netbird-backend
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
-  name: netbird-backend-signal
-  namespace: netbird
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: longhorn-static
-  volumeName: netbird-signal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -14358,9 +14327,77 @@ metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-dashboard
+    helm.sh/chart: netbird-1.9.0
+  name: netbird-backend-dashboard
+  namespace: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbird-backend
+      app.kubernetes.io/name: netbird-dashboard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: netbird-backend
+        app.kubernetes.io/name: netbird-dashboard
+    spec:
+      containers:
+        - args:
+            - sed -i 's/listen \[\:\:\]\:80 default_server\;//g' /etc/nginx/http.d/default.conf && /usr/bin/supervisord -c /etc/supervisord.conf
+          command:
+            - /bin/sh
+            - -c
+          env:
+            - name: AUTH_AUDIENCE
+              value: netbird
+            - name: AUTH_AUTHORITY
+              value: https://keycloak.homelab.olav.ninja/realms/homelab
+            - name: AUTH_CLIENT_ID
+              value: netbird
+            - name: AUTH_SUPPORTED_SCOPES
+              value: openid profile email offline_access netbird-api
+            - name: NETBIRD_MGMT_API_ENDPOINT
+              value: https://netbird.homelab.olav.ninja
+            - name: NETBIRD_MGMT_GRPC_API_ENDPOINT
+              value: https://netbird.homelab.olav.ninja
+            - name: NGINX_SSL_PORT
+              value: "443"
+            - name: USE_AUTH0
+              value: "false"
+          image: netbirdio/dashboard:v2.91.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+          name: netbird
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources: {}
+          securityContext: {}
+      securityContext: {}
+      serviceAccountName: netbird-backend-dashboard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 spec:
@@ -14374,7 +14411,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: a7d495890f56d73e445f354af57bb002ed4c977911c8422a1650a4a531d69800
+        checksum/config: 24c4ef7207f7c19809d4b7d399944be93ba88f58b502a2bc5c334558e96c4f1d
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
@@ -14387,13 +14424,49 @@ spec:
             - console
             - --dns-domain
             - netbird
+          env:
+            - name: NB_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: NB_AUTH_SECRET
+                  name: netbird-relay-secret
+            - name: NB_EXPOSED_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  key: NB_EXPOSED_ADDRESS
+                  name: netbird-relay-secret
+            - name: NETBIRD_TURN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: netbird-turn-credentials
           image: netbirdio/management:0.78.1
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            tcpSocket:
+              port: http
+            timeoutSeconds: 3
           name: netbird-management
           ports:
             - containerPort: 80
               name: http
               protocol: TCP
+            - containerPort: 33073
+              name: grpc
+              protocol: TCP
+            - containerPort: 9090
+              name: metrics
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            tcpSocket:
+              port: http
+            timeoutSeconds: 3
           resources: {}
           securityContext: {}
           volumeMounts:
@@ -14401,76 +14474,12 @@ spec:
               name: config
             - mountPath: /var/lib/netbird
               name: management
-      initContainers:
-        - args:
-            - |
-              go install github.com/drone/envsubst/cmd/envsubst@latest && envsubst < /tmp/netbird/management.tmpl.json > /etc/netbird/management.json && cat /etc/netbird/management.json
-          command:
-            - /bin/sh
-            - -c
-          env:
-            - name: NETBIRD_SIGNAL_URI
-              value: netbird.homelab.olav.ninja:443
-            - name: NETBIRD_SIGNAL_PROTOCOL
-              value: https
-            - name: NETBIRD_STUN_URI
-              value: stun:coturn.homelab.olav.ninja:3478
-            - name: NETBIRD_TURN_URI
-              value: turn:coturn.homelab.olav.ninja:3478
-            - name: NETBIRD_TURN_USER
-              value: netbird
-            - name: NETBIRD_TURN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: netbird-turn-credentials
-            - name: NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT
-              value: https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration
-            - name: NETBIRD_MGMT_API_CERT_FILE
-              value: ""
-            - name: NETBIRD_MGMT_API_CERT_KEY_FILE
-              value: ""
-            - name: NETBIRD_AUTH_AUDIENCE
-              value: netbird
-            - name: NETBIRD_AUTH_USER_ID_CLAIM
-            - name: NETBIRD_AUTH_DEVICE_AUTH_PROVIDER
-              value: hosted
-            - name: NETBIRD_AUTH_DEVICE_AUTH_AUDIENCE
-              value: netbird
-            - name: NETBIRD_AUTH_DEVICE_AUTH_AUTHORITY
-              value: https://keycloak.homelab.olav.ninja/realms/homelab
-            - name: NETBIRD_AUTH_DEVICE_AUTH_CLIENT_ID
-              value: netbird
-            - name: NETBIRD_AUTH_DEVICE_AUTH_DEVICE_AUTHORIZATION_ENDPOINT
-              value: https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/auth
-            - name: NETBIRD_AUTH_DEVICE_AUTH_TOKEN_ENDPOINT
-              value: https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token
-            - name: NETBIRD_AUTH_DEVICE_AUTH_SCOPE
-              value: openid
-            - name: NETBIRD_AUTH_DEVICE_AUTH_USE_ID_TOKEN
-              value: "false"
-            - name: NETBIRD_IDP_MANAGER_TYPE
-              value: none
-          envFrom:
-            - secretRef:
-                name: netbird-relay-secret
-          image: golang:latest
-          imagePullPolicy: IfNotPresent
-          name: configure
-          volumeMounts:
-            - mountPath: /etc/netbird
-              name: config
-            - mountPath: /tmp/netbird
-              name: config-template
       securityContext: {}
       serviceAccountName: netbird-backend-management
       volumes:
-        - emptyDir:
-            medium: Memory
-          name: config
         - configMap:
             name: netbird-backend-management
-          name: config-template
+          name: config
         - name: management
           persistentVolumeClaim:
             claimName: netbird-backend-management
@@ -14482,8 +14491,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-relay
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-relay
   namespace: netbird
 spec:
@@ -14499,32 +14508,44 @@ spec:
         app.kubernetes.io/name: netbird-relay
     spec:
       containers:
-        - args:
-            - --listen-address
-            - :80
-            - --log-level
-            - info
-            - --log-file
-            - console
-          envFrom:
-            - secretRef:
-                name: netbird-relay-secret
+        - env:
+            - name: NB_LISTEN_ADDRESS
+              value: :80
+            - name: NB_LOG_LEVEL
+              value: info
+            - name: NB_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: NB_AUTH_SECRET
+                  name: netbird-relay-secret
+            - name: NB_EXPOSED_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  key: NB_EXPOSED_ADDRESS
+                  name: netbird-relay-secret
           image: netbirdio/relay:0.78.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
             tcpSocket:
-              port: 80
+              port: http
           name: netbird-relay
           ports:
             - containerPort: 80
               name: http
               protocol: TCP
+            - containerPort: 9090
+              name: metrics
+              protocol: TCP
           readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
             tcpSocket:
-              port: 80
+              port: http
           resources: {}
-          securityContext: null
-      securityContext: null
+          securityContext: {}
+      securityContext: {}
       serviceAccountName: netbird-backend-relay
 ---
 apiVersion: apps/v1
@@ -14534,8 +14555,8 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-signal
   namespace: netbird
 spec:
@@ -14563,94 +14584,27 @@ spec:
           image: netbirdio/signal:0.78.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
             tcpSocket:
-              port: https
+              port: grpc
           name: netbird-signal
           ports:
             - containerPort: 80
-              name: https
+              name: grpc
+              protocol: TCP
+            - containerPort: 9090
+              name: metrics
               protocol: TCP
           readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
             tcpSocket:
-              port: https
-          resources: {}
-          securityContext: null
-          volumeMounts:
-            - mountPath: /var/lib/netbird
-              name: signal
-      securityContext: null
-      serviceAccountName: netbird-backend-signal
-      volumes:
-        - name: signal
-          persistentVolumeClaim:
-            claimName: netbird-backend-signal
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/instance: netbird-dashboard
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.90.2
-    helm.sh/chart: netbird-dashboard-1.2.1
-  name: netbird-dashboard
-  namespace: netbird
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: netbird-dashboard
-      app.kubernetes.io/name: netbird-dashboard
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: netbird-dashboard
-        app.kubernetes.io/name: netbird-dashboard
-    spec:
-      containers:
-        - args:
-            - |
-              sed -i 's/listen \[\:\:\]\:80 default_server\;//g' /etc/nginx/http.d/default.conf && /usr/bin/supervisord -c /etc/supervisord.conf
-          command:
-            - /bin/sh
-            - -c
-          env:
-            - name: AUTH_AUDIENCE
-              value: netbird
-            - name: AUTH_AUTHORITY
-              value: https://keycloak.homelab.olav.ninja/realms/homelab
-            - name: AUTH_CLIENT_ID
-              value: netbird
-            - name: AUTH_SUPPORTED_SCOPES
-              value: openid profile email offline_access netbird-api
-            - name: USE_AUTH0
-              value: "false"
-            - name: NETBIRD_MGMT_API_ENDPOINT
-              value: https://netbird.homelab.olav.ninja
-            - name: NETBIRD_MGMT_GRPC_API_ENDPOINT
-              value: https://netbird.homelab.olav.ninja
-            - name: NGINX_SSL_PORT
-              value: "443"
-          image: netbirdio/dashboard:v2.91.1
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          name: netbird-dashboard
-          ports:
-            - containerPort: 80
-              name: http
-              protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+              port: grpc
           resources: {}
           securityContext: {}
       securityContext: {}
-      serviceAccountName: netbird-dashboard
+      serviceAccountName: netbird-backend-signal
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -20013,12 +19967,44 @@ metadata:
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbird-dashboard
+    helm.sh/chart: netbird-1.9.0
+  name: netbird-backend-dashboard
+  namespace: netbird
+spec:
+  ingressClassName: null
+  rules:
+    - host: netbird.homelab.olav.ninja
+      http:
+        paths:
+          - backend:
+              service:
+                name: netbird-backend-dashboard
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - netbird.homelab.olav.ninja
+      secretName: netbird-tls-certificate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
+  labels:
+    app.kubernetes.io/instance: netbird-backend
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-management
   namespace: netbird
 spec:
+  ingressClassName: null
   rules:
     - host: netbird.homelab.olav.ninja
       http:
@@ -20052,11 +20038,12 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-relay
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-relay
   namespace: netbird
 spec:
+  ingressClassName: null
   rules:
     - host: netbird.homelab.olav.ninja
       http:
@@ -20083,11 +20070,12 @@ metadata:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.35.2
-    helm.sh/chart: netbird-0.14.4
+    app.kubernetes.io/version: 0.46.0
+    helm.sh/chart: netbird-1.9.0
   name: netbird-backend-signal
   namespace: netbird
 spec:
+  ingressClassName: null
   rules:
     - host: netbird.homelab.olav.ninja
       http:
@@ -20098,37 +20086,6 @@ spec:
                 port:
                   number: 80
             path: /signalexchange.SignalExchange/
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: netbird-dashboard
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-dashboard
-    app.kubernetes.io/version: v2.90.2
-    helm.sh/chart: netbird-dashboard-1.2.1
-  name: netbird-dashboard
-  namespace: netbird
-spec:
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-dashboard
-                port:
-                  number: 80
-            path: /
             pathType: Prefix
   tls:
     - hosts:
