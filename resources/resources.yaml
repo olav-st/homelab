@@ -14435,6 +14435,11 @@ spec:
                 secretKeyRef:
                   key: NB_EXPOSED_ADDRESS
                   name: netbird-relay-secret
+            - name: NETBIRD_DATASTORE_ENC_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: NETBIRD_DATASTORE_ENC_KEY
+                  name: netbird-management-secret
             - name: NETBIRD_TURN_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -18603,6 +18608,19 @@ spec:
       name: longhorn-truenas-cifs-credentials
       namespace: longhorn-system
     type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: netbird-management-secret
+  namespace: netbird
+spec:
+  encryptedData:
+    NETBIRD_DATASTORE_ENC_KEY: AgBydd5y+XvD/25JCqr+1FZTgMCx2AMD5W/M3I1A8AKNIyVPl4fGVZuEFEYspHTIPCS3p/ykucGaYD3dGWJ8KU7yDFujh6MKzzqEhCKPFeyQv6naC2BVAU/iX+p0p1jFmB9vDawa9qmbbaoZHwwAS8b6cqJlSdCA3xxHXyarA2Cl0mt+q3fC2IcVzttIh4cHe7Q7UibuAoFAhR9s3JAPCsypJ4zhbcpkq+Dt7wan7pi9d9EMBtlg9Udc33TzWDHjgh4h8Cvjj1PvqRrCpr4yWJ8MWdF5Yc3CJJJ/1SiYvfkJ3zvnLvAn+MLD72lftJw5ZatfljgMH0BktR2fmKE/xNkR+fa6/y899Jao4IeRx9COw7fqQVk+NvGAbNqRQ8OxdnZPEh2+yQaTdFbgRlOBDS66pt26gtlc9gx4L0RgvRXVV4rDalrRTQxMOvUPNji/Aae+mjG/feo0iyZ7/MTyrWuMSWKPAkM2kRCWdH5aXOidU88sK14Qla2sCMK0lJYaQS/yJvj7loZAHRJgHunWulOHq+LX62LEPlmkiPcBKuMaiwr5QKZrA5Bs4E1w2TNxrRYEuzLw7xVTjppMMCSSmIydZJpUEeyokcmdyHjrr9d2YtjhcEm68qEp041pTucU8HW2/DXAL/21SwlF3J/PbuByvH1jl6mBGrv63cOevUTkZCu48Ln2eaB72xlc08WSQvbCMSg0xxz4zWO3hnC/DaIJD9RWexIfAiS89F0h8Ywu+T6EjAo=
+  template:
+    metadata:
+      name: netbird-management-secret
+      namespace: netbird
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
