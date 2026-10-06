@@ -10961,7 +10961,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: homelab.olav.ninja,*.homelab.olav.ninja,proxy.netbird.homelab.olav.ninja,*.proxy.netbird.homelab.olav.ninja
+    external-dns.alpha.kubernetes.io/hostname: homelab.olav.ninja,*.homelab.olav.ninja
   labels:
     app.kubernetes.io/instance: traefik-traefik
     app.kubernetes.io/managed-by: Helm
