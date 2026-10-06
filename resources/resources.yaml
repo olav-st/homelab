@@ -8791,36 +8791,37 @@ data:
             "Username": "",
             "Password": null
         },
-        "Datadir": "",
-        "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
-        "HttpConfig": {
-            "Address": "0.0.0.0:80",
-            "AuthAudience": "netbird",
-            "AuthUserIDClaim": "sub",
-            "CertFile": "",
-            "CertKey": "",
-            "IdpSignKeyRefreshEnabled": true,
-            "OIDCConfigEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/.well-known/openid-configuration"
-        },
-        "IdpManagerConfig": {
-            "ManagerType": "none"
-        },
-        "DeviceAuthorizationFlow": {
-            "Provider": "hosted",
-            "ProviderConfig": {
-                "Audience": "netbird",
-                "ClientID": "netbird",
-                "DeviceAuthEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/auth",
-                "Domain": "https://keycloak.homelab.olav.ninja/realms/homelab",
-                "TokenEndpoint": "https://keycloak.homelab.olav.ninja/realms/homelab/protocol/openid-connect/token",
-                "Scope": "openid",
-                "UseIDToken": false
-            }
-        },
         "Relay": {
             "Addresses": ["{{ .NB_EXPOSED_ADDRESS }}"],
             "CredentialsTTL": "24h",
             "Secret": "{{ .NB_AUTH_SECRET }}"
+        },
+        "Datadir": "",
+        "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
+        "HttpConfig": {
+            "CertFile": "",
+            "CertKey": ""
+        },
+        "EmbeddedIdP": {
+            "Enabled": true,
+            "Issuer": "https://netbird.homelab.olav.ninja/oauth2",
+            "DashboardRedirectURIs": [
+                "https://netbird.homelab.olav.ninja/nb-auth",
+                "https://netbird.homelab.olav.ninja/nb-silent-auth"
+            ],
+            "StaticConnectors": [
+                {
+                    "type": "oidc",
+                    "name": "Keycloak",
+                    "id": "keycloak",
+                    "config": {
+                        "issuer": "https://keycloak.homelab.olav.ninja/realms/homelab",
+                        "clientID": "netbird-embedded",
+                        "clientSecret": "{{ .NETBIRD_IDP_CLIENT_SECRET }}",
+                        "redirectURI": "https://netbird.homelab.olav.ninja/oauth2/callback"
+                    }
+                }
+            ]
         }
     }
 kind: ConfigMap
@@ -14352,13 +14353,17 @@ spec:
             - -c
           env:
             - name: AUTH_AUDIENCE
-              value: netbird
+              value: netbird-dashboard
             - name: AUTH_AUTHORITY
-              value: https://keycloak.homelab.olav.ninja/realms/homelab
+              value: https://netbird.homelab.olav.ninja/oauth2
             - name: AUTH_CLIENT_ID
-              value: netbird
+              value: netbird-dashboard
+            - name: AUTH_REDIRECT_URI
+              value: /nb-auth
+            - name: AUTH_SILENT_REDIRECT_URI
+              value: /nb-silent-auth
             - name: AUTH_SUPPORTED_SCOPES
-              value: openid profile email offline_access netbird-api
+              value: openid profile email groups
             - name: NETBIRD_MGMT_API_ENDPOINT
               value: https://netbird.homelab.olav.ninja
             - name: NETBIRD_MGMT_GRPC_API_ENDPOINT
@@ -14412,7 +14417,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: d21ec90794d24d6e52ed352b44b105b77b48c929edfdca857773241b7a28595b
+        checksum/config: 5b4d30feab10b575fe29f13afc022295934862656aef5fe2610212fa0c4b9dea
       labels:
         app.kubernetes.io/instance: netbird-backend
         app.kubernetes.io/name: netbird-management
@@ -14441,6 +14446,11 @@ spec:
                 secretKeyRef:
                   key: NETBIRD_DATASTORE_ENC_KEY
                   name: netbird-management-secret
+            - name: NETBIRD_IDP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: netbird-embedded-oidc-credentials
             - name: NETBIRD_TURN_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -20054,6 +20064,13 @@ spec:
                 port:
                   number: 80
             path: /management.ManagementService/
+            pathType: Prefix
+          - backend:
+              service:
+                name: netbird-backend-management
+                port:
+                  number: 80
+            path: /oauth2
             pathType: Prefix
   tls:
     - hosts:
