@@ -19892,6 +19892,23 @@ spec:
         - name: traefik-clusterip
           port: 443
 ---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: netbird-proxy
+spec:
+  hostnames:
+    - proxy.netbird.homelab.olav.ninja
+    - '*.proxy.netbird.homelab.olav.ninja'
+  parentRefs:
+    - name: external
+      namespace: traefik
+      sectionName: netbird-proxy
+  rules:
+    - backendRefs:
+        - name: netbird-proxy
+          port: 443
+---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
