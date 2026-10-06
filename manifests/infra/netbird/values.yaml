@@ -36,10 +36,6 @@ management:
         },
         "Datadir": "",
         "DataStoreEncryptionKey": "{{ .NETBIRD_DATASTORE_ENC_KEY }}",
-        "HttpConfig": {
-            "CertFile": "",
-            "CertKey": ""
-        },
         "EmbeddedIdP": {
             "Enabled": true,
             "Issuer": "https://netbird.homelab.olav.ninja/oauth2",
