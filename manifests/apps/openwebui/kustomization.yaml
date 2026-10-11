@@ -5,6 +5,7 @@ namespace: openwebui
 resources:
   - cilium-netpols.yaml
   - namespace.yaml
+  - netbird-resources.yaml
   - oidc-client.yaml
   - pvcs.yaml
   - secrets.yaml
