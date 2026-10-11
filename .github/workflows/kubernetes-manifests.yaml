@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: render-manifests-${{ github.ref_name }}
+      queue: max
     steps:
       - name: Checkout
         uses: actions/checkout@v7
