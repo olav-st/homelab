@@ -225,6 +225,9 @@ spec:
   displayName: Open WebUI
   grantTypes:
     - code
+  postLogoutRedirectUris:
+    - https://openwebui.homelab.olav.ninja/auth
+    - https://openwebui.proxy.homelab.olav.ninja/auth
   realm: homelab
   redirectUris:
     - https://openwebui.homelab.olav.ninja/oauth/oidc/callback
