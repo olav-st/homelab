@@ -20115,6 +20115,18 @@ spec:
   task: backup
 ---
 apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: openwebui
+  namespace: openwebui
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: openwebui-open-webui
+---
+apiVersion: netbird.io/v1alpha1
 kind: NetworkRouter
 metadata:
   name: cluster
