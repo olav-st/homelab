@@ -228,6 +228,7 @@ spec:
   realm: homelab
   redirectUris:
     - https://openwebui.homelab.olav.ninja/oauth/oidc/callback
+    - https://openwebui.proxy.homelab.olav.ninja/oauth/oidc/callback
   type: CONFIDENTIAL
 ---
 apiVersion: oidc.homelab.olav.ninja/v1alpha1
