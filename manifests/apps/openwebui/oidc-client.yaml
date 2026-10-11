@@ -17,4 +17,5 @@ spec:
   baseUrl: "https://openwebui.homelab.olav.ninja"
   redirectUris:
     - "https://openwebui.homelab.olav.ninja/oauth/oidc/callback"
+    - "https://openwebui.proxy.homelab.olav.ninja/oauth/oidc/callback"
   realm: homelab
