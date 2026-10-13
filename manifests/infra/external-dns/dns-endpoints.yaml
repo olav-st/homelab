@@ -3,19 +3,29 @@ kind: DNSEndpoint
 metadata:
   name: a-records
   annotations:
-    kustomize.toolkit.fluxcd.io/ssa: Merge # Some fields are managed by pubip-operator
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent # The resource is managed by pubip-operator after creation
 spec:
   endpoints:
   - dnsName: keycloak.homelab.olav.ninja
     recordType: A
+    targets:
+    - "127.0.0.1" #placeholder, updated by pubip-operator
   - dnsName: netbird.homelab.olav.ninja
     recordType: A
+    targets:
+    - "127.0.0.1" #placeholder, updated by pubip-operator
   - dnsName: coturn.homelab.olav.ninja
     recordType: A
+    targets:
+    - "127.0.0.1" #placeholder, updated by pubip-operator
   - dnsName: proxy.homelab.olav.ninja
     recordType: A
+    targets:
+    - "127.0.0.1" #placeholder, updated by pubip-operator
   - dnsName: '*.proxy.homelab.olav.ninja'
     recordType: A
+    targets:
+    - "127.0.0.1" #placeholder, updated by pubip-operator
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
