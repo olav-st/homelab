@@ -7,4 +7,4 @@ resources:
   - deployment.yaml
   - secrets.yaml
   - service.yaml
-  - tls-route.yaml
+  - tls-routes.yaml
