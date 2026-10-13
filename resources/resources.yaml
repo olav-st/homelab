@@ -19577,7 +19577,7 @@ spec:
                 operator: In
                 values:
                   - netbird
-      hostname: '*.proxy.homelab.olav.ninja'
+      hostname: '*.homelab.olav.ninja'
       name: netbird-proxy
       port: 9443
       protocol: TLS
@@ -19592,7 +19592,7 @@ spec:
                 operator: In
                 values:
                   - netbird
-      hostname: proxy.homelab.olav.ninja
+      hostname: homelab.olav.ninja
       name: netbird-proxy-apex
       port: 9443
       protocol: TLS
@@ -20275,6 +20275,8 @@ metadata:
   namespace: netbird
 spec:
   hostnames:
+    - homelab.olav.ninja
+    - '*.homelab.olav.ninja'
     - proxy.homelab.olav.ninja
     - '*.proxy.homelab.olav.ninja'
   parentRefs:
