@@ -13,23 +13,30 @@ config:
     gateway: true   # << picks up the new HTTPRoute
 
   bookmarks:
-    - Infrastructure:
+    - Infrastructure Apps:
+        - Netbird:
+            - icon: netbird.png
+              href: https://netbird.homelab.olav.ninja
         - Keycloak:
             - icon: keycloak.png
               href: https://keycloak.homelab.olav.ninja
         - Longhorn:
             - icon: longhorn.png
               href: https://longhorn.homelab.olav.ninja
+    - Monitoring:
+        - Hubble:
+            - icon: mdi-telescope
+              href: https://hubble.homelab.olav.ninja
         - Traefik:
             - icon: traefik.png
               href: https://traefik.homelab.olav.ninja
-    - Networking:
+    - Outside Cluster:
         - OpenWrt:
             - icon: openwrt.png
               href: http://192.168.0.1
-        - Netbird:
-            - icon: netbird.png
-              href: https://netbird.homelab.olav.ninja
+        - TrueNAS:
+            - icon: truenas.png
+              href: https://truenas.proxy.homelab.olav.ninja/
     - External:
         - Cloudflare Dashboard:
             - icon: cloudflare.png
@@ -37,10 +44,6 @@ config:
         - Github Repo:
             - icon: github.png
               href: https://github.com/olav-st/homelab
-    - Utilities:
-        - Hubble:
-            - icon: mdi-telescope
-              href: https://hubble.homelab.olav.ninja
 
   services: []
 
