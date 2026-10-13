@@ -1,0 +1,33 @@
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: a-records
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: Merge # Some fields are managed by pubip-operator
+spec:
+  endpoints:
+  - dnsName: keycloak.homelab.olav.ninja
+    recordType: A
+  - dnsName: netbird.homelab.olav.ninja
+    recordType: A
+  - dnsName: coturn.homelab.olav.ninja
+    recordType: A
+  - dnsName: proxy.homelab.olav.ninja
+    recordType: A
+  - dnsName: '*.proxy.homelab.olav.ninja'
+    recordType: A
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: cname-records
+spec:
+  endpoints:
+  - dnsName: homelab.olav.ninja
+    recordType: CNAME
+    targets:
+    - proxy.homelab.olav.ninja
+  - dnsName: '*.homelab.olav.ninja'
+    recordType: CNAME
+    targets:
+    - proxy.homelab.olav.ninja

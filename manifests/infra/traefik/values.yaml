@@ -4,8 +4,6 @@ ingressRoute:
 
 service:
   type: LoadBalancer
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: "homelab.olav.ninja,*.homelab.olav.ninja"
   spec:
     externalTrafficPolicy: Local
     internalTrafficPolicy: Local
