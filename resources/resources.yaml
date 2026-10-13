@@ -19472,21 +19472,26 @@ apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
   annotations:
-    kustomize.toolkit.fluxcd.io/ssa: Merge
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
   name: a-records
   namespace: external-dns
 spec:
   endpoints:
     - dnsName: keycloak.homelab.olav.ninja
       recordType: A
+      targets: []
     - dnsName: netbird.homelab.olav.ninja
       recordType: A
+      targets: []
     - dnsName: coturn.homelab.olav.ninja
       recordType: A
+      targets: []
     - dnsName: proxy.homelab.olav.ninja
       recordType: A
+      targets: []
     - dnsName: '*.proxy.homelab.olav.ninja'
       recordType: A
+      targets: []
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
