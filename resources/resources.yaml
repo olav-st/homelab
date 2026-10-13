@@ -19329,7 +19329,6 @@ metadata:
   name: netbird-proxy-wildcard-cert
   namespace: netbird
 spec:
-  commonName: proxy.homelab.olav.ninja
   dnsNames:
     - homelab.olav.ninja
     - '*.homelab.olav.ninja'
