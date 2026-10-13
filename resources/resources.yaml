@@ -19479,19 +19479,24 @@ spec:
   endpoints:
     - dnsName: keycloak.homelab.olav.ninja
       recordType: A
-      targets: []
+      targets:
+        - 127.0.0.1
     - dnsName: netbird.homelab.olav.ninja
       recordType: A
-      targets: []
+      targets:
+        - 127.0.0.1
     - dnsName: coturn.homelab.olav.ninja
       recordType: A
-      targets: []
+      targets:
+        - 127.0.0.1
     - dnsName: proxy.homelab.olav.ninja
       recordType: A
-      targets: []
+      targets:
+        - 127.0.0.1
     - dnsName: '*.proxy.homelab.olav.ninja'
       recordType: A
-      targets: []
+      targets:
+        - 127.0.0.1
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
