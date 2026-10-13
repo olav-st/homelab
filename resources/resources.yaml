@@ -20599,6 +20599,18 @@ spec:
 apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
+  name: homepage
+  namespace: homepage
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: homepage
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
   name: keycloak
   namespace: keycloak
 spec:
