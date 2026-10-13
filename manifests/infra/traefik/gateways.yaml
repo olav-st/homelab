@@ -85,14 +85,20 @@ spec:
                 operator: In
                 values:
                   - netbird
-    - name: https
+    - name: netbird-https
       protocol: HTTPS
       port: 9443
-      hostname: "*.homelab.olav.ninja"
+      hostname: "netbird.homelab.olav.ninja"
       tls:
         mode: Terminate
         certificateRefs:
           - name: gateway-wildcard-tls-certificate
       allowedRoutes:
         namespaces:
-          from: All
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird

@@ -1,0 +1,10 @@
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: keycloak
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: keycloak-keycloakx-http

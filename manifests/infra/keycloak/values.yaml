@@ -36,8 +36,6 @@ httpRoute:
   parentRefs:
     - namespace: traefik
       name: internal
-    - namespace: traefik
-      name: external
 
 dbchecker:
   enabled: true
