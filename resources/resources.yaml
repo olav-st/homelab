@@ -19331,6 +19331,8 @@ metadata:
 spec:
   commonName: proxy.homelab.olav.ninja
   dnsNames:
+    - homelab.olav.ninja
+    - '*.homelab.olav.ninja'
     - proxy.homelab.olav.ninja
     - '*.proxy.homelab.olav.ninja'
   issuerRef:
