@@ -8612,23 +8612,30 @@ metadata:
 apiVersion: v1
 data:
   bookmarks.yaml: |
-    - Infrastructure:
+    - Infrastructure Apps:
+      - Netbird:
+        - href: https://netbird.homelab.olav.ninja
+          icon: netbird.png
       - Keycloak:
         - href: https://keycloak.homelab.olav.ninja
           icon: keycloak.png
       - Longhorn:
         - href: https://longhorn.homelab.olav.ninja
           icon: longhorn.png
+    - Monitoring:
+      - Hubble:
+        - href: https://hubble.homelab.olav.ninja
+          icon: mdi-telescope
       - Traefik:
         - href: https://traefik.homelab.olav.ninja
           icon: traefik.png
-    - Networking:
+    - Outside Cluster:
       - OpenWrt:
         - href: http://192.168.0.1
           icon: openwrt.png
-      - Netbird:
-        - href: https://netbird.homelab.olav.ninja
-          icon: netbird.png
+      - TrueNAS:
+        - href: https://truenas.proxy.homelab.olav.ninja/
+          icon: truenas.png
     - External:
       - Cloudflare Dashboard:
         - href: https://dash.cloudflare.com
@@ -8636,10 +8643,6 @@ data:
       - Github Repo:
         - href: https://github.com/olav-st/homelab
           icon: github.png
-    - Utilities:
-      - Hubble:
-        - href: https://hubble.homelab.olav.ninja
-          icon: mdi-telescope
   docker.yaml: ""
   kubernetes.yaml: |
     gateway: true
@@ -13163,7 +13166,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    values-checksum: cf64a80386075a7d0bb8cba95522ab7a756ee4e2127daba2524c3a2cc3b33aaa
+    values-checksum: ffa311a049b559180c6e95061802bc80cf5324d0475eddb018fc35826531ad48
   labels:
     app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
@@ -13185,7 +13188,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
-        values-checksum: cf64a80386075a7d0bb8cba95522ab7a756ee4e2127daba2524c3a2cc3b33aaa
+        values-checksum: ffa311a049b559180c6e95061802bc80cf5324d0475eddb018fc35826531ad48
       labels:
         app.kubernetes.io/instance: homepage
         app.kubernetes.io/name: homepage
