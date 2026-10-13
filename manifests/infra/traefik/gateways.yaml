@@ -92,7 +92,8 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: gateway-wildcard-tls-certificate
+          - name: netbird-tls-certificate
+            namespace: netbird
       allowedRoutes:
         namespaces:
           from: Selector

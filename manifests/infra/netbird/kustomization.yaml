@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
+  - certificate.yaml
   - oidc-client.yaml
   - oidc-scopes.yaml
   - secrets.yaml
