@@ -19315,6 +19315,19 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: netbird-tls-certificate
+  namespace: netbird
+spec:
+  dnsNames:
+    - netbird.homelab.olav.ninja
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt
+  secretName: netbird-tls-certificate
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: traefik-dashboard-tls-certificate
   namespace: traefik
 spec:
@@ -19589,7 +19602,8 @@ spec:
       protocol: HTTPS
       tls:
         certificateRefs:
-          - name: gateway-wildcard-tls-certificate
+          - name: netbird-tls-certificate
+            namespace: netbird
         mode: Terminate
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -20395,6 +20409,21 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: netbird-tls-certificate
+  namespace: netbird
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: traefik
+  to:
+    - group: ""
+      kind: Secret
+      name: netbird-tls-certificate
 ---
 apiVersion: group.keycloak.m.crossplane.io/v1alpha1
 kind: Group
