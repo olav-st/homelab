@@ -20376,6 +20376,9 @@ spec:
     - name: external
       namespace: traefik
       sectionName: netbird-proxy
+    - name: external
+      namespace: traefik
+      sectionName: netbird-proxy-apex
   rules:
     - backendRefs:
         - name: netbird-proxy
