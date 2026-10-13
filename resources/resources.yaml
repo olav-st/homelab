@@ -20368,7 +20368,6 @@ metadata:
   namespace: netbird
 spec:
   hostnames:
-    - homelab.olav.ninja
     - '*.homelab.olav.ninja'
     - proxy.homelab.olav.ninja
     - '*.proxy.homelab.olav.ninja'
@@ -20376,6 +20375,20 @@ spec:
     - name: external
       namespace: traefik
       sectionName: netbird-proxy
+  rules:
+    - backendRefs:
+        - name: netbird-proxy
+          port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: netbird-proxy-apex
+  namespace: netbird
+spec:
+  hostnames:
+    - homelab.olav.ninja
+  parentRefs:
     - name: external
       namespace: traefik
       sectionName: netbird-proxy-apex
