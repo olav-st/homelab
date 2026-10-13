@@ -9954,19 +9954,6 @@ metadata:
 type: kubernetes.io/service-account-token
 ---
 apiVersion: v1
-kind: Endpoints
-metadata:
-  name: external-cluster
-  namespace: traefik
-subsets:
-  - addresses:
-      - ip: 192.168.0.80
-    ports:
-      - name: ingress-port
-        port: 443
-        protocol: TCP
----
-apiVersion: v1
 kind: Service
 metadata:
   name: aria2
@@ -10829,8 +10816,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: h2c
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
@@ -10841,7 +10826,8 @@ metadata:
   namespace: netbird
 spec:
   ports:
-    - name: http
+    - appProtocol: kubernetes.io/h2c
+      name: http
       port: 80
       protocol: TCP
       targetPort: http
@@ -10875,8 +10861,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: h2c
   labels:
     app.kubernetes.io/instance: netbird-backend
     app.kubernetes.io/managed-by: Helm
@@ -10887,7 +10871,8 @@ metadata:
   namespace: netbird
 spec:
   ports:
-    - name: grpc
+    - appProtocol: kubernetes.io/h2c
+      name: grpc
       port: 80
       protocol: TCP
       targetPort: grpc
@@ -11200,20 +11185,6 @@ spec:
   selector:
     app.kubernetes.io/instance: sealed-secrets
     app.kubernetes.io/name: sealed-secrets
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: external-cluster
-  namespace: traefik
-spec:
-  clusterIP: None
-  ports:
-    - name: ingress-port
-      port: 443
-      protocol: TCP
-      targetPort: 443
   type: ClusterIP
 ---
 apiVersion: v1
@@ -19605,9 +19576,15 @@ spec:
         mode: Passthrough
     - allowedRoutes:
         namespaces:
-          from: All
-      hostname: '*.homelab.olav.ninja'
-      name: https
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - netbird
+      hostname: netbird.homelab.olav.ninja
+      name: netbird-https
       port: 9443
       protocol: HTTPS
       tls:
@@ -20035,8 +20012,6 @@ spec:
   parentRefs:
     - name: internal
       namespace: traefik
-    - name: external
-      namespace: traefik
   rules:
     - backendRefs:
         - name: keycloak-keycloakx-http
@@ -20083,6 +20058,107 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbird-dashboard
+  namespace: netbird
+spec:
+  hostnames:
+    - netbird.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+    - name: external
+      namespace: traefik
+      sectionName: netbird-https
+  rules:
+    - backendRefs:
+        - name: netbird-backend-dashboard
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbird-management
+  namespace: netbird
+spec:
+  hostnames:
+    - netbird.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+    - name: external
+      namespace: traefik
+      sectionName: netbird-https
+  rules:
+    - backendRefs:
+        - name: netbird-backend-management
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /management.ManagementService/
+        - path:
+            type: PathPrefix
+            value: /management.ProxyService
+        - path:
+            type: PathPrefix
+            value: /oauth2
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbird-relay
+  namespace: netbird
+spec:
+  hostnames:
+    - netbird.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+    - name: external
+      namespace: traefik
+      sectionName: netbird-https
+  rules:
+    - backendRefs:
+        - name: netbird-backend-relay
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /relay
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbird-signal
+  namespace: netbird
+spec:
+  hostnames:
+    - netbird.homelab.olav.ninja
+  parentRefs:
+    - name: internal
+      namespace: traefik
+    - name: external
+      namespace: traefik
+      sectionName: netbird-https
+  rules:
+    - backendRefs:
+        - name: netbird-backend-signal
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /signalexchange.SignalExchange/
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -20494,6 +20570,18 @@ spec:
 apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
+  name: keycloak
+  namespace: keycloak
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: keycloak-keycloakx-http
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
   name: openwebui
   namespace: openwebui
 spec:
@@ -20556,154 +20644,6 @@ spec:
     - hosts:
         - hubble.homelab.olav.ninja
       secretName: hubble-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: netbird-backend
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-dashboard
-    helm.sh/chart: netbird-1.9.0
-  name: netbird-backend-dashboard
-  namespace: netbird
-spec:
-  ingressClassName: null
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-backend-dashboard
-                port:
-                  number: 80
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: netbird-backend
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-management
-    app.kubernetes.io/version: 0.46.0
-    helm.sh/chart: netbird-1.9.0
-  name: netbird-backend-management
-  namespace: netbird
-spec:
-  ingressClassName: null
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-backend-management
-                port:
-                  number: 80
-            path: /api
-            pathType: Prefix
-          - backend:
-              service:
-                name: netbird-backend-management
-                port:
-                  number: 80
-            path: /management.ManagementService/
-            pathType: Prefix
-          - backend:
-              service:
-                name: netbird-backend-management
-                port:
-                  number: 80
-            path: /management.ProxyService
-            pathType: Prefix
-          - backend:
-              service:
-                name: netbird-backend-management
-                port:
-                  number: 80
-            path: /oauth2
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: netbird-backend
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-relay
-    app.kubernetes.io/version: 0.46.0
-    helm.sh/chart: netbird-1.9.0
-  name: netbird-backend-relay
-  namespace: netbird
-spec:
-  ingressClassName: null
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-backend-relay
-                port:
-                  number: 80
-            path: /relay
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-  labels:
-    app.kubernetes.io/instance: netbird-backend
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: netbird-signal
-    app.kubernetes.io/version: 0.46.0
-    helm.sh/chart: netbird-1.9.0
-  name: netbird-backend-signal
-  namespace: netbird
-spec:
-  ingressClassName: null
-  rules:
-    - host: netbird.homelab.olav.ninja
-      http:
-        paths:
-          - backend:
-              service:
-                name: netbird-backend-signal
-                port:
-                  number: 80
-            path: /signalexchange.SignalExchange/
-            pathType: Prefix
-  tls:
-    - hosts:
-        - netbird.homelab.olav.ninja
-      secretName: netbird-tls-certificate
 ---
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
@@ -21460,22 +21400,6 @@ spec:
           name: api@internal
   tls:
     secretName: traefik-dashboard-tls-certificate
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: external-cluster-ingressroute
-  namespace: traefik
-spec:
-  entryPoints:
-    - webpublic
-  routes:
-    - match: HostSNIRegexp(`jiyoung.cloud|{subdomain:[a-z]+}.jiyoung.cloud`)
-      services:
-        - name: external-cluster
-          port: ingress-port
-  tls:
-    passthrough: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
