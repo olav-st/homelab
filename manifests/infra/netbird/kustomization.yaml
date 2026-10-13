@@ -6,6 +6,7 @@ resources:
   - oidc-client.yaml
   - oidc-scopes.yaml
   - secrets.yaml
+  - httproute.yaml
   - ./kubernetes-api-expose
   - ./proxy
 
@@ -19,3 +20,11 @@ helmCharts:
 
 patches:
   - path: patches/set-deployment-strategy.yaml
+  - path: patches/set-app-protocol.yaml
+    target:
+      kind: Service
+      name: netbird-backend-management
+  - path: patches/set-app-protocol.yaml
+    target:
+      kind: Service
+      name: netbird-backend-signal

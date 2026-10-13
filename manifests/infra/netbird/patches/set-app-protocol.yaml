@@ -1,0 +1,3 @@
+- op: add
+  path: /spec/ports/0/appProtocol
+  value: kubernetes.io/h2c

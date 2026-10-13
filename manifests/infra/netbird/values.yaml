@@ -78,61 +78,17 @@ management:
     NB_EXPOSED_ADDRESS: netbird-relay-secret/NB_EXPOSED_ADDRESS
     NETBIRD_IDP_CLIENT_SECRET: netbird-oidc-credentials/clientSecret
 
-  service:
-    annotations:
-      traefik.ingress.kubernetes.io/service.serversscheme: h2c
-
   persistentVolume:
     enabled: true
     size: 1Gi
     storageClass: longhorn-static
     existingPVName: netbird-management
 
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-    hosts:
-      - host: netbird.homelab.olav.ninja
-        paths:
-          - path: /api
-            pathType: Prefix
-          - path: /management.ManagementService/
-            pathType: Prefix
-          - path: /management.ProxyService
-            pathType: Prefix
-          - path: /oauth2
-            pathType: Prefix
-    tls:
-      - secretName: netbird-tls-certificate
-        hosts:
-          - netbird.homelab.olav.ninja
-
 signal:
   image:
     tag: 0.80.0 # renovate: docker=netbirdio/signal
 
   logLevel: info
-
-  service:
-    annotations:
-      traefik.ingress.kubernetes.io/service.serversscheme: h2c
-
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-    hosts:
-      - host: netbird.homelab.olav.ninja
-        paths:
-          - path: /signalexchange.SignalExchange/
-            pathType: Prefix
-    tls:
-      - secretName: netbird-tls-certificate
-        hosts:
-          - netbird.homelab.olav.ninja
 
 relay:
   replicaCount: 1
@@ -157,21 +113,6 @@ relay:
     port: 80
     name: http
 
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-    hosts:
-      - host: netbird.homelab.olav.ninja
-        paths:
-          - path: /relay
-            pathType: Prefix
-    tls:
-      - hosts:
-          - netbird.homelab.olav.ninja
-        secretName: netbird-tls-certificate
-
 dashboard:
   enabled: true
 
@@ -193,18 +134,3 @@ dashboard:
     NETBIRD_MGMT_API_ENDPOINT: https://netbird.homelab.olav.ninja
     NETBIRD_MGMT_GRPC_API_ENDPOINT: https://netbird.homelab.olav.ninja
     NGINX_SSL_PORT: "443"
-
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure, webpublic
-    hosts:
-      - host: netbird.homelab.olav.ninja
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: netbird-tls-certificate
-        hosts:
-          - netbird.homelab.olav.ninja
