@@ -20142,6 +20142,8 @@ spec:
     - name: external
       namespace: traefik
       sectionName: netbird-https
+    - name: netbird-public
+      namespace: netbird
   rules:
     - backendRefs:
         - name: netbird-backend-relay
