@@ -65,6 +65,8 @@ spec:
     - name: external
       namespace: traefik
       sectionName: netbird-https
+    - name: netbird-public
+      namespace: netbird
   hostnames:
     - netbird.homelab.olav.ninja
   rules:
