@@ -14,7 +14,7 @@ helmCharts:
     releaseName: fileflows
     namespace: fileflows
     repo: oci://oci.trueforge.org/truecharts
-    version: 16.16.0
+    version: 16.17.1
     valuesFile: values.yaml
 
 patches:
