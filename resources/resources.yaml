@@ -21277,7 +21277,7 @@ metadata:
   name: function-auto-ready
   namespace: crossplane
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.7.0
+  package: xpkg.upbound.io/crossplane-contrib/function-auto-ready:v0.7.1
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: Function
