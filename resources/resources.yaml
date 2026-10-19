@@ -14343,7 +14343,7 @@ spec:
                 TCP:$REMOTE_HOST:$REMOTE_PORT,connect-timeout=5
           env:
             - name: REMOTE_HOST
-              value: olav-gpu-machine.lan
+              value: gpu-machine.lan
             - name: REMOTE_PORT
               value: "8080"
             - name: REMOTE_MAC
@@ -14396,7 +14396,7 @@ spec:
               done
           env:
             - name: REMOTE_HOST
-              value: olav-gpu-machine.lan
+              value: gpu-machine.lan
             - name: REMOTE_PORT
               value: "8080"
           image: alpine/curl:8.22.0
