@@ -1,6 +1,6 @@
 # https://github.com/trueforge-org/truecharts/blob/master/charts/stable/fileflows/values.yaml
 image:
-  tag: "26.09" # renovate: docker=docker.io/revenz/fileflows
+  tag: "26.10" # renovate: docker=docker.io/revenz/fileflows
 
 service:
   main:
