@@ -62,8 +62,8 @@ ports:
   ssh:
     expose:
       default: true
-    port: 2222
-    containerPort: 2222
+    port: 22
+    containerPort: 22
     exposedPort: 22
 
 ingressRoute:
