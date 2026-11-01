@@ -658,8 +658,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery
   namespace: node-feature-discovery
 ---
@@ -670,8 +670,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-gc
   namespace: node-feature-discovery
 ---
@@ -685,8 +685,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-prune
   namespace: node-feature-discovery
 ---
@@ -697,8 +697,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
 ---
@@ -1533,8 +1533,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
 rules:
@@ -6124,8 +6124,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery
 rules:
   - apiGroups:
@@ -6185,8 +6185,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-gc
 rules:
   - apiGroups:
@@ -6221,8 +6221,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-prune
 rules:
   - apiGroups:
@@ -7041,8 +7041,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
 roleRef:
@@ -7700,8 +7700,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7719,8 +7719,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-gc
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7741,8 +7741,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-prune
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -9564,8 +9564,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-master-conf
   namespace: node-feature-discovery
 ---
@@ -9578,8 +9578,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-worker-conf
   namespace: node-feature-discovery
 ---
@@ -15448,8 +15448,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
     role: gc
   name: nfd-node-feature-discovery-gc
   namespace: node-feature-discovery
@@ -15471,6 +15471,7 @@ spec:
       containers:
         - args:
             - -gc-interval=1h
+            - -port=8080
           command:
             - nfd-gc
           env:
@@ -15478,7 +15479,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: registry.k8s.io/nfd/node-feature-discovery:v0.19.0
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.20.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -15520,8 +15521,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
     role: master
   name: nfd-node-feature-discovery-master
   namespace: node-feature-discovery
@@ -15536,7 +15537,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: f0749b40d9e1123c4ac02c4d7b8dc3c53f2eb46eab9cfe36309ce2a3d09dec98
+        checksum/config: f6062520702819f62c589fc8a8a25b16eeffb299c9c22a302f029c51a5cb8374
       labels:
         app.kubernetes.io/instance: nfd
         app.kubernetes.io/name: node-feature-discovery
@@ -15562,7 +15563,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: registry.k8s.io/nfd/node-feature-discovery:v0.19.0
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.20.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -18377,8 +18378,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
     role: worker
   name: nfd-node-feature-discovery-worker
   namespace: node-feature-discovery
@@ -18392,7 +18393,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 251d6641a9145a494b93378db0b49326b1ad4b8d680612a08cbb86da06d3a869
+        checksum/config: 9f710ed37ba4147c53cd1e145a2d4a14b1b5f6168f5a5541dfb47c71c9d44715
       labels:
         app.kubernetes.io/instance: nfd
         app.kubernetes.io/name: node-feature-discovery
@@ -18417,7 +18418,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.uid
-          image: registry.k8s.io/nfd/node-feature-discovery:v0.19.0
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.20.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -18647,8 +18648,8 @@ metadata:
     app.kubernetes.io/instance: nfd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: node-feature-discovery
-    app.kubernetes.io/version: v0.19.0
-    helm.sh/chart: node-feature-discovery-0.19.0
+    app.kubernetes.io/version: v0.20.1
+    helm.sh/chart: node-feature-discovery-0.20.1
   name: nfd-node-feature-discovery-prune
   namespace: node-feature-discovery
 spec:
@@ -18658,8 +18659,8 @@ spec:
         app.kubernetes.io/instance: nfd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: node-feature-discovery
-        app.kubernetes.io/version: v0.19.0
-        helm.sh/chart: node-feature-discovery-0.19.0
+        app.kubernetes.io/version: v0.20.1
+        helm.sh/chart: node-feature-discovery-0.20.1
         role: prune
     spec:
       affinity:
@@ -18677,7 +18678,7 @@ spec:
             - -prune
           command:
             - nfd-master
-          image: registry.k8s.io/nfd/node-feature-discovery:v0.19.0
+          image: registry.k8s.io/nfd/node-feature-discovery:v0.20.1
           imagePullPolicy: IfNotPresent
           name: nfd-master
           resources:
