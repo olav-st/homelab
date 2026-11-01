@@ -16131,7 +16131,7 @@ spec:
       containers:
         - args:
             - --entryPoints.metrics.address=:9100/tcp
-            - --entryPoints.ssh.address=:2222/tcp
+            - --entryPoints.ssh.address=:22/tcp
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
             - --entryPoints.webpublic.address=:9443/tcp
@@ -16190,7 +16190,7 @@ spec:
             - containerPort: 9100
               name: metrics
               protocol: TCP
-            - containerPort: 2222
+            - containerPort: 22
               name: ssh
               protocol: TCP
             - containerPort: 8080
