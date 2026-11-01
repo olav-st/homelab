@@ -16153,6 +16153,7 @@ spec:
             - --providers.kubernetesgateway
             - --providers.kubernetesgateway.statusaddress.service.name=traefik
             - --providers.kubernetesgateway.statusaddress.service.namespace=traefik
+            - --providers.kubernetesgateway.experimentalchannel=true
             - --entryPoints.webpublic.http.middlewares=traefik-securityheaders@kubernetescrd
             - --entryPoints.webpublic.http.tls=true
             - --entryPoints.webpublic.transport.respondingTimeouts.readTimeout=0
