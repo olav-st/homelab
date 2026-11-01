@@ -1,3 +1,4 @@
+# https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 ingressRoute:
   dashboard:
     enabled: false
@@ -24,6 +25,7 @@ providers:
       pathOverride: "traefik/traefik"
   kubernetesGateway:
     enabled: true
+    experimentalChannel: true # Enable support for TCPRoute and TLSRoute
 
 ports:
   web:
