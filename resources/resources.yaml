@@ -14398,7 +14398,7 @@ spec:
               value: gpu-machine.lan
             - name: REMOTE_PORT
               value: "8080"
-          image: alpine/curl:8.22.0
+          image: alpine/curl:8.23.0
           imagePullPolicy: IfNotPresent
           name: keepalive-ping
           resources:
