@@ -14,5 +14,5 @@ helmCharts:
   releaseName: nextcloud
   namespace: nextcloud
   repo: https://nextcloud.github.io/helm/
-  version: 9.4.1
+  version: 9.4.3
   valuesFile: values.yaml
