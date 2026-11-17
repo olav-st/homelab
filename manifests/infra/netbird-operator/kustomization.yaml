@@ -12,6 +12,6 @@ helmCharts:
     releaseName: netbird-operator
     namespace: netbird
     repo: oci://ghcr.io/netbirdio/helm-charts
-    version: 0.8.0
+    version: 0.9.0
     includeCRDs: true
     valuesFile: values.yaml
