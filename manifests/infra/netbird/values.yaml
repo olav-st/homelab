@@ -117,7 +117,7 @@ dashboard:
   enabled: true
 
   image:
-    tag: v2.94.0 # renovate: docker=netbirdio/dashboard
+    tag: v2.97.0 # renovate: docker=netbirdio/dashboard
 
   podCommand:
     args:
