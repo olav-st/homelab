@@ -8,13 +8,10 @@ spec:
     name: cluster.internal
   workloadOverride:
     replicas: 1
-    podTemplate:  # Fix for issue https://github.com/netbirdio/kubernetes-operator/issues/349
+    podTemplate:
       spec:
         containers:
           - name: netbird
-            env:
-              - name: NB_DISABLE_UPDATE_SETTINGS
-                value: 'false'
             resources:
               requests:
                 cpu: 50m
