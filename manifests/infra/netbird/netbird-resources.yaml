@@ -2,6 +2,7 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-dashboard
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
@@ -13,6 +14,7 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-management
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
@@ -24,6 +26,7 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-relay
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
@@ -35,6 +38,7 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-signal
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
