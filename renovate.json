@@ -53,7 +53,7 @@
       "groupName": "crossplane"
     },
     {
-      "matchPackageNames": ["netbirdio/netbird", "netbirdio/signal", "netbirdio/management", "netbirdio/relay"],
+      "matchPackageNames": ["netbirdio/netbird", "netbirdio/signal", "netbirdio/management", "netbirdio/relay", "netbirdio/reverse-proxy"],
       "groupName": "netbird"
     }
   ]
