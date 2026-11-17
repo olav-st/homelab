@@ -16839,14 +16839,10 @@ spec:
               value: "True"
             - name: BYPASS_MODEL_ACCESS_CONTROL
               value: "True"
-            - name: OPENROUTER_MODELS
-              value: '"z-ai/glm-5.3-flash","deepseek/deepseek-v4.1-flash"'
             - name: DEFAULT_MODELS
               value: deepseek/deepseek-v4-flash-0731
             - name: DEFAULT_MODEL_METADATA
               value: '{"capabilities":{"web_search":true},"defaultFeatureIds":["web_search"]}'
-            - name: MODEL_ORDER_LIST
-              value: '[$(OPENROUTER_MODELS)]'
             - name: OPENROUTER_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -16855,7 +16851,7 @@ spec:
             - name: OPENAI_API_KEYS
               value: none;$(OPENROUTER_API_KEY)
             - name: OPENAI_API_CONFIGS
-              value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp","tags": ["Local"]}, "1":{"enable":true,"model_ids":[$(OPENROUTER_MODELS)],"tags": ["OpenRouter"]}}'
+              value: '{"0":{"enable":true,"connection_type":"openai","provider":"llama.cpp","tags": ["Local"]}, "1":{"enable":true,"tags": ["OpenRouter"]}}'
             - name: ENABLE_LOGIN_FORM
               value: "False"
             - name: ENABLE_PASSWORD_AUTH
