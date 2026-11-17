@@ -20659,10 +20659,7 @@ spec:
     podTemplate:
       spec:
         containers:
-          - env:
-              - name: NB_DISABLE_UPDATE_SETTINGS
-                value: "false"
-            name: netbird
+          - name: netbird
             resources:
               requests:
                 cpu: 50m
