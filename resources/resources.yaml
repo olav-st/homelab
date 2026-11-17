@@ -20073,109 +20073,6 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: netbird-dashboard
-  namespace: netbird
-spec:
-  hostnames:
-    - netbird.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-    - name: external
-      namespace: traefik
-      sectionName: netbird-https
-  rules:
-    - backendRefs:
-        - name: netbird-backend-dashboard
-          port: 80
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: netbird-management
-  namespace: netbird
-spec:
-  hostnames:
-    - netbird.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-    - name: external
-      namespace: traefik
-      sectionName: netbird-https
-  rules:
-    - backendRefs:
-        - name: netbird-backend-management
-          port: 80
-      matches:
-        - path:
-            type: PathPrefix
-            value: /api
-        - path:
-            type: PathPrefix
-            value: /management.ManagementService/
-        - path:
-            type: PathPrefix
-            value: /management.ProxyService
-        - path:
-            type: PathPrefix
-            value: /oauth2
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: netbird-relay
-  namespace: netbird
-spec:
-  hostnames:
-    - netbird.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-    - name: external
-      namespace: traefik
-      sectionName: netbird-https
-    - name: netbird-public
-      namespace: netbird
-  rules:
-    - backendRefs:
-        - name: netbird-backend-relay
-          port: 80
-      matches:
-        - path:
-            type: PathPrefix
-            value: /relay
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: netbird-signal
-  namespace: netbird
-spec:
-  hostnames:
-    - netbird.homelab.olav.ninja
-  parentRefs:
-    - name: internal
-      namespace: traefik
-    - name: external
-      namespace: traefik
-      sectionName: netbird-https
-  rules:
-    - backendRefs:
-        - name: netbird-backend-signal
-          port: 80
-      matches:
-        - path:
-            type: PathPrefix
-            value: /signalexchange.SignalExchange/
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
   annotations:
     gethomepage.dev/description: Cloud storage
     gethomepage.dev/enabled: "true"
@@ -20646,6 +20543,50 @@ spec:
     namespace: netbird
   serviceRef:
     name: openwebui-open-webui
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: netbird-backend-dashboard
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: netbird-backend-dashboard
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: netbird-backend-management
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: netbird-backend-management
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: netbird-backend-relay
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: netbird-backend-relay
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: netbird-backend-signal
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: netbird-backend-signal
 ---
 apiVersion: netbird.io/v1alpha1
 kind: NetworkRouter
