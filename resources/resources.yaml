@@ -20547,19 +20547,8 @@ spec:
 apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
-  name: openwebui
-  namespace: openwebui
-spec:
-  networkRouterRef:
-    name: cluster
-    namespace: netbird
-  serviceRef:
-    name: openwebui-open-webui
----
-apiVersion: netbird.io/v1alpha1
-kind: NetworkResource
-metadata:
   name: netbird-backend-management
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
@@ -20571,6 +20560,7 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-relay
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
@@ -20582,12 +20572,25 @@ apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
   name: netbird-backend-signal
+  namespace: netbird
 spec:
   networkRouterRef:
     name: cluster
     namespace: netbird
   serviceRef:
     name: netbird-backend-signal
+---
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: openwebui
+  namespace: openwebui
+spec:
+  networkRouterRef:
+    name: cluster
+    namespace: netbird
+  serviceRef:
+    name: openwebui-open-webui
 ---
 apiVersion: netbird.io/v1alpha1
 kind: NetworkRouter
