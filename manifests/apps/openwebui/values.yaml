@@ -62,7 +62,7 @@ extraEnvVars:
   - name: BYPASS_MODEL_ACCESS_CONTROL
     value: "True"
   - name: DEFAULT_MODELS
-    value: "deepseek/deepseek-v4-flash-0731"
+    value: "z-ai/glm-5.3-flash"
   - name: DEFAULT_MODEL_METADATA
     value: '{"capabilities":{"web_search":true},"defaultFeatureIds":["web_search"]}'
   # Connections 
