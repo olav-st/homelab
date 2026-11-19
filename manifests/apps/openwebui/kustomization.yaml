@@ -15,7 +15,7 @@ helmCharts:
     releaseName: openwebui
     namespace: openwebui
     repo: https://helm.openwebui.com/
-    version: 17.5.0
+    version: 18.4.0
     valuesFile: values.yaml
 
 patches:
