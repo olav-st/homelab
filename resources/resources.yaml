@@ -350,8 +350,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.21.0
-    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/version: 0.24.0
+    helm.sh/chart: external-dns-1.24.0
   name: external-dns
   namespace: external-dns
 ---
@@ -4027,8 +4027,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.21.0
-    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/version: 0.24.0
+    helm.sh/chart: external-dns-1.24.0
   name: external-dns
 rules:
   - apiGroups:
@@ -4075,7 +4075,7 @@ rules:
     resources:
       - dnsendpoints/status
     verbs:
-      - '*'
+      - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -7466,8 +7466,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.21.0
-    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/version: 0.24.0
+    helm.sh/chart: external-dns-1.24.0
   name: external-dns-viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10176,8 +10176,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.21.0
-    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/version: 0.24.0
+    helm.sh/chart: external-dns-1.24.0
   name: external-dns
   namespace: external-dns
 spec:
@@ -12488,8 +12488,8 @@ metadata:
     app.kubernetes.io/instance: external-dns
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: external-dns
-    app.kubernetes.io/version: 0.21.0
-    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/version: 0.24.0
+    helm.sh/chart: external-dns-1.24.0
   name: external-dns
   namespace: external-dns
 spec:
@@ -12514,7 +12514,7 @@ spec:
             - --interval=1m
             - --source=crd
             - --source=service
-            - --policy=upsert-only
+            - --policy=sync
             - --registry=txt
             - --provider=cloudflare
             - --publish-internal-services
@@ -12529,7 +12529,7 @@ spec:
                 secretKeyRef:
                   key: email
                   name: cloudflare-api-key
-          image: registry.k8s.io/external-dns/external-dns:v0.21.0
+          image: registry.k8s.io/external-dns/external-dns:v0.24.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 2
