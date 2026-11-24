@@ -44,6 +44,9 @@ config:
         - Github Repo:
             - icon: github.png
               href: https://github.com/olav-st/homelab
+        - Renovate:
+            - icon: renovate.png
+              href: https://developer.mend.io/github/olav-st/homelab
 
   services: []
 
