@@ -69,7 +69,7 @@ management:
       - netbird
 
   image:
-    tag: 0.83.1 # renovate: docker=netbirdio/management
+    tag: 0.83.2 # renovate: docker=netbirdio/management
 
   envFromSecret:
     NETBIRD_DATASTORE_ENC_KEY: netbird-management-secret/NETBIRD_DATASTORE_ENC_KEY
@@ -86,7 +86,7 @@ management:
 
 signal:
   image:
-    tag: 0.83.1 # renovate: docker=netbirdio/signal
+    tag: 0.83.2 # renovate: docker=netbirdio/signal
 
   logLevel: info
 
@@ -96,7 +96,7 @@ relay:
   image:
     repository: netbirdio/relay
     pullPolicy: IfNotPresent
-    tag: 0.83.1 # renovate: docker=netbirdio/relay
+    tag: 0.83.2 # renovate: docker=netbirdio/relay
 
   env:
     NB_LISTEN_ADDRESS: ":80"
