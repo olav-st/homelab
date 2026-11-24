@@ -8643,6 +8643,9 @@ data:
       - Github Repo:
         - href: https://github.com/olav-st/homelab
           icon: github.png
+      - Renovate:
+        - href: https://developer.mend.io/github/olav-st/homelab
+          icon: renovate.png
   docker.yaml: ""
   kubernetes.yaml: |
     gateway: true
@@ -13136,7 +13139,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    values-checksum: ffa311a049b559180c6e95061802bc80cf5324d0475eddb018fc35826531ad48
+    values-checksum: 9431a05d1731712091b654eda33534265ae8a40a60f419d3857578e722b01427
   labels:
     app.kubernetes.io/instance: homepage
     app.kubernetes.io/managed-by: Helm
@@ -13158,7 +13161,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets: 4141e6981f3b767e75a4e744858b9ff414dba5d0ef6afd761f7700061fb6e32e
-        values-checksum: ffa311a049b559180c6e95061802bc80cf5324d0475eddb018fc35826531ad48
+        values-checksum: 9431a05d1731712091b654eda33534265ae8a40a60f419d3857578e722b01427
       labels:
         app.kubernetes.io/instance: homepage
         app.kubernetes.io/name: homepage
