@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: reverse-proxy
-          image: netbirdio/reverse-proxy:0.83.1 # renovate: docker=netbirdio/reverse-proxy
+          image: netbirdio/reverse-proxy:0.83.2 # renovate: docker=netbirdio/reverse-proxy
           env:
             - name: NB_PROXY_TOKEN
               valueFrom:
