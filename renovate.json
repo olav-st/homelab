@@ -9,6 +9,7 @@
     "after 4pm on friday"
   ],
   "timezone": "Europe/Oslo",
+  "prConcurrentLimit": 15,
   "customManagers": [
     {
       "customType": "regex",
