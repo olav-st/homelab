@@ -14686,7 +14686,7 @@ spec:
               value: "443"
             - name: USE_AUTH0
               value: "false"
-          image: netbirdio/dashboard:v2.97.0
+          image: netbirdio/dashboard:v2.100.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
